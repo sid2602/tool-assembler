@@ -18,10 +18,10 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
 
-const loginSchema = Yup.object().shape({
+export const registerSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
-	firstName: Yup.string().required(),
-	lastName: Yup.string().required(),
+	first_name: Yup.string().required(),
+	last_name: Yup.string().required(),
 	password: Yup.string().min(3).required(),
 });
 
@@ -29,11 +29,11 @@ export default function Register() {
 	const formik = useFormik({
 		initialValues: {
 			email: "",
-			firstName: "",
-			lastName: "",
+			first_name: "",
+			last_name: "",
 			password: "",
 		},
-		validationSchema: loginSchema,
+		validationSchema: registerSchema,
 		onSubmit: (values) => {
 			alert(JSON.stringify(values, null, 2));
 		},
@@ -43,16 +43,24 @@ export default function Register() {
 		formik.errors.email !== undefined && formik.touched.email === true;
 
 	const isFirstNameInvalid =
-		formik.errors.firstName !== undefined && formik.touched.firstName === true;
+		formik.errors.first_name !== undefined &&
+		formik.touched.first_name === true;
 
 	const isLastNameInvalid =
-		formik.errors.lastName !== undefined && formik.touched.lastName === true;
+		formik.errors.last_name !== undefined && formik.touched.last_name === true;
 
 	const isPasswordInvalid =
 		formik.errors.password !== undefined && formik.touched.password === true;
 
 	return (
-		<Flex h="100vh" justifyContent="center" alignItems="center">
+		<Flex
+			h="100vh"
+			justifyContent="center"
+			alignItems="center"
+			backgroundImage={"/abstract.jpg"}
+			backgroundSize="cover"
+			backgroundPosition="25% 25%"
+		>
 			<Container maxW="container.sm">
 				<Card>
 					<CardHeader>
@@ -80,25 +88,27 @@ export default function Register() {
 									<FormLabel>First name</FormLabel>
 									<Input
 										placeholder="Please enter first name"
-										name="firstName"
+										name="first_name"
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
-										value={formik.values.firstName}
+										value={formik.values.first_name}
 									/>
 
-									<FormErrorMessage>{formik.errors.firstName}</FormErrorMessage>
+									<FormErrorMessage>
+										{formik.errors.first_name}
+									</FormErrorMessage>
 								</FormControl>
 								<FormControl isInvalid={isLastNameInvalid}>
 									<FormLabel>Last name</FormLabel>
 									<Input
 										placeholder="Please enter last name"
-										name="lastName"
+										name="last_name"
 										onChange={formik.handleChange}
 										onBlur={formik.handleBlur}
-										value={formik.values.lastName}
+										value={formik.values.last_name}
 									/>
 
-									<FormErrorMessage>{formik.errors.lastName}</FormErrorMessage>
+									<FormErrorMessage>{formik.errors.last_name}</FormErrorMessage>
 								</FormControl>
 								<FormControl isInvalid={isPasswordInvalid}>
 									<FormLabel>Password</FormLabel>

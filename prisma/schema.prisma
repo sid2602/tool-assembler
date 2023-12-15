@@ -1,0 +1,23 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+    id Int  @id @default(autoincrement())
+    first_name String
+    last_name String
+    email String @unique
+    password String
+    tool_assemblies Tool_assembly[]
+}
+
+model Tool_assembly {
+    id Int @id @default(autoincrement())
+    customer Customer @relation(fields: [customer_id], references: [id])
+    customer_id Int
+}

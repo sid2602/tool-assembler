@@ -14,8 +14,14 @@ import { MdOutlineHandyman } from "react-icons/md";
 
 export default function Home() {
 	return (
-		<Flex h="100vh" justifyContent="center">
-			<Container maxW="container.md" mt="150" p="0">
+		<Flex
+			h="100vh"
+			justifyContent="center"
+			backgroundImage={"/gradient.jpg"}
+			backgroundSize="cover"
+			backgroundPosition="65% 25%"
+		>
+			<Container maxW="container.md" mt="150">
 				<Stack>
 					<Heading mt="8">
 						<Center>Welcome to Tool builder</Center>
@@ -37,6 +43,7 @@ export default function Home() {
 						maxW="100%"
 						height="250"
 					/>
+
 					<Center>
 						<Button
 							size="md"

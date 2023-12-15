@@ -18,7 +18,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
 
-const loginSchema = Yup.object().shape({
+export const loginSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
 	password: Yup.string().min(3).required(),
 });
@@ -42,7 +42,14 @@ export default function Login() {
 		formik.errors.password !== undefined && formik.touched.password === true;
 
 	return (
-		<Flex h="100vh" justifyContent="center" alignItems="center">
+		<Flex
+			h="100vh"
+			justifyContent="center"
+			alignItems="center"
+			backgroundImage={"/abstract.jpg"}
+			backgroundSize="cover"
+			backgroundPosition="25% 25%"
+		>
 			<Container maxW="container.sm">
 				<Card>
 					<CardHeader>
