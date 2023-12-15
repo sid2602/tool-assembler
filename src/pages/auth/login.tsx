@@ -1,3 +1,4 @@
+import { useLogin } from "@/hooks/auth";
 import {
 	Button,
 	Card,
@@ -13,25 +14,45 @@ import {
 	Input,
 	Stack,
 	Text,
+	useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
 
-export const loginSchema = Yup.object().shape({
+export const LoginSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
 	password: Yup.string().min(3).required(),
 });
 
 export default function Login() {
+	const { mutateAsync, isLoading } = useLogin();
+	const toast = useToast({});
+
 	const formik = useFormik({
 		initialValues: {
 			email: "",
 			password: "",
 		},
-		validationSchema: loginSchema,
-		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2));
+		validationSchema: LoginSchema,
+		onSubmit: async (values) => {
+			try {
+				await mutateAsync(values);
+			} catch (e) {
+				const errorMessage = axios.isAxiosError(e)
+					? e.response?.data?.error
+					: "Unknow error";
+
+				toast({
+					title: "Error",
+					description: errorMessage,
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+					position: "top",
+				});
+			}
 		},
 	});
 
@@ -85,7 +106,7 @@ export default function Login() {
 									/>
 									<FormErrorMessage>{formik.errors.password}</FormErrorMessage>
 								</FormControl>
-								<Button type="submit" mt="2">
+								<Button type="submit" mt="2" isLoading={isLoading}>
 									Sign in
 								</Button>
 								<Text fontSize="sm">

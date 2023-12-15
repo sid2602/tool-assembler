@@ -1,3 +1,4 @@
+import { useRegister } from "@/hooks/auth";
 import {
 	Button,
 	Card,
@@ -13,7 +14,9 @@ import {
 	Input,
 	Stack,
 	Text,
+	useToast,
 } from "@chakra-ui/react";
+import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
@@ -26,6 +29,9 @@ export const registerSchema = Yup.object().shape({
 });
 
 export default function Register() {
+	const { mutateAsync, isLoading } = useRegister();
+	const toast = useToast({});
+
 	const formik = useFormik({
 		initialValues: {
 			email: "",
@@ -34,8 +40,23 @@ export default function Register() {
 			password: "",
 		},
 		validationSchema: registerSchema,
-		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2));
+		onSubmit: async (values) => {
+			try {
+				await mutateAsync(values);
+			} catch (e) {
+				const errorMessage = axios.isAxiosError(e)
+					? e.response?.data?.error
+					: "Unknow error";
+
+				toast({
+					title: "Error",
+					description: errorMessage,
+					status: "error",
+					duration: 5000,
+					isClosable: true,
+					position: "top",
+				});
+			}
 		},
 	});
 
@@ -122,7 +143,7 @@ export default function Register() {
 									/>
 									<FormErrorMessage>{formik.errors.password}</FormErrorMessage>
 								</FormControl>
-								<Button mt="2" type="submit">
+								<Button mt="2" type="submit" isLoading={isLoading}>
 									Sign up
 								</Button>
 							</Stack>

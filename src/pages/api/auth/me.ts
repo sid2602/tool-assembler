@@ -1,37 +1,18 @@
-import { PrismaClient } from "@prisma/client";
-import jwt from "jsonwebtoken";
+import { verifyToken } from "@/utils/server/token";
+import { Customer, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
-
-interface VerifiedTokenData {
-	id: number;
-	first_name: string;
-	last_name: string;
-	email: string;
-	password: string;
-	iat: number;
-	exp: number;
-}
 
 const prisma = new PrismaClient();
 
-function verifyToken(token: string): VerifiedTokenData | null {
-	const secret = process.env.JWT_SECRET;
-
-	if (secret === undefined) {
-		return null;
-	}
-
-	try {
-		const decoded = jwt.verify(token, secret) as VerifiedTokenData;
-		return decoded;
-	} catch (error) {
-		return null;
-	}
-}
+export type MeResponse =
+	| { customer: Customer }
+	| {
+			error: string;
+	  };
 
 export default async function GET(
 	request: NextApiRequest,
-	response: NextApiResponse
+	response: NextApiResponse<MeResponse>
 ) {
 	try {
 		const token = request.cookies.token;
@@ -53,6 +34,12 @@ export default async function GET(
 		const customer = await prisma.customer.findUnique({
 			where: { id: decodedToken?.id },
 		});
+
+		if (customer === null) {
+			return response.status(400).json({
+				error: "Unknown error",
+			});
+		}
 
 		return response.status(200).json({ customer });
 	} catch (e) {
