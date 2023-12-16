@@ -1,4 +1,5 @@
-import { useMutation, useQueryClient } from "react-query";
+import Router from "next/router";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import AuthService, { LoginPost, RegisterPost } from "../services/auth";
 
 export const useLogin = () => {
@@ -16,8 +17,10 @@ export const useRegister = () => {
 };
 
 export const useMe = () => {
-	const queryClient = useQueryClient();
-	return useMutation(() => {
-		return AuthService.me();
+	return useQuery(["me"], AuthService.me, {
+		retry: 2,
+		onError: () => {
+			Router.replace("/auth/login");
+		},
 	});
 };

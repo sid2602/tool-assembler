@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 import { useFormik } from "formik";
 import Link from "next/link";
+import Router from "next/router";
 import * as Yup from "yup";
 
 export const LoginSchema = Yup.object().shape({
@@ -39,6 +40,7 @@ export default function Login() {
 		onSubmit: async (values) => {
 			try {
 				await mutateAsync(values);
+				Router.replace("/assembler");
 			} catch (e) {
 				const errorMessage = axios.isAxiosError(e)
 					? e.response?.data?.error

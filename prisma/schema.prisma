@@ -20,4 +20,498 @@ model Tool_assembly {
     id Int @id @default(autoincrement())
     customer Customer @relation(fields: [customer_id], references: [id])
     customer_id Int
+    used_cutting_item Tool_assembly_cutting_item[]
+    used_adaptive_item Tool_assembly_adaptive_item[]
+    used_tool_item Tool_assembly_tool_item[]
+    used_assembly_item Tool_assembly_assembly_item[]
+}
+
+model Assembly_item_category {
+id     Int       @id @default(autoincrement())
+name  String
+img String
+assembly_items Assembly_item[]
+}
+
+model Assembly_item {
+  id    Int       @id @default(autoincrement())
+  name  String
+  connecting_adaptive_item Adaptive_assembly[]
+  used_for_tool_assembly Tool_assembly_assembly_item[]
+  category Assembly_item_category @relation(fields: [category_id], references: [id])
+  category_id Int
+  img   String?
+  adjby Int?
+  dcbx  String?
+  dcbn  String?
+  ccms  String?
+  ccws  String?
+  dinn  Float?
+  diout Float?
+  hand  String?
+  hth   Float?
+  ssc   String?
+  sc    String?
+  lth   Float?
+  pnes  String?
+  pnfx  String?
+  scty  String?
+  sfdm  Float?
+  sftl  Float?
+  spcf  Float?
+  ta    Float?
+  tg    Float?
+}
+
+model Adaptive_item_category {
+id     Int       @id @default(autoincrement())
+name  String
+img String
+adaptive_items Adaptive_item[]
+}
+
+model Adaptive_item {
+  id     Int       @id @default(autoincrement())
+  name   String
+  img    String?
+  connecting_tool_item Tool_adaptive[]
+  connecting_assembly_item Adaptive_assembly[]
+  used_for_tool_assembly Tool_assembly_adaptive_item[]
+  category Adaptive_item_category @relation(fields: [category_id], references: [id])
+  category_id Int
+  adc    String?
+  atc    String?
+  asp    Float?
+  blq    String?
+  bbd    Boolean?
+  bd     Float?
+  bdx    Float?
+  bhta   Float?
+  htb    Float?
+  lb     Float?
+  lbx    Float?
+  bmc    String?
+  btel   Float?
+  wb     Float?
+  casc   String?
+  mxc    Float?
+  lsc    Float?
+  lscx   Float?
+  lscn   String?
+  wsc    Float?
+  cbdp   Float?
+  dcb    Float?
+  dcbx   String?
+  dcbn   String?
+  ccms   String?
+  ccws   String?
+  cconws Int?
+  dcon   String?
+  crks   String?
+  czc    String?
+  cub    String?
+  dcsfms Float?
+  dcsfws Float?
+  csp    Boolean?
+  dpc    Boolean?
+  dcp    Boolean?
+  dkty   String?
+  hf     Float?
+  lf     Float?
+  lfn    Float?
+  wf     Float?
+  kapr   Float?
+  kyp    Boolean?
+  oah    Float?
+  oal    Float?
+  oaw    Float?
+  phi    Float?
+  lpr    Float?
+  rho    Float?
+  rpm    String?
+  dmm    Float?
+  h      Float?
+  ls     Float?
+  b      Float?
+  side   String?
+  dix    String?
+  lin    String?
+  tsyc   String?
+  ust    String?
+  lu     Float?
+  lux    String?
+  wt     Float?
+}
+
+model Cutting_item_category {
+id     Int       @id @default(autoincrement())
+name  String
+img String
+cutting_items Cutting_item[]
+}
+
+model Cutting_item {
+  id      Int       @id @default(autoincrement())
+  name    String
+  connecting_tool_item Tool_cutting[]
+  used_for_tool_assembly Tool_assembly_cutting_item[]
+  category Cutting_item_category @relation(fields: [category_id], references: [id])
+  category_id Int
+  img     String?
+  bnp     Boolean?
+  cpp     Boolean?
+  cbp     Boolean?
+  cb      Int?
+  lbb     Float?
+  mtp     String?
+  an      Float?
+  ann     String?
+  as      Float?
+  ctp     Boolean?
+  ccms    String?
+  kch     Float?
+  bch     Float?
+  chw     Float?
+  cnc     Int?
+  cnid    Int?
+  re      Float?
+  cdx     Float?
+  krins   Float?
+  psirl   Float?
+  psirr   Float?
+  cecp    Boolean?
+  cecc    String?
+  cedc    Int?
+  cecv    Float?
+  le      Float?
+  ceid    Int?
+  l       Float?
+  cw      Float?
+  apmx    Float?
+  drprfp  Boolean?
+  gb      Float?
+  flsc    String?
+  bn      Float?
+  fxhlp   Boolean?
+  d1      Float?
+  flid    Int?
+  gad     Float?
+  gads    Float?
+  gdsc    Int?
+  gppfp   Boolean?
+  inclp   Boolean?
+  ic      Float?
+  ibw     Float?
+  cdi     Float?
+  insd    Float?
+  ih      Float?
+  epsr    Float?
+  noi     Int?
+  iic     String?
+  psirins Float?
+  insl    Float?
+  ifs     Int?
+  gan     Float?
+  ssc     String?
+  sc      String?
+  s       Float?
+  w1      Float?
+  iep     Boolean?
+  m       Float?
+  m2      Float?
+  oln     Float?
+  pal     Float?
+  par     Float?
+  pdx     Float?
+  pdy     Float?
+  pna     Float?
+  prfrad  Float?
+  prspc   String?
+  ral     Float?
+  ra      Float?
+  rar     Float?
+  rcp     Boolean?
+  tg      Float?
+  thft    String?
+  hc      Float?
+  hb      Float?
+  ha      Float?
+  tp      Float?
+  tpdlt   String?
+  tpx     Float?
+  tpn     Float?
+  tpt     String?
+  ttp     String?
+  thl     Float?
+  thpf    Boolean?
+  tpi     Float?
+  tpix    Float?
+  tpin    Float?
+  tce     String?
+  tcins   String?
+  wep     Boolean?
+  nt      Int?
+  wt      Float?
+  bs      Float?
+  bsr     Float?
+}
+
+
+
+model Tool_item_category {
+id     Int       @id @default(autoincrement())
+name  String
+img String
+tool_items Tool_item[]
+}
+
+model Tool_item {
+  id      Int       @id @default(autoincrement())
+  name    String
+  category Tool_item_category @relation(fields: [category_id], references: [id])
+  category_id Int
+  connecting_adaptive_item Tool_adaptive[]
+  connecting_cutting_item Tool_cutting[]
+  used_for_tool_assembly Tool_assembly_tool_item[]
+  img     String?
+  LFA     Float?
+  WFA     Float?
+  ADJBY   String?
+  DAXX    Float?
+  DAXN    Float?
+  BLQ     String?
+  BBD     Boolean?
+  BLRAD   Float?
+  BCDP    Float?
+  BD      Float?
+  BDX     Float?
+  BHTA    Float?
+  HTB     Float?
+  LB      Float?
+  LBX     Float?
+  BMC     String?
+  WB      Float?
+  BTC     String?
+  CASC    String?
+  LSC     Float?
+  LSCX    Float?
+  LSCN    String?
+  MTP     String?
+  WSC     Float?
+  ALP     Float?
+  ALN     Float?
+  ALO     Float?
+  ALF     Float?
+  CTP     Boolean?
+  CBDP    Float?
+  DCB     Float?
+  CCMS    String?
+  CCWS    String?
+  CCONWS  Int?
+  DCON    String?
+  CRKS    String?
+  CZC     String?
+  CUB     String?
+  DCSFMS  Float?
+  CSP     Boolean?
+  CDX     String?
+  DC      Float?
+  DCIN    Float?
+  DCINX   Float?
+  DCINN   Float?
+  DCX     Float?
+  DCN     Float?
+  DCSC    String?
+  ZNC     Int?
+  NCE     Int?
+  CICT    Int?
+  CLMBD   Float?
+  CPDN    String?
+  CPDF    Boolean?
+  CW      Float?
+  CWX     String?
+  CWN     String?
+  DPC     Boolean?
+  DCP     Boolean?
+  APMX    String?
+  DCC     String?
+  DBT     String?
+  DRVA    Float?
+  DRVCT   Int?
+  DHD     Boolean?
+  ZEFF    Int?
+  ZNF     Int?
+  NOF     Int?
+  FDC     String?
+  FHA     Float?
+  FHH     String?
+  FHP     Float?
+  FLW     Float?
+  HF      Float?
+  LF      Float?
+  LFN     Float?
+  LFS     Float?
+  WF      Float?
+  WF2     Float?
+  WFS     Float?
+  GDMB    Float?
+  GEP     Boolean?
+  GPD     Float?
+  HAND    String?
+  HBKL    Float?
+  HBKW    Float?
+  HBH     Float?
+  HBL     Float?
+  HDD     Float?
+  LH      Float?
+  DHUB    Float?
+  HBP     Boolean?
+  THUB    Float?
+  LAMS    Float?
+  ZADJ    Int?
+  IIC     String?
+  SSC     String?
+  LCB     Boolean?
+  KYP     Boolean?
+  LCF     Float?
+  MIID    String?
+  DMIN    Float?
+  MHA     Float?
+  MHD     Float?
+  MHD2    Float?
+  MHH     Float?
+  DN      Float?
+  LN      Float?
+  OAH     Float?
+  OAL     Float?
+  OALN    Float?
+  OAW     Float?
+  ZEFP    Int?
+  ZNP     Int?
+  PDP     Float?
+  PPL     Float?
+  TCPD    Float?
+  TCS     String?
+  AZ      Float?
+  SIG     Float?
+  PL      Float?
+  PHD     Float?
+  PRSPC   String?
+  LPR     Float?
+  QTC     String?
+  GAMP    Float?
+  GAMN    Float?
+  GAMO    Float?
+  GAMF    Float?
+  RMPX    String?
+  RPMX    String?
+  RID     String?
+  SX      String?
+  DMM     Float?
+  H       Float?
+  LS      Float?
+  B       Float?
+  SHIAN   Float?
+  NOS     Int?
+  SDL     Float?
+  SD      Float?
+  STA     Float?
+  SRX     String?
+  SRN     String?
+  SRR     String?
+  TMINS   Boolean?
+  TTPID   String?
+  TA      Float?
+  TG      Float?
+  TPD     Boolean?
+  TD      Float?
+  TDZ     String?
+  TCTR    String?
+  DIX     String?
+  LIN     String?
+  KAPR    Float?
+  CEATC   String?
+  THSC    String?
+  PSIR    Float?
+  TSYC    String?
+  UST     String?
+  LU      Float?
+  ULDR    Float?
+  LUX     String?
+  WBTP    String?
+  WBTHK   Float?
+  WT      Float?
+  CUTDIA  String?
+}
+
+model Tool_adaptive {
+ 
+  tool_item_id Int
+  tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
+  adaptive_item_id Int
+  adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
+
+  @@id([tool_item_id, adaptive_item_id])
+}
+
+
+model Tool_cutting{
+ 
+  tool_item_id Int
+  tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
+  cutting_item_id Int
+  cutting_item Cutting_item @relation(fields: [cutting_item_id], references: [id])
+
+  @@id([tool_item_id, cutting_item_id])
+}
+
+model Adaptive_assembly{
+ 
+  adaptive_item_id Int
+  adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
+  assembly_item_id Int
+  assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
+
+  @@id([adaptive_item_id, assembly_item_id])
+}
+
+
+model Tool_assembly_cutting_item {
+ 
+  tool_assembly_id Int
+  tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
+  cutting_item_id Int
+  cutting_item Cutting_item @relation(fields: [cutting_item_id], references: [id])
+
+  @@id([tool_assembly_id, cutting_item_id])
+}
+
+model Tool_assembly_adaptive_item {
+ 
+  tool_assembly_id Int
+  tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
+  adaptive_item_id Int
+  adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
+
+  @@id([tool_assembly_id, adaptive_item_id])
+}
+
+model Tool_assembly_tool_item {
+ 
+  tool_assembly_id Int
+  tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
+  tool_item_id Int
+  tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
+
+  @@id([tool_assembly_id, tool_item_id])
+}
+
+model Tool_assembly_assembly_item {
+ 
+  tool_assembly_id Int
+  tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
+  assembly_item_id Int
+  assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
+
+  @@id([tool_assembly_id, assembly_item_id])
 }
