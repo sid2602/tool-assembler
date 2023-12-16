@@ -268,8 +268,8 @@ tool_items Tool_item[]
 model Tool_item {
   id      Int       @id @default(autoincrement())
   name    String
-  category Tool_item_category @relation(fields: [category_id], references: [id])
-  category_id Int
+  category Tool_item_category? @relation(fields: [category_id], references: [id])
+  category_id Int?
   connecting_adaptive_item Tool_adaptive[]
   connecting_cutting_item Tool_cutting[]
   used_for_tool_assembly Tool_assembly_tool_item[]
@@ -445,73 +445,68 @@ model Tool_item {
 }
 
 model Tool_adaptive {
- 
+  id  Int       @id @default(autoincrement())
+
   tool_item_id Int
   tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
   adaptive_item_id Int
   adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
-
-  @@id([tool_item_id, adaptive_item_id])
 }
 
 
 model Tool_cutting{
- 
+  id  Int       @id @default(autoincrement())
+
   tool_item_id Int
   tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
   cutting_item_id Int
   cutting_item Cutting_item @relation(fields: [cutting_item_id], references: [id])
-
-  @@id([tool_item_id, cutting_item_id])
 }
 
 model Adaptive_assembly{
+  id  Int       @id @default(autoincrement())
  
+
   adaptive_item_id Int
   adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
   assembly_item_id Int
   assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
-
-  @@id([adaptive_item_id, assembly_item_id])
 }
 
 
 model Tool_assembly_cutting_item {
- 
+  id  Int       @id @default(autoincrement())
+  
+
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   cutting_item_id Int
   cutting_item Cutting_item @relation(fields: [cutting_item_id], references: [id])
-
-  @@id([tool_assembly_id, cutting_item_id])
 }
 
 model Tool_assembly_adaptive_item {
- 
+  id  Int       @id @default(autoincrement())
+
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   adaptive_item_id Int
   adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
-
-  @@id([tool_assembly_id, adaptive_item_id])
 }
 
 model Tool_assembly_tool_item {
- 
+  id  Int       @id @default(autoincrement())
+  
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   tool_item_id Int
   tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
-
-  @@id([tool_assembly_id, tool_item_id])
 }
 
 model Tool_assembly_assembly_item {
- 
+  id  Int       @id @default(autoincrement())
+  
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   assembly_item_id Int
   assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
-
-  @@id([tool_assembly_id, assembly_item_id])
 }
