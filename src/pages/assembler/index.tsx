@@ -1,7 +1,8 @@
+import Nav from "@/components/organisms/nav/nav";
 import { useMe } from "@/hooks/auth";
-import { Container, Flex } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "react-query";
-import AuthService from "../../services/auth";
+import { default as AuthService } from "../../services/auth";
 
 export default function Assembler() {
 	const { data, isLoading, isError } = useMe();
@@ -22,7 +23,7 @@ export default function Assembler() {
 			backgroundSize="cover"
 			backgroundPosition="25% 25%"
 		>
-			<Container maxW="container.md" mt="150"></Container>
+			<Nav />
 		</Flex>
 	);
 }

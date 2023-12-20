@@ -1,4 +1,5 @@
 import { registerSchema } from "@/pages/auth/register";
+import { ServerErrorResponse } from "@/types/ServerErrorResponse";
 import { hashPassword } from "@/utils/server/passwordHash";
 import { generateToken } from "@/utils/server/token";
 import { PrismaClient } from "@prisma/client";
@@ -6,13 +7,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-export type RegisterResponse =
-	| {
-			jwt: string;
-	  }
-	| {
-			error: string;
-	  };
+export type RegisterSuccessResponse = {
+	type: "Success";
+	jwt: string;
+};
+
+export type RegisterResponse = RegisterSuccessResponse | ServerErrorResponse;
 
 export default async function POST(
 	request: NextApiRequest,
@@ -24,7 +24,8 @@ export default async function POST(
 
 		if (isBodyValid === false) {
 			return response.status(400).json({
-				error: "Wrong body",
+				type: "Error",
+				message: "Wrong body",
 			});
 		}
 
@@ -37,7 +38,8 @@ export default async function POST(
 
 		if (customerWithThisSameEmail !== null) {
 			return response.status(400).json({
-				error: "Customer with this email already exists",
+				type: "Error",
+				message: "Customer with this email already exists",
 			});
 		}
 
@@ -48,15 +50,17 @@ export default async function POST(
 
 		if (jwt === null) {
 			return response.status(400).json({
-				error: "Unknown error",
+				type: "Error",
+				message: "Unknown error",
 			});
 		}
 
 		response.setHeader("Set-Cookie", `token=${jwt}; Path=/; HttpOnly`);
-		return response.status(201).json({ jwt });
+		return response.status(201).json({ type: "Success", jwt });
 	} catch (e) {
 		return response.status(400).json({
-			error: "Unknown error",
+			type: "Error",
+			message: "Unknown error",
 		});
 	}
 }

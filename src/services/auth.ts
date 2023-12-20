@@ -1,6 +1,6 @@
-import { LoginResponse } from "@/pages/api/auth/login";
-import { MeResponse } from "@/pages/api/auth/me";
-import { RegisterResponse } from "@/pages/api/auth/register";
+import { LoginSuccessResponse } from "@/pages/api/auth/login";
+import { MeSuccessResponse } from "@/pages/api/auth/me";
+import { RegisterSuccessResponse } from "@/pages/api/auth/register";
 import axios from "axios";
 
 export interface LoginPost {
@@ -16,19 +16,32 @@ export interface RegisterPost {
 }
 
 class AuthService {
-	async login(data: LoginPost): Promise<LoginResponse> {
-		return await axios.post("http://localhost:3000/api/auth/login", {
+	async login(data: LoginPost): Promise<LoginSuccessResponse> {
+		const resp = await axios.post("http://localhost:3000/api/auth/login", {
 			data,
 		});
+
+		return resp.data;
 	}
-	async register(data: RegisterPost): Promise<RegisterResponse> {
-		return await axios.post("http://localhost:3000/api/auth/register", {
+	async register(data: RegisterPost): Promise<RegisterSuccessResponse> {
+		const resp = await axios.post("http://localhost:3000/api/auth/register", {
 			data,
 		});
+
+		return resp.data;
 	}
 
-	async me(): Promise<MeResponse> {
-		return await axios.get("http://localhost:3000/api/auth/me");
+	async me(): Promise<MeSuccessResponse> {
+		const resp = await axios.get<MeSuccessResponse>(
+			"http://localhost:3000/api/auth/me"
+		);
+
+		return resp.data;
+	}
+
+	async logout(): Promise<void> {
+		const resp = await axios.post("http://localhost:3000/api/auth/logout");
+		return resp.data;
 	}
 }
 

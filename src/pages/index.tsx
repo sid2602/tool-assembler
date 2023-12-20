@@ -10,6 +10,7 @@ import {
 	Stack,
 	Text,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import { MdOutlineHandyman } from "react-icons/md";
 
 export default function Home() {
@@ -46,10 +47,12 @@ export default function Home() {
 
 					<Center>
 						<Button
+							as={Link}
 							size="md"
 							width="sm"
 							leftIcon={<Icon as={MdOutlineHandyman} />}
 							rightIcon={<Icon as={MdOutlineHandyman} />}
+							href="/auth/login"
 						>
 							Create your tool
 						</Button>

@@ -39,11 +39,11 @@ export default function Login() {
 		validationSchema: LoginSchema,
 		onSubmit: async (values) => {
 			try {
-				await mutateAsync(values);
+				const resp = await mutateAsync(values);
 				Router.replace("/assembler");
 			} catch (e) {
 				const errorMessage = axios.isAxiosError(e)
-					? e.response?.data?.error
+					? e.response?.data?.message
 					: "Unknow error";
 
 				toast({

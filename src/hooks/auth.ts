@@ -4,16 +4,30 @@ import AuthService, { LoginPost, RegisterPost } from "../services/auth";
 
 export const useLogin = () => {
 	const queryClient = useQueryClient();
-	return useMutation((data: LoginPost) => {
-		return AuthService.login(data);
-	});
+	return useMutation(
+		(data: LoginPost) => {
+			return AuthService.login(data);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("me");
+			},
+		}
+	);
 };
 
 export const useRegister = () => {
 	const queryClient = useQueryClient();
-	return useMutation((data: RegisterPost) => {
-		return AuthService.register(data);
-	});
+	return useMutation(
+		(data: RegisterPost) => {
+			return AuthService.register(data);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("me");
+			},
+		}
+	);
 };
 
 export const useMe = () => {

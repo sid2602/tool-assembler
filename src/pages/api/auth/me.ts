@@ -1,14 +1,16 @@
+import { ServerErrorResponse } from "@/types/ServerErrorResponse";
 import { verifyToken } from "@/utils/server/token";
 import { Customer, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-export type MeResponse =
-	| { customer: Customer }
-	| {
-			error: string;
-	  };
+export type MeSuccessResponse = {
+	type: "Success";
+	customer: Customer;
+};
+
+export type MeResponse = MeSuccessResponse | ServerErrorResponse;
 
 export default async function GET(
 	request: NextApiRequest,
@@ -19,7 +21,8 @@ export default async function GET(
 
 		if (token === undefined) {
 			return response.status(400).json({
-				error: "No token",
+				type: "Error",
+				message: "No token",
 			});
 		}
 
@@ -27,7 +30,8 @@ export default async function GET(
 
 		if (decodedToken?.id === undefined) {
 			return response.status(400).json({
-				error: "Unknown error",
+				type: "Error",
+				message: "Unknown error",
 			});
 		}
 
@@ -37,14 +41,16 @@ export default async function GET(
 
 		if (customer === null) {
 			return response.status(400).json({
-				error: "Unknown error",
+				type: "Error",
+				message: "Unknown error",
 			});
 		}
 
-		return response.status(200).json({ customer });
+		return response.status(200).json({ type: "Success", customer });
 	} catch (e) {
 		return response.status(400).json({
-			error: "Unknown error",
+			type: "Error",
+			message: "Unknown error",
 		});
 	}
 }

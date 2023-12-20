@@ -1,4 +1,5 @@
 import { LoginSchema } from "@/pages/auth/login";
+import { ServerErrorResponse } from "@/types/ServerErrorResponse";
 import { comparePasswords } from "@/utils/server/passwordHash";
 import { generateToken } from "@/utils/server/token";
 import { PrismaClient } from "@prisma/client";
@@ -6,13 +7,12 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
-export type LoginResponse =
-	| {
-			jwt: string;
-	  }
-	| {
-			error: string;
-	  };
+export type LoginSuccessResponse = {
+	type: "Success";
+	jwt: string;
+};
+
+export type LoginResponse = LoginSuccessResponse | ServerErrorResponse;
 
 export default async function POST(
 	request: NextApiRequest,
@@ -24,7 +24,8 @@ export default async function POST(
 
 		if (isBodyValid === false) {
 			return response.json({
-				error: "Wrong body",
+				type: "Error",
+				message: "Wrong body",
 			});
 		}
 
@@ -36,7 +37,8 @@ export default async function POST(
 
 		if (customer === null) {
 			return response.status(400).json({
-				error: "Wrong email or password",
+				type: "Error",
+				message: "Wrong email or password",
 			});
 		}
 
@@ -47,7 +49,8 @@ export default async function POST(
 
 		if (isPasswordMatching === false) {
 			return response.status(400).json({
-				error: "Wrong email or password",
+				type: "Error",
+				message: "Wrong email or password",
 			});
 		}
 
@@ -55,16 +58,19 @@ export default async function POST(
 
 		if (jwt === null) {
 			return response.status(400).json({
-				error: "Unknown error",
+				type: "Error",
+
+				message: "Unknown error",
 			});
 		}
 
 		response.setHeader("Set-Cookie", `token=${jwt}; Path=/; HttpOnly`);
 
-		return response.status(200).json({ jwt });
+		return response.status(200).json({ type: "Success", jwt });
 	} catch (e) {
 		return response.status(400).json({
-			error: "Unknown error",
+			type: "Error",
+			message: "Unknown error",
 		});
 	}
 }

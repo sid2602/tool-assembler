@@ -5,6 +5,8 @@ import {
 	Tool_item,
 	Tool_item_category,
 } from "@prisma/client";
+// import { createToolItemAndToolItemCategory } from "./seedData/tool_item";
+
 const prisma = new PrismaClient();
 
 interface DrillToolItem {
@@ -93,6 +95,8 @@ async function main() {
 	await prisma.tool_item_category.deleteMany();
 	await prisma.adaptive_item_category.deleteMany();
 
+	//Tool items
+	// await createToolItemAndToolItemCategory();
 	const drillt_tool_item_category = await prisma.tool_item_category.upsert({
 		where: {
 			id: drills.category.id,
@@ -114,17 +118,12 @@ async function main() {
 				name: drills.toolItems[i].name ?? "",
 				img: drills.toolItems[i].img ?? "",
 				category_id: drillt_tool_item_category.id,
-				// DC: drills.toolItems[i]?.DC ?? undefined,
-				// LU: drills.toolItems[i]?.LU ?? undefined,
-				// LCF: drills.toolItems[i]?.LCF ?? undefined,
-				// OAL: drills.toolItems[i]?.OAL ?? undefined,
-				// PL: drills.toolItems[i]?.PL ?? undefined,
-				// WT: drills.toolItems[i]?.WT ?? undefined,
-				// ULDR: drills.toolItems[i]?.ULDR ?? undefined,
 			},
 			update: {},
 		});
 	}
+
+	//adaptive items
 
 	const collet_adaptive_item_category =
 		await prisma.adaptive_item_category.upsert({
@@ -153,6 +152,8 @@ async function main() {
 		});
 	}
 
+	//Tool adaptive
+
 	for (let i = 0; i < tool_adaptive.length; i++) {
 		const tool_item = await prisma.tool_item.findFirst({
 			where: { name: tool_adaptive[i].tool_name },
@@ -177,28 +178,6 @@ async function main() {
 			},
 		});
 	}
-
-	// const adaptive_item_first = await prisma.adaptive_item.findFirst({});
-	// if (adaptive_item_first === null) {
-	// 	return;
-	// }
-	// const tool_item_first = await prisma.tool_item.findFirst({});
-	// if (tool_item_first === null) {
-	// 	return;
-	// }
-
-	// const many = await prisma.tool_adaptive.create({
-	// 	data: {
-	// 		adaptive_item_id: adaptive_item_first.id,
-	// 		tool_item_id: tool_item_first.id,
-	// 	},
-	// });
-
-	// const t = await prisma.adaptive_item.findMany({
-	// 	include: {
-	// 		connecting_tool_item: true,
-	// 	},
-	// });
 }
 
 main()
