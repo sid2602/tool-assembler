@@ -1,6 +1,8 @@
 import {
 	Adaptive_item,
 	Adaptive_item_category,
+	Cutting_item,
+	Cutting_item_category,
 	PrismaClient,
 	Tool_item,
 	Tool_item_category,
@@ -89,6 +91,27 @@ const millingCutters: ToolItem = {
 			RPMX: "2000 1/min",
 			WT: 1.8,
 		},
+		{
+			name: "345-040A32-13M",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view-on-item-level/preview/202702493_d50_0_3~tl04_04.jpg",
+			KAPR: 45,
+			DC: 40,
+			DCX: 54.08,
+			CICT: 4,
+			MTP: "S",
+			APMX: "6",
+			CPDF: true,
+			ZEFP: 4,
+			HAND: "R",
+			DCON: "32",
+			LF: 120,
+			LB: 40,
+			GAMF: 6.3297,
+			GAMP: 11.1679,
+			BMC: "Steel",
+			RPMX: "19600 1/min",
+			WT: 0.854,
+		},
 	],
 };
 
@@ -160,6 +183,16 @@ const collets: AdaptiveItem = {
 			bmc: "Steel",
 			bbd: true,
 		},
+		{
+			name: "393.14-50 320",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426884_d50_0_0~tl04_00.png",
+			dcon: "52",
+			lsc: 60,
+			lf: 21.08,
+			oal: 60,
+			bd: 52,
+			wt: 0.3647,
+		},
 	],
 };
 
@@ -170,6 +203,57 @@ const tool_adaptive = [
 	{ tool_name: "162-090Q27-40", adaptive_name: "392.54005C4027050" },
 	{ tool_name: "162-120Q27-60", adaptive_name: "A1B05-40 27 100" },
 	{ tool_name: "162-120Q27-60", adaptive_name: "392.54005C4027050" },
+	{ tool_name: "345-040A32-13M", adaptive_name: "393.14-50 320" },
+];
+
+interface CuttingItem {
+	category: Partial<Cutting_item_category>;
+	cutting_items: Omit<Partial<Cutting_item>, "id">[];
+}
+
+const millingInserts: CuttingItem = {
+	category: {
+		id: 0,
+		name: "Milling inserts",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/inscmil_png.webp",
+	},
+	cutting_items: [
+		{
+			name: "176M40-N100608E-PM 1130",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426656_d50_0_0~tl04_00.png",
+			ifs: 1,
+			d1: 2.2,
+			cedc: 1,
+			gan: 0,
+			w1: 9.78,
+			s: 5.5,
+			wt: 0.008,
+		},
+		{
+			name: "345N-1305E-KW8 3220",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202425497_d50_0_0~tl04_00.png",
+			ifs: 3,
+			d1: 4.8,
+			cedc: 2,
+			ic: 13,
+			sc: "S",
+			le: 8.8,
+			apmx: 6,
+			bs: 8,
+			bsr: 500,
+			re: 1,
+			krins: 45,
+			gan: 22,
+			s: 5.05,
+			wt: 0.0102,
+		},
+	],
+};
+
+const tool_cutting = [
+	{ tool_name: "345-040A32-13M", cutting_name: "345N-1305E-KW8 3220" },
+	{ tool_name: "162-090Q27-40", cutting_name: "176M40-N100608E-PM 1130" },
+	{ tool_name: "162-120Q27-60", cutting_name: "176M40-N100608E-PM 1130" },
 ];
 
 async function main() {
@@ -312,6 +396,62 @@ async function main() {
 		await prisma.tool_adaptive.create({
 			data: {
 				adaptive_item_id: adaptive_item.id,
+				tool_item_id: tool_item.id,
+			},
+		});
+	}
+
+	// cutting items
+
+	const miling_inserts_cutting_item_category =
+		await prisma.cutting_item_category.upsert({
+			where: {
+				id: millingInserts.category.id,
+			},
+			create: {
+				name: millingInserts.category.name ?? "",
+				img: millingInserts.category.img ?? "",
+			},
+			update: {},
+		});
+
+	for (let i = 0; i < millingInserts.cutting_items.length; i++) {
+		await prisma.cutting_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...millingInserts.cutting_items[i],
+				name: millingInserts.cutting_items[i].name ?? "",
+				img: millingInserts.cutting_items[i].img ?? "",
+				category_id: miling_inserts_cutting_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	//Tool cutting
+
+	for (let i = 0; i < tool_cutting.length; i++) {
+		const tool_item = await prisma.tool_item.findFirst({
+			where: { name: tool_cutting[i].tool_name },
+		});
+
+		if (tool_item === null) {
+			continue;
+		}
+
+		const cutting_item = await prisma.cutting_item.findFirst({
+			where: { name: tool_cutting[i].cutting_name },
+		});
+
+		if (cutting_item === null) {
+			continue;
+		}
+
+		await prisma.tool_cutting.create({
+			data: {
+				cutting_item_id: cutting_item.id,
 				tool_item_id: tool_item.id,
 			},
 		});
