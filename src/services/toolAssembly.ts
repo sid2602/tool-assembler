@@ -23,7 +23,7 @@ class ToolAssemblyService {
 	async getToolAssembly(
 		id: number | undefined
 	): Promise<GetToolAssemblySuccessResponse> {
-		const resp = await axios.post(
+		const resp = await axios.get(
 			"http://localhost:3000/api/tool-assembly/" + id
 		);
 		return resp.data;

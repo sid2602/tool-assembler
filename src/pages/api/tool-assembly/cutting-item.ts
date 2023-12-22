@@ -22,8 +22,8 @@ export default async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyCuttingItemResponse>
 ) {
-	const { cuttingItemId, toolAssemblyId } =
-		request.body as PostToolAssemblyCuttingItemBody;
+	const { cuttingItemId, toolAssemblyId } = request.body
+		.data as PostToolAssemblyCuttingItemBody;
 
 	const tool_assembly_cutting_item =
 		await prisma.tool_assembly_cutting_item.create({

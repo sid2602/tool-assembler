@@ -1,11 +1,16 @@
 import { AddIcon } from "@chakra-ui/icons";
-import { Box } from "@chakra-ui/react";
+import { Box, Image, Text } from "@chakra-ui/react";
 
 interface Props {
+	item?: {
+		name: string;
+		img: string | null;
+	};
+
 	handleButton: () => void;
 }
 
-export default function ToolAssemblerItem({ handleButton }: Props) {
+export default function ToolAssemblerItem({ item, handleButton }: Props) {
 	return (
 		<Box
 			borderRadius="lg"
@@ -21,18 +26,36 @@ export default function ToolAssemblerItem({ handleButton }: Props) {
 			justifyContent="flex-end"
 			// flexDir="column"
 		>
-			<AddIcon
-				as="button"
-				boxSize={8}
-				cursor="pointer"
-				flex="1"
-				position="absolute"
-				left="50%"
-				top="50%"
-				transform="translate(-50%,-50%)"
-				onClick={handleButton}
-			/>
-			{/* <Text fontSize="sm">Something</Text> */}
+			{item === undefined ? (
+				<AddIcon
+					as="button"
+					boxSize={8}
+					cursor="pointer"
+					flex="1"
+					position="absolute"
+					left="50%"
+					top="50%"
+					transform="translate(-50%,-50%)"
+					onClick={handleButton}
+				/>
+			) : (
+				<>
+					<Image
+						alt={item.name}
+						src={item?.img ?? ""}
+						flex="1"
+						position="absolute"
+						left="50%"
+						top="35%"
+						transform="translate(-50%,-50%)"
+						w="40"
+						h="40"
+					/>
+					<Text fontSize="sm" textAlign="center">
+						{item.name}
+					</Text>
+				</>
+			)}
 		</Box>
 	);
 }

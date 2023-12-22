@@ -18,7 +18,7 @@ export default async function POST(
 	response: NextApiResponse<PostToolAssemblyResponse>
 ) {
 	const tool_assembly = await prisma.tool_assembly.create({
-		data: { customer_id: 0 },
+		data: {},
 	});
 
 	return response.json({

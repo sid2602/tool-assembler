@@ -22,8 +22,8 @@ export default async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyAdaptiveItemResponse>
 ) {
-	const { adaptiveItemId, toolAssemblyId } =
-		request.body as PostToolAssemblyAdaptiveItemBody;
+	const { adaptiveItemId, toolAssemblyId } = request.body
+		.data as PostToolAssemblyAdaptiveItemBody;
 
 	const tool_assembly_adaptive_item =
 		await prisma.tool_assembly_adaptive_item.create({

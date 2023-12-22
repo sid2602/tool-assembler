@@ -46,7 +46,7 @@ export const useAddCuttingItem = () => {
 	);
 };
 
-export const useToolItem = () => {
+export const useAddToolItem = () => {
 	const queryClient = useQueryClient();
 	return useMutation(
 		(data: PostToolAssemblyToolItemBody) => {
@@ -64,6 +64,6 @@ export const useGetToolAssembly = (id: number | undefined) => {
 	return useQuery(
 		["getToolAssembly"],
 		() => ToolAssemblyService.getToolAssembly(id),
-		{}
+		{ enabled: id !== undefined }
 	);
 };

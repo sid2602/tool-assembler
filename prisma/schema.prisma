@@ -18,8 +18,8 @@ model Customer {
 
 model Tool_assembly {
     id Int @id @default(autoincrement())
-    customer Customer @relation(fields: [customer_id], references: [id])
-    customer_id Int
+    customer Customer? @relation(fields: [customer_id], references: [id])
+    customer_id Int?
     used_cutting_item Tool_assembly_cutting_item[]
     used_adaptive_item Tool_assembly_adaptive_item[]
     used_tool_item Tool_assembly_tool_item[]

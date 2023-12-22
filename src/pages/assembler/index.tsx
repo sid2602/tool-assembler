@@ -1,14 +1,25 @@
 import ToolAssemblerItem from "@/components/molecues/toolAssemblerItem/toolAssemblerItem";
 import ToolAssemblerModal from "@/components/organisms/toolAssemblerModal/toolAssemblerModal";
 import AuthenticatedCustomerPage from "@/components/templates/authenticatedCustomerPage";
+import {
+	ToolAssemblyContextProvider,
+	useToolAssemblyContext,
+} from "@/contexts/toolAssembly.context";
 import { useMe } from "@/hooks/auth";
-import { useDisclosure } from "@chakra-ui/react";
 import { QueryClient, dehydrate } from "react-query";
 import { default as AuthService } from "../../services/auth";
 
-export default function Assembler() {
+export default function index() {
+	return (
+		<ToolAssemblyContextProvider>
+			<Assembler />
+		</ToolAssemblyContextProvider>
+	);
+}
+
+function Assembler() {
 	const { data, isLoading, isError } = useMe();
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const context = useToolAssemblyContext();
 
 	if (isError) {
 		return <>Error</>;
@@ -18,10 +29,20 @@ export default function Assembler() {
 		return <>loading</>;
 	}
 
+	const toolItem = context.toolAssembly?.used_tool_item?.[0].tool_item;
+	console.log();
+
 	return (
 		<AuthenticatedCustomerPage>
-			<ToolAssemblerItem handleButton={onOpen} />
-			<ToolAssemblerModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+			<ToolAssemblerItem
+				handleButton={context.onOpen}
+				item={
+					toolItem !== undefined
+						? { name: toolItem.name, img: toolItem.img }
+						: undefined
+				}
+			/>
+			<ToolAssemblerModal />
 		</AuthenticatedCustomerPage>
 	);
 }

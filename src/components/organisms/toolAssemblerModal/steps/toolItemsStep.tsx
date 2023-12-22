@@ -22,11 +22,14 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
-	categoryId: number | undefined;
+	categoryId: number | null | undefined;
+	onClick: (id: number) => void;
 }
 
-export default function ToolItemsStep({ categoryId }: Props) {
-	const { data, isLoading, isSuccess, isError } = useGetToolItems(categoryId);
+export default function ToolItemsStep({ categoryId, onClick }: Props) {
+	const { data, isLoading, isSuccess, isError } = useGetToolItems(
+		categoryId ?? undefined
+	);
 
 	if (isError) {
 		return;
@@ -72,7 +75,7 @@ export default function ToolItemsStep({ categoryId }: Props) {
 											<Td isNumeric>{item?.WT}</Td>
 											<Td>
 												<Button w="10" h="10">
-													<AddIcon />
+													<AddIcon onClick={() => onClick(item.id)} />
 												</Button>
 											</Td>
 										</Tr>
