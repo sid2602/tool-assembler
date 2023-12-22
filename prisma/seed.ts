@@ -9,12 +9,12 @@ import {
 
 const prisma = new PrismaClient();
 
-interface DrillToolItem {
+interface ToolItem {
 	category: Partial<Tool_item_category>;
 	toolItems: Omit<Partial<Tool_item>, "id">[];
 }
 
-const drills: DrillToolItem = {
+const drills: ToolItem = {
 	category: {
 		id: 0,
 		name: "drill",
@@ -28,7 +28,7 @@ const drills: DrillToolItem = {
 			LU: 75,
 			LCF: 100.47,
 			OAL: 150,
-			// DCON: 14,
+			DCON: "14",
 			PL: 2.51,
 			WT: 0.135,
 			ULDR: 6,
@@ -40,7 +40,7 @@ const drills: DrillToolItem = {
 			LU: 44.45,
 			LCF: 50.8,
 			OAL: 101.6,
-			// DCON: 14,
+			DCON: "14",
 			PL: 0.867,
 			WT: 0.022,
 			ULDR: 10.6646,
@@ -48,12 +48,94 @@ const drills: DrillToolItem = {
 	],
 };
 
-interface ColletAdaptiveItem {
+const millingCutters: ToolItem = {
+	category: {
+		id: 0,
+		name: "Milling cutters",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/mil_png.webp",
+	},
+	toolItems: [
+		{
+			name: "162-090Q27-40",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427159_d50_0_0~tl04_00.png",
+			DC: 90,
+			LF: 75,
+			LB: 48,
+			BD: 72,
+			BMC: "Steel",
+			RMPX: "2,000 1/min",
+			WT: 0.8366,
+			HAND: "R",
+			KAPR: 70,
+			CICT: 11,
+			MTP: "W",
+			APMX: "9,8",
+			ZEFP: 11,
+			DCON: "27",
+		},
+		{
+			name: "162-120Q27-60",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427159_d50_0_0~tl04_00.png",
+			KAPR: 70,
+			DC: 120,
+			CICT: 11,
+			MTP: "W",
+			APMX: "14.7",
+			ZEFP: 11,
+			HAND: "R",
+			DCON: "27",
+			LF: 51,
+			BMC: "Steel",
+			RPMX: "2000 1/min",
+			WT: 1.8,
+		},
+	],
+};
+
+interface AdaptiveItem {
 	category: Partial<Adaptive_item_category>;
 	adaptive_items: Omit<Partial<Adaptive_item>, "id">[];
 }
 
-const collets: ColletAdaptiveItem = {
+const rotationSymetricalAdaptors: AdaptiveItem = {
+	category: {
+		id: 0,
+		name: "Rotation symmetrical adaptors",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/adpcl_png.webp",
+	},
+	adaptive_items: [
+		{
+			name: "A1B05-40 27 100",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424022_d50_0_0~tl04_00.png",
+			dcp: true,
+			lf: 100,
+			bd: 60,
+			bdx: 63.5,
+			lb: 80,
+			lbx: 63.5,
+			bhta: 0,
+			rpm: "18000 1/min",
+			bmc: "Steel",
+			bbd: true,
+			wt: 2.59,
+		},
+		{
+			name: "392.54005C4027050",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view-on-item-level/preview-high/204032410_d50_0_0~tl04_04.jpg",
+			bd: 60,
+			bdx: 63.5,
+			lb: 30.9,
+			lbx: 50,
+			bhta: 0,
+			rpm: "18000 1/min",
+			bmc: "Steel",
+			bbd: true,
+			wt: 1.463,
+		},
+	],
+};
+
+const collets: AdaptiveItem = {
 	category: {
 		id: 0,
 		name: "drill",
@@ -84,6 +166,10 @@ const collets: ColletAdaptiveItem = {
 const tool_adaptive = [
 	{ tool_name: "400.1-1250-075A1-NM N1DU", adaptive_name: "393.14-25 140" },
 	{ tool_name: "452.1-0417-044A0-CM H10F", adaptive_name: "C3-391.32-08 076" },
+	{ tool_name: "162-090Q27-40", adaptive_name: "A1B05-40 27 100" },
+	{ tool_name: "162-090Q27-40", adaptive_name: "392.54005C4027050" },
+	{ tool_name: "162-120Q27-60", adaptive_name: "A1B05-40 27 100" },
+	{ tool_name: "162-120Q27-60", adaptive_name: "392.54005C4027050" },
 ];
 
 async function main() {
@@ -123,6 +209,32 @@ async function main() {
 		});
 	}
 
+	const milling_category = await prisma.tool_item_category.upsert({
+		where: {
+			id: millingCutters.category.id,
+		},
+		create: {
+			name: millingCutters.category.name ?? "",
+			img: millingCutters.category.img ?? "",
+		},
+		update: {},
+	});
+
+	for (let i = 0; i < millingCutters.toolItems.length; i++) {
+		await prisma.tool_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...millingCutters.toolItems[i],
+				name: millingCutters.toolItems[i].name ?? "",
+				img: millingCutters.toolItems[i].img ?? "",
+				category_id: milling_category.id,
+			},
+			update: {},
+		});
+	}
+
 	//adaptive items
 
 	const collet_adaptive_item_category =
@@ -147,6 +259,32 @@ async function main() {
 				name: collets.adaptive_items[i].name ?? "",
 				img: collets.adaptive_items[i].img ?? "",
 				category_id: collet_adaptive_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	const rotational_category = await prisma.adaptive_item_category.upsert({
+		where: {
+			id: rotationSymetricalAdaptors.category.id,
+		},
+		create: {
+			name: rotationSymetricalAdaptors.category.name ?? "",
+			img: rotationSymetricalAdaptors.category.img ?? "",
+		},
+		update: {},
+	});
+
+	for (let i = 0; i < rotationSymetricalAdaptors.adaptive_items.length; i++) {
+		await prisma.adaptive_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...rotationSymetricalAdaptors.adaptive_items[i],
+				name: rotationSymetricalAdaptors.adaptive_items[i].name ?? "",
+				img: rotationSymetricalAdaptors.adaptive_items[i].img ?? "",
+				category_id: rotational_category.id,
 			},
 			update: {},
 		});
