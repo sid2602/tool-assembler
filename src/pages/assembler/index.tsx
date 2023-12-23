@@ -30,7 +30,6 @@ function Assembler() {
 	}
 
 	const toolItem = context.toolAssembly?.used_tool_item?.[0].tool_item;
-	console.log();
 
 	return (
 		<AuthenticatedCustomerPage>

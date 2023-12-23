@@ -19,7 +19,7 @@ type ContainerProps = {
 };
 
 interface ToolItemStep {
-	step: "toolItem";
+	step: "modal";
 	actualSubStep: "categories" | "lists";
 	categoryId: number | null;
 }
@@ -27,20 +27,22 @@ interface ToolItemStep {
 type StepState = ToolItemStep;
 
 const initialStep: StepState = {
-	step: "toolItem",
+	step: "modal",
 	actualSubStep: "categories",
 	categoryId: null,
 };
 
-type StepStateActions = "TOOL_ITEM";
+type StepStateActions = "MODAL" | "CLOSE";
 
 const reducer = (
 	state: StepState,
 	action: { type: StepStateActions; payload: Partial<StepState> }
 ): StepState => {
 	switch (action.type) {
-		case "TOOL_ITEM":
+		case "MODAL":
 			return { ...state, ...action.payload };
+		case "CLOSE":
+			return initialStep;
 
 		default:
 			throw new Error("WRONG ACTION");

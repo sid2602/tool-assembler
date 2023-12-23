@@ -130,6 +130,7 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 		{
 			name: "A1B05-40 27 100",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424022_d50_0_0~tl04_00.png",
+			number_of_possible_tool_items: 1,
 			dcp: true,
 			lf: 100,
 			bd: 60,
@@ -145,6 +146,7 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 		{
 			name: "392.54005C4027050",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view-on-item-level/preview-high/204032410_d50_0_0~tl04_04.jpg",
+			number_of_possible_tool_items: 1,
 			bd: 60,
 			bdx: 63.5,
 			lb: 30.9,
@@ -168,6 +170,7 @@ const collets: AdaptiveItem = {
 		{
 			name: "393.14-25 140",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426884_d50_0_0~tl04_00.png",
+			number_of_possible_tool_items: 1,
 			bd: 26,
 			lf: 11.66,
 			oal: 34,
@@ -177,6 +180,7 @@ const collets: AdaptiveItem = {
 		{
 			name: "C3-391.32-08 076",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202423385_d50_0_0~tl04_00.png",
+			number_of_possible_tool_items: 1,
 			bd: 36,
 			lf: 76,
 			wt: 0.54,
@@ -186,6 +190,7 @@ const collets: AdaptiveItem = {
 		{
 			name: "393.14-50 320",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426884_d50_0_0~tl04_00.png",
+			number_of_possible_tool_items: 1,
 			dcon: "52",
 			lsc: 60,
 			lf: 21.08,
@@ -257,6 +262,9 @@ const tool_cutting = [
 ];
 
 async function main() {
+	await prisma.tool_assembly_tool_item.deleteMany();
+
+	await prisma.tool_cutting.deleteMany();
 	await prisma.tool_adaptive.deleteMany();
 
 	await prisma.tool_item.deleteMany();
@@ -264,9 +272,10 @@ async function main() {
 
 	await prisma.tool_item_category.deleteMany();
 	await prisma.adaptive_item_category.deleteMany();
+	await prisma.tool_assembly.deleteMany();
 
 	//Tool items
-	// await createToolItemAndToolItemCategory();
+
 	const drillt_tool_item_category = await prisma.tool_item_category.upsert({
 		where: {
 			id: drills.category.id,

@@ -1,5 +1,9 @@
 import CategoryItem from "@/components/molecues/categoryItem/categoryItem";
-import { useGetToolItemCategories } from "@/hooks/categories";
+import {
+	useGetAdaptiveItemCategories,
+	useGetCuttingItemCategories,
+	useGetToolItemCategories,
+} from "@/hooks/categories";
 import {
 	Flex,
 	ModalBody,
@@ -15,10 +19,32 @@ interface Props {
 }
 
 export default function ChoosePurposeStep({ onCategorySelect }: Props) {
-	// const { data: tools } = useGetToolItems(categoryId);
-	const { data, isSuccess, isLoading, isError } = useGetToolItemCategories();
+	const {
+		data: toolCategories,
+		isSuccess: toolCategoriesIsSuccess,
+		isLoading: toolCategoriesIsLoading,
+		isError: toolCategoriesIsError,
+	} = useGetToolItemCategories();
 
-	if (isError) {
+	const {
+		data: adaptiveCategories,
+		isSuccess: adaptiveCategoriesIsSuccess,
+		isLoading: adaptiveCategoriesIsLoading,
+		isError: adaptiveCategoriesIsError,
+	} = useGetAdaptiveItemCategories();
+
+	const {
+		data: cuttingCategories,
+		isSuccess: cuttingCategoriesIsSuccess,
+		isLoading: cuttingCategoriesIsLoading,
+		isError: cuttingCategoriesIsError,
+	} = useGetCuttingItemCategories();
+
+	if (
+		toolCategoriesIsError ||
+		adaptiveCategoriesIsError ||
+		cuttingCategoriesIsError
+	) {
 		return;
 	}
 
@@ -27,23 +53,60 @@ export default function ChoosePurposeStep({ onCategorySelect }: Props) {
 			<ModalHeader>Choose your first product</ModalHeader>
 			<ModalCloseButton />
 			<ModalBody>
-				{isLoading ? <div>loading...</div> : null}
-				{isSuccess && data !== undefined ? (
-					<>
-						<Text fontSize="md" fontWeight="bold">
-							What do you want to build ?
-						</Text>
-						<Flex my="4" gap="2">
-							{data.items.map((item) => (
-								<CategoryItem
-									key={item.id}
-									item={item}
-									onClick={() => onCategorySelect(item.id)}
-								/>
-							))}
-						</Flex>
-					</>
-				) : null}
+				<>
+					{toolCategoriesIsLoading ? <div>loading...</div> : null}
+					{toolCategoriesIsSuccess && toolCategories !== undefined ? (
+						<>
+							<Text fontSize="md" fontWeight="bold">
+								Tool categories
+							</Text>
+							<Flex my="4" gap="2">
+								{toolCategories.items.map((item) => (
+									<CategoryItem
+										key={item.id}
+										item={item}
+										onClick={() => onCategorySelect(item.id)}
+									/>
+								))}
+							</Flex>
+						</>
+					) : null}
+					{adaptiveCategoriesIsLoading ? <div>loading...</div> : null}
+					{adaptiveCategoriesIsSuccess && adaptiveCategories !== undefined ? (
+						<>
+							<Text fontSize="md" fontWeight="bold">
+								Adaptive categories
+							</Text>
+							<Flex my="4" gap="2">
+								{adaptiveCategories.items.map((item) => (
+									<CategoryItem
+										key={item.id}
+										item={item}
+										onClick={() => onCategorySelect(item.id)}
+									/>
+								))}
+							</Flex>
+						</>
+					) : null}
+
+					{cuttingCategoriesIsLoading ? <div>loading...</div> : null}
+					{cuttingCategoriesIsSuccess && cuttingCategories !== undefined ? (
+						<>
+							<Text fontSize="md" fontWeight="bold">
+								Adaptive categories
+							</Text>
+							<Flex my="4" gap="2">
+								{cuttingCategories.items.map((item) => (
+									<CategoryItem
+										key={item.id}
+										item={item}
+										onClick={() => onCategorySelect(item.id)}
+									/>
+								))}
+							</Flex>
+						</>
+					) : null}
+				</>
 			</ModalBody>
 
 			<ModalFooter></ModalFooter>

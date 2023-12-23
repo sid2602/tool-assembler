@@ -70,14 +70,26 @@ img String
 adaptive_items Adaptive_item[]
 }
 
+model Adaptive_item_matching {
+  id Int @id @default(autoincrement())
+  machine_direction_adaptive_id Int
+  machine_direction_adaptive_item Adaptive_item @relation(fields: [machine_direction_adaptive_id], references: [id], "machine_direction", onDelete: NoAction, onUpdate: NoAction)
+  worpiece_direction_adaptive_id Int
+  workpiece_direction_adaptive_item Adaptive_item @relation(fields: [worpiece_direction_adaptive_id], references: [id], "workpiece_direction", onDelete: NoAction, onUpdate: NoAction)
+
+}
+
 model Adaptive_item {
   id     Int       @id @default(autoincrement())
   name   String
   img    String?
+  number_of_possible_tool_items Int @default(0)
   connecting_tool_item Tool_adaptive[]
   connecting_assembly_item Adaptive_assembly[]
   used_for_tool_assembly Tool_assembly_adaptive_item[]
   category Adaptive_item_category @relation(fields: [category_id], references: [id])
+  machine_direction_adaptive_items Adaptive_item_matching[] @relation("machine_direction")
+  workpiece_direction_adaptive_items Adaptive_item_matching[] @relation("workpiece_direction")
   category_id Int
   adc    String?
   atc    String?

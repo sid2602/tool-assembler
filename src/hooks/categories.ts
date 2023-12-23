@@ -7,3 +7,17 @@ export const useGetToolItemCategories = () => {
 		CategoriesService.getToolItemCategories
 	);
 };
+
+export const useGetAdaptiveItemCategories = () => {
+	return useQuery(
+		["getAdaptiveItemCategories"],
+		CategoriesService.getAdaptiveItemCategories
+	);
+};
+
+export const useGetCuttingItemCategories = () => {
+	return useQuery(
+		["getCuttingItemCategories"],
+		CategoriesService.getCuttingItemCategories
+	);
+};
