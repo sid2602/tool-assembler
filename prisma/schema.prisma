@@ -489,7 +489,8 @@ model Adaptive_assembly{
 model Tool_assembly_cutting_item {
   id  Int       @id @default(autoincrement())
   
-
+  order Int
+  row Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   cutting_item_id Int
@@ -499,6 +500,8 @@ model Tool_assembly_cutting_item {
 model Tool_assembly_adaptive_item {
   id  Int       @id @default(autoincrement())
 
+
+  order Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   adaptive_item_id Int
@@ -507,7 +510,8 @@ model Tool_assembly_adaptive_item {
 
 model Tool_assembly_tool_item {
   id  Int       @id @default(autoincrement())
-  
+  order Int
+  row Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   tool_item_id Int
@@ -516,6 +520,7 @@ model Tool_assembly_tool_item {
 
 model Tool_assembly_assembly_item {
   id  Int       @id @default(autoincrement())
+  
   
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])

@@ -18,9 +18,16 @@ type ContainerProps = {
 	children: React.ReactNode;
 };
 
+export type CategoryName =
+	| "tool-item-categories"
+	| "adaptive-item-categories"
+	| "cutting-item-categories"
+	| null;
+
 interface ToolItemStep {
 	step: "modal";
 	actualSubStep: "categories" | "lists";
+	category: CategoryName;
 	categoryId: number | null;
 }
 
@@ -29,6 +36,7 @@ type StepState = ToolItemStep;
 const initialStep: StepState = {
 	step: "modal",
 	actualSubStep: "categories",
+	category: null,
 	categoryId: null,
 };
 

@@ -1,6 +1,11 @@
-import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
+import {
+	CategoryName,
+	useToolAssemblyContext,
+} from "@/contexts/toolAssembly.context";
 import { Modal, ModalOverlay } from "@chakra-ui/react";
+import AdaptiveItemsStep from "./steps/adaptiveItemsStep";
 import ChoosePurposeStep from "./steps/choosePurposeStep";
+import CuttingItemsStep from "./steps/cuttingItemsStep";
 import ToolItemsStep from "./steps/toolItemsStep";
 
 interface Props {}
@@ -16,10 +21,15 @@ export default function ToolAssemblerModal({}: Props) {
 		dispatchStepState({ type: "CLOSE", payload: {} });
 	};
 
-	const onCategorySelect = (categoryId: number) => {
+	const onCategorySelect = (categoryName: CategoryName, categoryId: number) => {
 		dispatchStepState({
 			type: "MODAL",
-			payload: { step: "modal", actualSubStep: "lists", categoryId },
+			payload: {
+				step: "modal",
+				actualSubStep: "lists",
+				categoryId,
+				category: categoryName,
+			},
 		});
 	};
 
@@ -34,12 +44,32 @@ export default function ToolAssemblerModal({}: Props) {
 					<ChoosePurposeStep onCategorySelect={onCategorySelect} />
 				)}
 
-			{stepState.step === "modal" && stepState.actualSubStep === "lists" && (
-				<ToolItemsStep
-					categoryId={stepState.categoryId}
-					onClick={addToolItem}
-				/>
-			)}
+			{stepState.step === "modal" &&
+				stepState.category === "tool-item-categories" &&
+				stepState.actualSubStep === "lists" && (
+					<ToolItemsStep
+						categoryId={stepState.categoryId}
+						onClick={addToolItem}
+					/>
+				)}
+
+			{stepState.step === "modal" &&
+				stepState.category === "adaptive-item-categories" &&
+				stepState.actualSubStep === "lists" && (
+					<AdaptiveItemsStep
+						categoryId={stepState.categoryId}
+						onClick={addToolItem}
+					/>
+				)}
+
+			{stepState.step === "modal" &&
+				stepState.category === "cutting-item-categories" &&
+				stepState.actualSubStep === "lists" && (
+					<CuttingItemsStep
+						categoryId={stepState.categoryId}
+						onClick={addToolItem}
+					/>
+				)}
 		</Modal>
 	);
 }

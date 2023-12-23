@@ -1,4 +1,5 @@
 import CategoryItem from "@/components/molecues/categoryItem/categoryItem";
+import { CategoryName } from "@/contexts/toolAssembly.context";
 import {
 	useGetAdaptiveItemCategories,
 	useGetCuttingItemCategories,
@@ -15,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
-	onCategorySelect: (categoryId: number) => void;
+	onCategorySelect: (categoryName: CategoryName, categoryId: number) => void;
 }
 
 export default function ChoosePurposeStep({ onCategorySelect }: Props) {
@@ -65,7 +66,9 @@ export default function ChoosePurposeStep({ onCategorySelect }: Props) {
 									<CategoryItem
 										key={item.id}
 										item={item}
-										onClick={() => onCategorySelect(item.id)}
+										onClick={() =>
+											onCategorySelect("tool-item-categories", item.id)
+										}
 									/>
 								))}
 							</Flex>
@@ -82,7 +85,9 @@ export default function ChoosePurposeStep({ onCategorySelect }: Props) {
 									<CategoryItem
 										key={item.id}
 										item={item}
-										onClick={() => onCategorySelect(item.id)}
+										onClick={() =>
+											onCategorySelect("adaptive-item-categories", item.id)
+										}
 									/>
 								))}
 							</Flex>
@@ -100,7 +105,9 @@ export default function ChoosePurposeStep({ onCategorySelect }: Props) {
 									<CategoryItem
 										key={item.id}
 										item={item}
-										onClick={() => onCategorySelect(item.id)}
+										onClick={() =>
+											onCategorySelect("cutting-item-categories", item.id)
+										}
 									/>
 								))}
 							</Flex>

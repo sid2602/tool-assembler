@@ -124,7 +124,7 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 	category: {
 		id: 0,
 		name: "Rotation symmetrical adaptors",
-		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/adpcl_png.webp",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/adprs_png.webp",
 	},
 	adaptive_items: [
 		{
@@ -163,7 +163,7 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 const collets: AdaptiveItem = {
 	category: {
 		id: 0,
-		name: "drill",
+		name: "Collets",
 		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/adpcl_png.webp",
 	},
 	adaptive_items: [
@@ -263,18 +263,22 @@ const tool_cutting = [
 
 async function main() {
 	await prisma.tool_assembly_tool_item.deleteMany();
+	await prisma.tool_assembly_cutting_item.deleteMany();
+	await prisma.tool_assembly_adaptive_item.deleteMany();
 
 	await prisma.tool_cutting.deleteMany();
 	await prisma.tool_adaptive.deleteMany();
 
 	await prisma.tool_item.deleteMany();
 	await prisma.adaptive_item.deleteMany();
+	await prisma.cutting_item.deleteMany();
 
 	await prisma.tool_item_category.deleteMany();
 	await prisma.adaptive_item_category.deleteMany();
+	await prisma.cutting_item_category.deleteMany();
 	await prisma.tool_assembly.deleteMany();
 
-	//Tool items
+	// //Tool items
 
 	const drillt_tool_item_category = await prisma.tool_item_category.upsert({
 		where: {
