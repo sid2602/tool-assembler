@@ -5,11 +5,32 @@ import {
 	useGetToolAdaptiveItems,
 	useGetToolCuttingItems,
 } from "@/hooks/products";
+import { Tool_assembly } from "@/pages/api/tool-assembly/[id]";
 
 interface Props {}
 
+const isToolAssemblerEmpty = (
+	toolAssembly: Tool_assembly | undefined
+): boolean => {
+	if (toolAssembly === undefined) {
+		return true;
+	}
+
+	if (
+		toolAssembly.used_adaptive_item.length === 0 &&
+		toolAssembly.used_assembly_item.length === 0 &&
+		toolAssembly.used_cutting_item.length === 0 &&
+		toolAssembly.used_tool_item.length === 0
+	) {
+		return true;
+	}
+
+	return false;
+};
+
 export default function ToolAssembler({}: Props) {
 	const { toolAssembly, onOpen } = useToolAssemblyContext();
+
 	const toolCutting = useGetToolCuttingItems(
 		toolAssembly?.used_tool_item?.[0]?.tool_item_id ?? undefined
 	);
@@ -17,13 +38,11 @@ export default function ToolAssembler({}: Props) {
 		toolAssembly?.used_tool_item?.[0]?.tool_item_id ?? undefined
 	);
 
-	if (toolAssembly === undefined) {
+	if (isToolAssemblerEmpty(toolAssembly) === true) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
 
-	const { used_tool_item } = toolAssembly;
-
-	if (used_tool_item.length > 0) {
+	if (toolAssembly !== undefined && toolAssembly.used_tool_item?.length > 0) {
 		return (
 			<>
 				{toolAdaptive.data?.items?.length === 0 ? null : (
@@ -37,7 +56,7 @@ export default function ToolAssembler({}: Props) {
 						}
 					/>
 				)}
-				{used_tool_item.map((item) => (
+				{toolAssembly.used_tool_item.map((item) => (
 					<ToolAssemblerItem key={item.id} item={item.tool_item} />
 				))}
 				{toolCutting.data?.items?.length === 0 ? null : (

@@ -6,14 +6,26 @@ const prisma = new PrismaClient();
 
 export type Tool_assembly = Prisma.Tool_assemblyGetPayload<{
 	include: {
-		used_adaptive_item: true;
-		used_cutting_item: true;
+		used_adaptive_item: {
+			include: {
+				adaptive_item: true;
+			};
+		};
+		used_cutting_item: {
+			include: {
+				cutting_item: true;
+			};
+		};
 		used_tool_item: {
 			include: {
 				tool_item: true;
 			};
 		};
-		used_assembly_item: true;
+		used_assembly_item: {
+			include: {
+				assembly_item: true;
+			};
+		};
 	};
 }>;
 
@@ -45,9 +57,21 @@ export default async function GET(
 	const tool_assembly = await prisma.tool_assembly.findUnique({
 		where: { id: Number(tool_assembly_id) },
 		include: {
-			used_adaptive_item: true,
-			used_assembly_item: true,
-			used_cutting_item: true,
+			used_adaptive_item: {
+				include: {
+					adaptive_item: true,
+				},
+			},
+			used_assembly_item: {
+				include: {
+					assembly_item: true,
+				},
+			},
+			used_cutting_item: {
+				include: {
+					cutting_item: true,
+				},
+			},
 			used_tool_item: {
 				include: {
 					tool_item: true,

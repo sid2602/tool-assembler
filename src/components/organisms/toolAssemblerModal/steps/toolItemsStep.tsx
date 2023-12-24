@@ -25,7 +25,7 @@ import { ListCategoryName } from "@/contexts/toolAssembly.context";
 interface Props {
 	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
-	onClick: (id: number) => void;
+	onClick: (id: number) => Promise<void>;
 }
 
 export default function ToolItemsStep({

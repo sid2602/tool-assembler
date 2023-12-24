@@ -11,8 +11,15 @@ import ToolItemsStep from "./steps/toolItemsStep";
 interface Props {}
 
 export default function ToolAssemblerModal({}: Props) {
-	const { stepState, dispatchStepState, isOpen, onClose, addToolItem } =
-		useToolAssemblyContext();
+	const {
+		stepState,
+		dispatchStepState,
+		isOpen,
+		onClose,
+		addToolItem,
+		addAdaptiveItem,
+		addCuttingItem,
+	} = useToolAssemblyContext();
 
 	const onCloseModal = () => {
 		onClose();
@@ -62,7 +69,7 @@ export default function ToolAssemblerModal({}: Props) {
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						searchId={stepState.searchId}
-						onClick={addToolItem}
+						onClick={addAdaptiveItem}
 					/>
 				)}
 
@@ -74,7 +81,7 @@ export default function ToolAssemblerModal({}: Props) {
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						searchId={stepState.searchId}
-						onClick={addToolItem}
+						onClick={addCuttingItem}
 					/>
 				)}
 		</Modal>

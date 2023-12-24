@@ -26,7 +26,7 @@ interface Props {
 	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
 	searchId: number | null | undefined;
-	onClick: (id: number) => void;
+	onClick: (id: number) => Promise<void>;
 }
 
 export default function CuttingItemsStep({

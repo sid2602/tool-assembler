@@ -1,4 +1,6 @@
 import {
+	useAddAdaptiveItem,
+	useAddCuttingItem,
 	useAddToolItem,
 	useCreateToolAssembly,
 	useGetToolAssembly,
@@ -76,7 +78,9 @@ type ContextType = {
 		type: StepStateActions;
 		payload: Partial<StepState>;
 	}>;
-	addToolItem: (toolItemId: number) => void;
+	addToolItem: (toolItemId: number) => Promise<void>;
+	addAdaptiveItem: (adaptiveItemId: number) => Promise<void>;
+	addCuttingItem: (cuttingItemId: number) => Promise<void>;
 };
 
 const defaultCotnextValue: ContextType = {
@@ -90,7 +94,9 @@ const defaultCotnextValue: ContextType = {
 	) => {},
 	onClose: () => {},
 	dispatchStepState: () => {},
-	addToolItem: (toolItemId: number) => {},
+	addToolItem: async (toolItemId: number) => {},
+	addAdaptiveItem: async (adaptiveItemId: number) => {},
+	addCuttingItem: async (cuttingItemId: number) => {},
 };
 
 export const ToolAssemblyContext =
@@ -112,12 +118,18 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	const [stepState, dispatchStepState] = useReducer(reducer, initialStep);
 	const createToolAssemblyQuery = useCreateToolAssembly();
 	const addToolItemToToolAssemblyQuery = useAddToolItem();
+	const addAdaptiveItemToToolAssemblyQuery = useAddAdaptiveItem();
+	const addCuttingItemToToolAssemblyQuery = useAddCuttingItem();
 
-	const onOpen = (
+	const onOpen = async (
 		actualStep?: ActualStep,
 		listCategory?: ListCategoryName,
 		searchId?: number | null
 	) => {
+		if (toolAssemblyQuery.data === undefined) {
+			await createToolAssembly();
+		}
+
 		dispatchStepState({
 			type: "MODAL",
 			payload: {
@@ -141,11 +153,49 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	};
 
 	const addToolItem = async (toolItemId: number) => {
-		const id = await createToolAssembly();
+		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
+
+		if (toolAssemblerId === undefined) {
+			throw new Error("No tool assembly");
+		}
 
 		await addToolItemToToolAssemblyQuery.mutateAsync({
 			toolItemId: toolItemId,
-			toolAssemblyId: id,
+			toolAssemblyId: toolAssemblerId,
+			order: 0,
+			row: 0,
+		});
+
+		onClose();
+	};
+
+	const addAdaptiveItem = async (adaptiveItemId: number) => {
+		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
+
+		if (toolAssemblerId === undefined) {
+			throw new Error("No tool assembly");
+		}
+
+		await addAdaptiveItemToToolAssemblyQuery.mutateAsync({
+			adaptiveItemId: adaptiveItemId,
+			toolAssemblyId: toolAssemblerId,
+			order: 0,
+			row: 0,
+		});
+
+		onClose();
+	};
+
+	const addCuttingItem = async (cuttingItemId: number) => {
+		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
+
+		if (toolAssemblerId === undefined) {
+			throw new Error("No tool assembly");
+		}
+
+		await addCuttingItemToToolAssemblyQuery.mutateAsync({
+			cuttingItemId: cuttingItemId,
+			toolAssemblyId: toolAssemblerId,
 			order: 0,
 			row: 0,
 		});
@@ -163,6 +213,8 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 				onClose,
 				dispatchStepState,
 				addToolItem,
+				addAdaptiveItem,
+				addCuttingItem,
 			}}
 		>
 			{children}
