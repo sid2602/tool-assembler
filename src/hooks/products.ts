@@ -36,11 +36,16 @@ export const useGetAdaptiveItems = (
 
 export const useGetToolAdaptiveItems = (
 	toolItemID: number | undefined,
+	adaptiveItemID: number | undefined,
 	isEnabled?: boolean
 ) => {
+	const toolkey = toolItemID !== undefined ? "tool" + toolItemID : undefined;
+	const adaptiveKey =
+		adaptiveItemID !== undefined ? "adaptive" + adaptiveItemID : undefined;
+
 	return useQuery(
-		["useGetToolAdaptiveItems", toolItemID],
-		() => ProductsService.getToolAdaptiveItems(toolItemID),
+		["useGetToolAdaptiveItems", toolkey ?? adaptiveKey ?? undefined],
+		() => ProductsService.getToolAdaptiveItems(toolItemID, adaptiveItemID),
 		{ enabled: isEnabled || toolItemID !== undefined }
 	);
 };

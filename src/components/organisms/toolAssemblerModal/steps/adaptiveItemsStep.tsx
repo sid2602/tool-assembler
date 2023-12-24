@@ -42,6 +42,7 @@ export default function AdaptiveItemsStep({
 
 	const toolAdaptive = useGetToolAdaptiveItems(
 		searchId ?? undefined,
+		undefined,
 		listCategory === "tool-adaptive"
 	);
 

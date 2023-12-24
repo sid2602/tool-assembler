@@ -26,6 +26,7 @@ export type ListCategoryName =
 	| "adaptive-item-categories"
 	| "cutting-item-categories"
 	| "tool-adaptive"
+	| "adaptive-tool"
 	| "tool-cutting"
 	| "cutting-tool"
 	| null;

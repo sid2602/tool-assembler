@@ -43,11 +43,16 @@ class ProductsService {
 	}
 
 	async getToolAdaptiveItems(
-		toolItemId: number | undefined
+		toolItemId: number | undefined,
+		adaptiveItemId: number | undefined
 	): Promise<GetToolAdaptiveSuccessResponse> {
+		if (toolItemId === undefined && adaptiveItemId === undefined) {
+			throw new Error("No toolItemId or adaptiveItemId");
+		}
+
 		const url =
 			toolItemId === undefined
-				? "http://localhost:3000/api/tool-items/tool-adaptive"
+				? `http://localhost:3000/api/tool-items/tool-adaptive?adaptive_item_id=${adaptiveItemId}`
 				: `http://localhost:3000/api/tool-items/tool-adaptive?tool_item_id=${toolItemId}`;
 
 		const resp = await axios.get(url);

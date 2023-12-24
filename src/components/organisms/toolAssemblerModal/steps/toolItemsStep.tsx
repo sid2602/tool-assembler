@@ -1,4 +1,8 @@
-import { useGetToolCuttingItems, useGetToolItems } from "@/hooks/products";
+import {
+	useGetToolAdaptiveItems,
+	useGetToolCuttingItems,
+	useGetToolItems,
+} from "@/hooks/products";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	Button,
@@ -22,6 +26,11 @@ import {
 } from "@chakra-ui/react";
 
 import { ListCategoryName } from "@/contexts/toolAssembly.context";
+import { GetToolItemsSuccessResponse } from "@/pages/api/tool-items";
+import { GetToolAdaptiveSuccessResponse } from "@/pages/api/tool-items/tool-adaptive";
+import { GetToolCuttingSuccessResponse } from "@/pages/api/tool-items/tool-cutting";
+import { Tool_item } from "@prisma/client";
+import { UseQueryResult } from "react-query";
 interface Props {
 	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
@@ -29,14 +38,53 @@ interface Props {
 	onClick: (id: number) => Promise<void>;
 }
 
+const filterData = (
+	toolItems: UseQueryResult<GetToolItemsSuccessResponse, unknown>,
+	cuttingTool: UseQueryResult<GetToolCuttingSuccessResponse, unknown>,
+	adaptiveTool: UseQueryResult<GetToolAdaptiveSuccessResponse, unknown>,
+	listCategory: ListCategoryName
+): {
+	data: Tool_item[];
+	isLoading: boolean;
+	isError: boolean;
+} => {
+	if (listCategory === "tool-item-categories") {
+		return {
+			data: toolItems.data?.items ?? [],
+			isLoading: toolItems.isLoading,
+			isError: toolItems.isError,
+		};
+	}
+
+	if (listCategory === "cutting-tool") {
+		return {
+			data: cuttingTool.data?.items.map((item) => item.tool_item) ?? [],
+			isLoading: cuttingTool.isLoading,
+			isError: cuttingTool.isError,
+		};
+	}
+
+	if (listCategory === "adaptive-tool") {
+		return {
+			data: adaptiveTool.data?.items.map((item) => item.tool_item) ?? [],
+			isLoading: adaptiveTool.isLoading,
+			isError: adaptiveTool.isError,
+		};
+	}
+
+	return {
+		data: [],
+		isLoading: false,
+		isError: false,
+	};
+};
+
 export default function ToolItemsStep({
 	categoryId,
 	listCategory,
 	searchId,
 	onClick,
 }: Props) {
-	console.log("listCategory", listCategory);
-
 	const toolItems = useGetToolItems(
 		categoryId ?? undefined,
 		listCategory === "tool-item-categories"
@@ -48,18 +96,18 @@ export default function ToolItemsStep({
 		listCategory === "cutting-tool"
 	);
 
-	const data =
-		listCategory === "tool-item-categories"
-			? toolItems.data?.items
-			: cuttingTool.data?.items.map((item) => item.tool_item);
-	const isLoading =
-		listCategory === "tool-item-categories"
-			? toolItems.isLoading
-			: cuttingTool.isLoading;
-	const isError =
-		listCategory === "tool-item-categories"
-			? toolItems.isError
-			: cuttingTool.isError;
+	const adaptiveTool = useGetToolAdaptiveItems(
+		undefined,
+		searchId ?? undefined,
+		listCategory === "adaptive-tool"
+	);
+
+	const { data, isLoading, isError } = filterData(
+		toolItems,
+		cuttingTool,
+		adaptiveTool,
+		listCategory
+	);
 
 	if (isError) {
 		return;

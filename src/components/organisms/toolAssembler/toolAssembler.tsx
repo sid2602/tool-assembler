@@ -94,6 +94,7 @@ const MachineDirection = ({
 }: MachineDirectionProps) => {
 	const toolAdaptive = useGetToolAdaptiveItems(
 		item.id ?? undefined,
+		undefined,
 		item.type === "tool"
 	);
 
@@ -134,6 +135,60 @@ const MachineDirection = ({
 	return null;
 };
 
+interface WorkpieceDirectionProps {
+	item: MapedItem;
+	haveParent: boolean;
+	onOpen: OnOpenFunctionType;
+}
+
+const WorkpieceDirection = ({
+	item,
+	haveParent,
+	onOpen,
+}: WorkpieceDirectionProps) => {
+	const toolAdaptive = useGetToolAdaptiveItems(
+		undefined,
+		item.id ?? undefined,
+		item.type === "adaptive"
+	);
+
+	const toolCutting = useGetToolCuttingItems(
+		item.id ?? undefined,
+		undefined,
+		item.type === "tool"
+	);
+
+	if (
+		item.type === "adaptive" &&
+		toolAdaptive.data?.items.length !== 0 &&
+		haveParent === false
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "adaptive-tool", item.id, item.order + 1)
+				}
+			/>
+		);
+	}
+
+	if (
+		item.type === "tool" &&
+		toolCutting.data?.items.length !== 0 &&
+		haveParent === false
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "tool-cutting", item.id, item.order + 1)
+				}
+			/>
+		);
+	}
+
+	return null;
+};
+
 export default function ToolAssembler({}: Props) {
 	const { toolAssembly, onOpen } = useToolAssemblyContext();
 
@@ -142,6 +197,8 @@ export default function ToolAssembler({}: Props) {
 	if (isToolAssemblerEmpty(toolAssembly) === true) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
+
+	console.log(mapedToolAseemblyItems);
 
 	return (
 		<>
@@ -164,6 +221,20 @@ export default function ToolAssembler({}: Props) {
 					<ToolAssemblerItem
 						key={item.name + item.row + item.order}
 						item={{ name: item.name, img: item.img }}
+					/>
+					<WorkpieceDirection
+						key={item.name + item.row + item.order + "Workpiece Direction"}
+						item={item}
+						haveParent={
+							mapedToolAseemblyItems.find(
+								(mapedItem) =>
+									mapedItem.order === item.order + 1 &&
+									mapedItem.row === item.row
+							)
+								? true
+								: false
+						}
+						onOpen={onOpen}
 					/>
 				</>
 			))}

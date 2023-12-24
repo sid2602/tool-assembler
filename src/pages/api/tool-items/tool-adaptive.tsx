@@ -22,11 +22,20 @@ export default async function GET(
 	request: NextApiRequest,
 	response: NextApiResponse<GetToolAdaptiveResponse>
 ) {
-	const { tool_item_id } = request.query;
+	const { tool_item_id, adaptive_item_id } = request.query;
+
+	if (tool_item_id === undefined && adaptive_item_id === undefined) {
+		return response.json({
+			type: "Error",
+			message: "undefined tool_item_id and adaptive_item_id",
+		});
+	}
 
 	const query =
 		tool_item_id === undefined
-			? undefined
+			? adaptive_item_id === undefined
+				? undefined
+				: { where: { adaptive_item_id: Number(adaptive_item_id) } }
 			: { where: { tool_item_id: Number(tool_item_id) } };
 
 	const items = await prisma.tool_adaptive.findMany({

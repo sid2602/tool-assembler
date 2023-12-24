@@ -55,7 +55,8 @@ export default function ToolAssemblerModal({}: Props) {
 
 			{stepState.step === "modal" &&
 				(stepState.listCategory === "tool-item-categories" ||
-					stepState.listCategory === "cutting-tool") &&
+					stepState.listCategory === "cutting-tool" ||
+					stepState.listCategory === "adaptive-tool") &&
 				stepState.actualSubStep === "lists" && (
 					<ToolItemsStep
 						listCategory={stepState.listCategory}
