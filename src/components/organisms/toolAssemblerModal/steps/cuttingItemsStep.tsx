@@ -35,25 +35,29 @@ export default function CuttingItemsStep({
 	searchId,
 	onClick,
 }: Props) {
-	const cuttingItems = useGetCuttingItems(categoryId ?? undefined);
+	const cuttingItems = useGetCuttingItems(
+		categoryId ?? undefined,
+		listCategory === "cutting-item-categories"
+	);
 
-	const toolAdaptive = useGetToolCuttingItems(
+	const toolCutting = useGetToolCuttingItems(
+		listCategory === "tool-cutting" ? searchId ?? undefined : undefined,
 		searchId ?? undefined,
 		listCategory === "tool-cutting"
 	);
 
 	const data =
-		listCategory === "adaptive-item-categories"
+		listCategory === "cutting-item-categories"
 			? cuttingItems.data?.items
-			: toolAdaptive.data?.items.map((item) => item.cutting_item);
+			: toolCutting.data?.items.map((item) => item.cutting_item);
 	const isLoading =
-		listCategory === "adaptive-item-categories"
+		listCategory === "cutting-item-categories"
 			? cuttingItems.isLoading
-			: toolAdaptive.isLoading;
+			: toolCutting.isLoading;
 	const isError =
-		listCategory === "adaptive-item-categories"
+		listCategory === "cutting-item-categories"
 			? cuttingItems.isError
-			: toolAdaptive.isError;
+			: toolCutting.isError;
 
 	if (isError) {
 		return;

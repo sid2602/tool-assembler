@@ -1,6 +1,9 @@
 import AddToolAssemblerItem from "@/components/molecues/toolAssemblerItem/addtoolAssemblerItem";
 import ToolAssemblerItem from "@/components/molecues/toolAssemblerItem/toolAssemblerItem";
-import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
+import {
+	OnOpenFunctionType,
+	useToolAssemblyContext,
+} from "@/contexts/toolAssembly.context";
 import {
 	useGetToolAdaptiveItems,
 	useGetToolCuttingItems,
@@ -27,52 +30,143 @@ const isToolAssemblerEmpty = (
 
 	return false;
 };
+interface MapedItem {
+	id: number;
+	type: "tool" | "cutting" | "adaptive";
+	name: string;
+	img: string | null;
+	order: number;
+	row: number;
+}
+
+const mapToolAssembly = (
+	toolAssembly: Tool_assembly | undefined
+): MapedItem[] => {
+	const tool_items: MapedItem[] =
+		toolAssembly?.used_tool_item.map((item) => ({
+			id: item.tool_item_id,
+			type: "tool",
+			name: item.tool_item.name,
+			img: item.tool_item.img,
+			order: item.order,
+			row: item.row,
+		})) ?? [];
+	44;
+	const adaptive_items: MapedItem[] =
+		toolAssembly?.used_adaptive_item.map((item) => ({
+			id: item.adaptive_item_id,
+			type: "adaptive",
+			name: item.adaptive_item.name,
+			img: item.adaptive_item.img,
+			order: item.order,
+			row: item.row,
+		})) ?? [];
+
+	const cutting_items: MapedItem[] =
+		toolAssembly?.used_cutting_item.map((item) => ({
+			id: item.cutting_item_id,
+			type: "cutting",
+			name: item.cutting_item.name,
+			img: item.cutting_item.img,
+			order: item.order,
+			row: item.row,
+		})) ?? [];
+
+	const finalArray = [...adaptive_items, ...tool_items, ...cutting_items].sort(
+		(a, b) => {
+			return a.order - b.order;
+		}
+	);
+
+	return finalArray;
+};
+
+interface MachineDirectionProps {
+	item: MapedItem;
+	haveChild: boolean;
+	onOpen: OnOpenFunctionType;
+}
+
+const MachineDirection = ({
+	item,
+	haveChild,
+	onOpen,
+}: MachineDirectionProps) => {
+	const toolAdaptive = useGetToolAdaptiveItems(
+		item.id ?? undefined,
+		item.type === "tool"
+	);
+
+	const toolCutting = useGetToolCuttingItems(
+		undefined,
+		item.id ?? undefined,
+		item.type === "cutting"
+	);
+
+	if (
+		item.type === "tool" &&
+		toolAdaptive.data?.items.length !== 0 &&
+		haveChild === false
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "tool-adaptive", item.id, item.order - 1)
+				}
+			/>
+		);
+	}
+
+	if (
+		item.type === "cutting" &&
+		toolCutting.data?.items.length !== 0 &&
+		haveChild === false
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "cutting-tool", item.id, item.order - 1)
+				}
+			/>
+		);
+	}
+
+	return null;
+};
 
 export default function ToolAssembler({}: Props) {
 	const { toolAssembly, onOpen } = useToolAssemblyContext();
 
-	const toolCutting = useGetToolCuttingItems(
-		toolAssembly?.used_tool_item?.[0]?.tool_item_id ?? undefined
-	);
-	const toolAdaptive = useGetToolAdaptiveItems(
-		toolAssembly?.used_tool_item?.[0]?.tool_item_id ?? undefined
-	);
+	const mapedToolAseemblyItems: MapedItem[] = mapToolAssembly(toolAssembly);
 
 	if (isToolAssemblerEmpty(toolAssembly) === true) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
 
-	if (toolAssembly !== undefined && toolAssembly.used_tool_item?.length > 0) {
-		return (
-			<>
-				{toolAdaptive.data?.items?.length === 0 ? null : (
-					<AddToolAssemblerItem
-						handleButton={() =>
-							onOpen(
-								"lists",
-								"tool-adaptive",
-								toolAdaptive.data?.items?.[0].tool_item_id ?? undefined
+	return (
+		<>
+			{mapedToolAseemblyItems.map((item) => (
+				<>
+					<MachineDirection
+						key={item.name + item.row + item.order + "Machine Direction"}
+						item={item}
+						haveChild={
+							mapedToolAseemblyItems.find(
+								(mapedItem) =>
+									mapedItem.order === item.order - 1 &&
+									mapedItem.row === item.row
 							)
+								? true
+								: false
 						}
+						onOpen={onOpen}
 					/>
-				)}
-				{toolAssembly.used_tool_item.map((item) => (
-					<ToolAssemblerItem key={item.id} item={item.tool_item} />
-				))}
-				{toolCutting.data?.items?.length === 0 ? null : (
-					<AddToolAssemblerItem
-						handleButton={() =>
-							onOpen(
-								"lists",
-								"tool-cutting",
-								toolCutting.data?.items?.[0].tool_item_id ?? undefined
-							)
-						}
+					<ToolAssemblerItem
+						key={item.name + item.row + item.order}
+						item={{ name: item.name, img: item.img }}
 					/>
-				)}
-			</>
-		);
-	}
-
-	return null;
+				</>
+			))}
+		</>
+	);
 }

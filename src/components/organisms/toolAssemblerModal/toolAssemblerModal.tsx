@@ -36,6 +36,8 @@ export default function ToolAssemblerModal({}: Props) {
 				actualSubStep: "lists",
 				categoryId,
 				listCategory: listCategoryName,
+				order: stepState.order,
+				row: stepState.row,
 			},
 		});
 	};
@@ -52,12 +54,14 @@ export default function ToolAssemblerModal({}: Props) {
 				)}
 
 			{stepState.step === "modal" &&
-				stepState.listCategory === "tool-item-categories" &&
+				(stepState.listCategory === "tool-item-categories" ||
+					stepState.listCategory === "cutting-tool") &&
 				stepState.actualSubStep === "lists" && (
 					<ToolItemsStep
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						onClick={addToolItem}
+						searchId={stepState.searchId}
 					/>
 				)}
 

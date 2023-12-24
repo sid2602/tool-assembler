@@ -22,11 +22,20 @@ export default async function GET(
 	request: NextApiRequest,
 	response: NextApiResponse<GetToolCuttingResponse>
 ) {
-	const { tool_item_id } = request.query;
+	const { tool_item_id, cutting_item_id } = request.query;
+
+	if (tool_item_id === undefined && cutting_item_id === undefined) {
+		return response.json({
+			type: "Error",
+			message: "undefined tool_item_id and cutting_item_id",
+		});
+	}
 
 	const query =
 		tool_item_id === undefined
-			? undefined
+			? cutting_item_id === undefined
+				? undefined
+				: { where: { cutting_item_id: Number(cutting_item_id) } }
 			: { where: { tool_item_id: Number(tool_item_id) } };
 
 	const items = await prisma.tool_cutting.findMany({

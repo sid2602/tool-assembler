@@ -1,4 +1,4 @@
-import { useGetToolItems } from "@/hooks/products";
+import { useGetToolCuttingItems, useGetToolItems } from "@/hooks/products";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	Button,
@@ -25,18 +25,41 @@ import { ListCategoryName } from "@/contexts/toolAssembly.context";
 interface Props {
 	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
+	searchId: number | null | undefined;
 	onClick: (id: number) => Promise<void>;
 }
 
 export default function ToolItemsStep({
 	categoryId,
 	listCategory,
+	searchId,
 	onClick,
 }: Props) {
-	const { data, isLoading, isSuccess, isError } = useGetToolItems(
+	console.log("listCategory", listCategory);
+
+	const toolItems = useGetToolItems(
 		categoryId ?? undefined,
 		listCategory === "tool-item-categories"
 	);
+
+	const cuttingTool = useGetToolCuttingItems(
+		undefined,
+		searchId ?? undefined,
+		listCategory === "cutting-tool"
+	);
+
+	const data =
+		listCategory === "tool-item-categories"
+			? toolItems.data?.items
+			: cuttingTool.data?.items.map((item) => item.tool_item);
+	const isLoading =
+		listCategory === "tool-item-categories"
+			? toolItems.isLoading
+			: cuttingTool.isLoading;
+	const isError =
+		listCategory === "tool-item-categories"
+			? toolItems.isError
+			: cuttingTool.isError;
 
 	if (isError) {
 		return;
@@ -48,7 +71,7 @@ export default function ToolItemsStep({
 			<ModalCloseButton />
 			<ModalBody>
 				{isLoading ? <div>loading...</div> : null}
-				{isSuccess && data !== undefined ? (
+				{data !== undefined ? (
 					<>
 						<Text fontSize="md" fontWeight="bold">
 							Select your tool
@@ -66,7 +89,7 @@ export default function ToolItemsStep({
 									</Tr>
 								</Thead>
 								<Tbody>
-									{data.items.map((item) => (
+									{data.map((item) => (
 										<Tr key={item.id}>
 											<Td>
 												<Image

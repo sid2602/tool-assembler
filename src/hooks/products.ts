@@ -47,11 +47,16 @@ export const useGetToolAdaptiveItems = (
 
 export const useGetToolCuttingItems = (
 	toolItemID: number | undefined,
+	cuttingItemID: number | undefined,
 	isEnabled?: boolean
 ) => {
+	const toolkey = toolItemID !== undefined ? "tool" + toolItemID : undefined;
+	const cuttingKey =
+		cuttingItemID !== undefined ? "cutting" + cuttingItemID : undefined;
+
 	return useQuery(
-		["useGetToolCuttingItems", toolItemID],
-		() => ProductsService.getToolCuttingItems(toolItemID),
+		["useGetToolCuttingItems", toolkey ?? cuttingKey ?? undefined],
+		() => ProductsService.getToolCuttingItems(toolItemID, cuttingItemID),
 		{ enabled: isEnabled || toolItemID !== undefined }
 	);
 };

@@ -55,11 +55,16 @@ class ProductsService {
 	}
 
 	async getToolCuttingItems(
-		toolItemId: number | undefined
+		toolItemId: number | undefined,
+		cuttingItemId: number | undefined
 	): Promise<GetToolCuttingSuccessResponse> {
+		if (toolItemId === undefined && cuttingItemId === undefined) {
+			throw new Error("No toolItemId or cuttingItemId");
+		}
+
 		const url =
 			toolItemId === undefined
-				? "http://localhost:3000/api/tool-items/tool-cutting"
+				? `http://localhost:3000/api/tool-items/tool-cutting?cutting_item_id=${cuttingItemId}`
 				: `http://localhost:3000/api/tool-items/tool-cutting?tool_item_id=${toolItemId}`;
 
 		const resp = await axios.get(url);
