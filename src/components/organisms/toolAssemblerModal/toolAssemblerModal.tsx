@@ -1,5 +1,5 @@
 import {
-	CategoryName,
+	ListCategoryName,
 	useToolAssemblyContext,
 } from "@/contexts/toolAssembly.context";
 import { Modal, ModalOverlay } from "@chakra-ui/react";
@@ -10,25 +10,25 @@ import ToolItemsStep from "./steps/toolItemsStep";
 
 interface Props {}
 
-type StepType = "choosePurposeStep" | "toolItemsStep";
-
 export default function ToolAssemblerModal({}: Props) {
 	const { stepState, dispatchStepState, isOpen, onClose, addToolItem } =
 		useToolAssemblyContext();
 
 	const onCloseModal = () => {
 		onClose();
-		dispatchStepState({ type: "CLOSE", payload: {} });
 	};
 
-	const onCategorySelect = (categoryName: CategoryName, categoryId: number) => {
+	const onCategorySelect = (
+		listCategoryName: ListCategoryName,
+		categoryId: number
+	) => {
 		dispatchStepState({
 			type: "MODAL",
 			payload: {
 				step: "modal",
 				actualSubStep: "lists",
 				categoryId,
-				category: categoryName,
+				listCategory: listCategoryName,
 			},
 		});
 	};
@@ -45,28 +45,35 @@ export default function ToolAssemblerModal({}: Props) {
 				)}
 
 			{stepState.step === "modal" &&
-				stepState.category === "tool-item-categories" &&
+				stepState.listCategory === "tool-item-categories" &&
 				stepState.actualSubStep === "lists" && (
 					<ToolItemsStep
+						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						onClick={addToolItem}
 					/>
 				)}
 
 			{stepState.step === "modal" &&
-				stepState.category === "adaptive-item-categories" &&
+				(stepState.listCategory === "adaptive-item-categories" ||
+					stepState.listCategory === "tool-adaptive") &&
 				stepState.actualSubStep === "lists" && (
 					<AdaptiveItemsStep
+						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
+						searchId={stepState.searchId}
 						onClick={addToolItem}
 					/>
 				)}
 
 			{stepState.step === "modal" &&
-				stepState.category === "cutting-item-categories" &&
+				(stepState.listCategory === "cutting-item-categories" ||
+					stepState.listCategory === "tool-cutting") &&
 				stepState.actualSubStep === "lists" && (
 					<CuttingItemsStep
+						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
+						searchId={stepState.searchId}
 						onClick={addToolItem}
 					/>
 				)}

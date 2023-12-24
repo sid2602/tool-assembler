@@ -502,6 +502,8 @@ model Tool_assembly_adaptive_item {
 
 
   order Int
+  row Int
+
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   adaptive_item_id Int

@@ -1,4 +1,4 @@
-import ToolAssemblerItem from "@/components/molecues/toolAssemblerItem/toolAssemblerItem";
+import ToolAssembler from "@/components/organisms/toolAssembler/toolAssembler";
 import ToolAssemblerModal from "@/components/organisms/toolAssemblerModal/toolAssemblerModal";
 import AuthenticatedCustomerPage from "@/components/templates/authenticatedCustomerPage";
 import {
@@ -29,18 +29,19 @@ function Assembler() {
 		return <>loading</>;
 	}
 
-	const toolItem = context.toolAssembly?.used_tool_item?.[0].tool_item;
+	// const toolItem = context.toolAssembly?.used_tool_item?.[0].tool_item;
 
 	return (
 		<AuthenticatedCustomerPage>
-			<ToolAssemblerItem
+			<ToolAssembler />
+			{/* <ToolAssemblerItem
 				handleButton={context.onOpen}
 				item={
 					toolItem !== undefined
 						? { name: toolItem.name, img: toolItem.img }
 						: undefined
 				}
-			/>
+			/> */}
 			<ToolAssemblerModal />
 		</AuthenticatedCustomerPage>
 	);

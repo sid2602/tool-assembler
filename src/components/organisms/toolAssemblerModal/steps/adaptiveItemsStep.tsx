@@ -1,4 +1,5 @@
-import { useGetAdaptiveItems } from "@/hooks/products";
+import { ListCategoryName } from "@/contexts/toolAssembly.context";
+import { useGetAdaptiveItems, useGetToolAdaptiveItems } from "@/hooks/products";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	Button,
@@ -22,14 +23,40 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
+	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
+	searchId: number | null | undefined;
 	onClick: (id: number) => void;
 }
 
-export default function AdaptiveItemsStep({ categoryId, onClick }: Props) {
-	const { data, isLoading, isSuccess, isError } = useGetAdaptiveItems(
-		categoryId ?? undefined
+export default function AdaptiveItemsStep({
+	listCategory,
+	categoryId,
+	searchId,
+	onClick,
+}: Props) {
+	const adaptiveItems = useGetAdaptiveItems(
+		categoryId ?? undefined,
+		listCategory === "adaptive-item-categories"
 	);
+
+	const toolAdaptive = useGetToolAdaptiveItems(
+		searchId ?? undefined,
+		listCategory === "tool-adaptive"
+	);
+
+	const data =
+		listCategory === "adaptive-item-categories"
+			? adaptiveItems.data?.items
+			: toolAdaptive.data?.items.map((item) => item.adaptive_item);
+	const isLoading =
+		listCategory === "adaptive-item-categories"
+			? adaptiveItems.isLoading
+			: toolAdaptive.isLoading;
+	const isError =
+		listCategory === "adaptive-item-categories"
+			? adaptiveItems.isError
+			: toolAdaptive.isError;
 
 	if (isError) {
 		return;
@@ -41,7 +68,7 @@ export default function AdaptiveItemsStep({ categoryId, onClick }: Props) {
 			<ModalCloseButton />
 			<ModalBody>
 				{isLoading ? <div>loading...</div> : null}
-				{isSuccess && data !== undefined ? (
+				{data !== undefined ? (
 					<>
 						<Text fontSize="md" fontWeight="bold">
 							Select your tool
@@ -59,7 +86,7 @@ export default function AdaptiveItemsStep({ categoryId, onClick }: Props) {
 									</Tr>
 								</Thead>
 								<Tbody>
-									{data.items.map((item) => (
+									{data.map((item) => (
 										<Tr key={item.id}>
 											<Td>
 												<Image

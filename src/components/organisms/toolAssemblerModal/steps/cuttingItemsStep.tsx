@@ -1,4 +1,5 @@
-import { useGetCuttingItems } from "@/hooks/products";
+import { ListCategoryName } from "@/contexts/toolAssembly.context";
+import { useGetCuttingItems, useGetToolCuttingItems } from "@/hooks/products";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	Button,
@@ -22,14 +23,37 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
+	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
+	searchId: number | null | undefined;
 	onClick: (id: number) => void;
 }
 
-export default function CuttingItemsStep({ categoryId, onClick }: Props) {
-	const { data, isLoading, isSuccess, isError } = useGetCuttingItems(
-		categoryId ?? undefined
+export default function CuttingItemsStep({
+	categoryId,
+	listCategory,
+	searchId,
+	onClick,
+}: Props) {
+	const cuttingItems = useGetCuttingItems(categoryId ?? undefined);
+
+	const toolAdaptive = useGetToolCuttingItems(
+		searchId ?? undefined,
+		listCategory === "tool-cutting"
 	);
+
+	const data =
+		listCategory === "adaptive-item-categories"
+			? cuttingItems.data?.items
+			: toolAdaptive.data?.items.map((item) => item.cutting_item);
+	const isLoading =
+		listCategory === "adaptive-item-categories"
+			? cuttingItems.isLoading
+			: toolAdaptive.isLoading;
+	const isError =
+		listCategory === "adaptive-item-categories"
+			? cuttingItems.isError
+			: toolAdaptive.isError;
 
 	if (isError) {
 		return;
@@ -41,7 +65,7 @@ export default function CuttingItemsStep({ categoryId, onClick }: Props) {
 			<ModalCloseButton />
 			<ModalBody>
 				{isLoading ? <div>loading...</div> : null}
-				{isSuccess && data !== undefined ? (
+				{data !== undefined ? (
 					<>
 						<Text fontSize="md" fontWeight="bold">
 							Select your tool
@@ -59,7 +83,7 @@ export default function CuttingItemsStep({ categoryId, onClick }: Props) {
 									</Tr>
 								</Thead>
 								<Tbody>
-									{data.items.map((item) => (
+									{data.map((item) => (
 										<Tr key={item.id}>
 											<Td>
 												<Image

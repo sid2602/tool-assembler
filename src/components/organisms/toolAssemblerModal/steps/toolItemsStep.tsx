@@ -21,14 +21,21 @@ import {
 	Tr,
 } from "@chakra-ui/react";
 
+import { ListCategoryName } from "@/contexts/toolAssembly.context";
 interface Props {
+	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
 	onClick: (id: number) => void;
 }
 
-export default function ToolItemsStep({ categoryId, onClick }: Props) {
+export default function ToolItemsStep({
+	categoryId,
+	listCategory,
+	onClick,
+}: Props) {
 	const { data, isLoading, isSuccess, isError } = useGetToolItems(
-		categoryId ?? undefined
+		categoryId ?? undefined,
+		listCategory === "tool-item-categories"
 	);
 
 	if (isError) {

@@ -17,18 +17,22 @@ import {
 type ContainerProps = {
 	children: React.ReactNode;
 };
+export type ActualStep = "categories" | "lists";
 
-export type CategoryName =
+export type ListCategoryName =
 	| "tool-item-categories"
 	| "adaptive-item-categories"
 	| "cutting-item-categories"
+	| "tool-adaptive"
+	| "tool-cutting"
 	| null;
 
 interface ToolItemStep {
 	step: "modal";
-	actualSubStep: "categories" | "lists";
-	category: CategoryName;
+	actualSubStep: ActualStep;
+	listCategory: ListCategoryName;
 	categoryId: number | null;
+	searchId: number | null;
 }
 
 type StepState = ToolItemStep;
@@ -36,8 +40,9 @@ type StepState = ToolItemStep;
 const initialStep: StepState = {
 	step: "modal",
 	actualSubStep: "categories",
-	category: null,
+	listCategory: null,
 	categoryId: null,
+	searchId: null,
 };
 
 type StepStateActions = "MODAL" | "CLOSE";
@@ -61,7 +66,11 @@ type ContextType = {
 	toolAssembly: Tool_assembly | undefined;
 	stepState: StepState;
 	isOpen: boolean;
-	onOpen: () => void;
+	onOpen: (
+		actualStep?: ActualStep,
+		listCategory?: ListCategoryName,
+		searchId?: number | null
+	) => void;
 	onClose: () => void;
 	dispatchStepState: Dispatch<{
 		type: StepStateActions;
@@ -74,7 +83,11 @@ const defaultCotnextValue: ContextType = {
 	toolAssembly: undefined,
 	stepState: initialStep,
 	isOpen: false,
-	onOpen: () => {},
+	onOpen: (
+		actualStep?: ActualStep,
+		listCategory?: ListCategoryName,
+		searchId?: number | null
+	) => {},
 	onClose: () => {},
 	dispatchStepState: () => {},
 	addToolItem: (toolItemId: number) => {},
@@ -91,10 +104,35 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	);
 
 	const toolAssemblyQuery = useGetToolAssembly(toolAssemblyId);
-	const { isOpen, onOpen, onClose } = useDisclosure();
+	const {
+		isOpen,
+		onOpen: onOpenModal,
+		onClose: onCloseModal,
+	} = useDisclosure();
 	const [stepState, dispatchStepState] = useReducer(reducer, initialStep);
 	const createToolAssemblyQuery = useCreateToolAssembly();
 	const addToolItemToToolAssemblyQuery = useAddToolItem();
+
+	const onOpen = (
+		actualStep?: ActualStep,
+		listCategory?: ListCategoryName,
+		searchId?: number | null
+	) => {
+		dispatchStepState({
+			type: "MODAL",
+			payload: {
+				actualSubStep: actualStep ?? initialStep.actualSubStep,
+				listCategory: listCategory ?? initialStep.listCategory,
+				searchId,
+			},
+		});
+		onOpenModal();
+	};
+
+	const onClose = () => {
+		onCloseModal();
+		dispatchStepState({ type: "CLOSE", payload: {} });
+	};
 
 	const createToolAssembly = async (): Promise<number> => {
 		const resp = await createToolAssemblyQuery.mutateAsync();
@@ -108,6 +146,8 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		await addToolItemToToolAssemblyQuery.mutateAsync({
 			toolItemId: toolItemId,
 			toolAssemblyId: id,
+			order: 0,
+			row: 0,
 		});
 
 		onClose();

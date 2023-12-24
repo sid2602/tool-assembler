@@ -1,5 +1,5 @@
 import CategoryItem from "@/components/molecues/categoryItem/categoryItem";
-import { CategoryName } from "@/contexts/toolAssembly.context";
+import { ListCategoryName } from "@/contexts/toolAssembly.context";
 import {
 	useGetAdaptiveItemCategories,
 	useGetCuttingItemCategories,
@@ -16,7 +16,10 @@ import {
 } from "@chakra-ui/react";
 
 interface Props {
-	onCategorySelect: (categoryName: CategoryName, categoryId: number) => void;
+	onCategorySelect: (
+		listCategoryName: ListCategoryName,
+		categoryId: number
+	) => void;
 }
 
 export default function ChoosePurposeStep({ onCategorySelect }: Props) {

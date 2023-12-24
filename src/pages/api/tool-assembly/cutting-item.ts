@@ -16,13 +16,15 @@ export type PostToolAssemblyCuttingItemResponse =
 export interface PostToolAssemblyCuttingItemBody {
 	cuttingItemId: number;
 	toolAssemblyId: number;
+	order: number;
+	row: number;
 }
 
 export default async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyCuttingItemResponse>
 ) {
-	const { cuttingItemId, toolAssemblyId } = request.body
+	const { cuttingItemId, toolAssemblyId, order, row } = request.body
 		.data as PostToolAssemblyCuttingItemBody;
 
 	const tool_assembly_cutting_item =
@@ -30,6 +32,8 @@ export default async function POST(
 			data: {
 				cutting_item_id: cuttingItemId,
 				tool_assembly_id: toolAssemblyId,
+				order,
+				row,
 			},
 		});
 
