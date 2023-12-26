@@ -47,6 +47,20 @@ const drills: ToolItem = {
 			WT: 0.022,
 			ULDR: 10.6646,
 		},
+		{
+			name: "460.1-0805-024A1-XM GC34",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426943_d50_0_0~tl04_00.png",
+			DCON: "10",
+			LU: 25.3,
+			ULDR: 3.1429,
+			SIG: 140,
+			PL: 1.2,
+			OAL: 89,
+			LF: 87.8,
+			LCF: 47,
+			RPMX: "11 862 1/min",
+			WT: 0.0707,
+		},
 	],
 };
 
@@ -117,6 +131,10 @@ const millingCutters: ToolItem = {
 
 interface AdaptiveItem {
 	category: Partial<Adaptive_item_category>;
+	adaptive_items: Omit<Partial<Adaptive_item>, "id">[];
+}
+
+interface AdaptiveItemWithoutCategory {
 	adaptive_items: Omit<Partial<Adaptive_item>, "id">[];
 }
 
@@ -198,6 +216,53 @@ const collets: AdaptiveItem = {
 			bd: 52,
 			wt: 0.3647,
 		},
+		{
+			name: "132L-1610050-B",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426929_d50_0_0~tl04_00.png",
+			number_of_possible_tool_items: 1,
+			dcon: "25,4",
+			lsc: 55,
+			lf: 5,
+			oal: 55,
+			bd: 31.4,
+			lb: 5,
+			bhta: 0,
+			wt: 0.193,
+		},
+	],
+};
+
+const adaptive_item_without_category: AdaptiveItemWithoutCategory = {
+	adaptive_items: [
+		{
+			name: "AA3B27-40 32 090",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424168_d50_0_0~tl04_00.png",
+			dcp: true,
+			dcon: "31,75",
+			crks: '5/8"-11',
+			kapr: 0,
+			lsc: 64,
+			lf: 90,
+			bd: 51,
+			bdx: 63.5,
+			lb: 67.902,
+			lbx: 90,
+			bhta: 0,
+			bbd: true,
+			wt: 1.51,
+		},
+		{
+			name: "A416.2-LX25-32",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427348_d50_0_0~tl04_00.png",
+			dcon: "31,75",
+			lsc: 65,
+			lf: 2.5,
+			oal: 65,
+			bd: 40,
+			lb: 5,
+			bhta: 0,
+			wt: 0.145,
+		},
 	],
 };
 
@@ -209,6 +274,12 @@ const tool_adaptive = [
 	{ tool_name: "162-120Q27-60", adaptive_name: "A1B05-40 27 100" },
 	{ tool_name: "162-120Q27-60", adaptive_name: "392.54005C4027050" },
 	{ tool_name: "345-040A32-13M", adaptive_name: "393.14-50 320" },
+	{ tool_name: "460.1-0805-024A1-XM GC34", adaptive_name: "132L-1610050-B" },
+];
+
+const adaptive_matching = [
+	{ machine_dir: "A416.2-LX25-32", workpiece_dir: "132L-1610050-B" },
+	{ machine_dir: "AA3B27-40 32 090", workpiece_dir: "A416.2-LX25-32" },
 ];
 
 interface CuttingItem {
@@ -268,6 +339,7 @@ async function main() {
 
 	await prisma.tool_cutting.deleteMany();
 	await prisma.tool_adaptive.deleteMany();
+	await prisma.adaptive_item_matching.deleteMany();
 
 	await prisma.tool_item.deleteMany();
 	await prisma.adaptive_item.deleteMany();
@@ -384,6 +456,51 @@ async function main() {
 				category_id: rotational_category.id,
 			},
 			update: {},
+		});
+	}
+
+	for (
+		let i = 0;
+		i < adaptive_item_without_category.adaptive_items.length;
+		i++
+	) {
+		await prisma.adaptive_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...adaptive_item_without_category.adaptive_items[i],
+				name: adaptive_item_without_category.adaptive_items[i].name ?? "",
+				img: adaptive_item_without_category.adaptive_items[i].img ?? "",
+			},
+			update: {},
+		});
+	}
+
+	//Adaptive matching
+
+	for (let i = 0; i < adaptive_matching.length; i++) {
+		const adaptive_item_machine = await prisma.adaptive_item.findFirst({
+			where: { name: adaptive_matching[i].machine_dir },
+		});
+
+		if (adaptive_item_machine === null) {
+			continue;
+		}
+
+		const adaptive_item_workiece = await prisma.adaptive_item.findFirst({
+			where: { name: adaptive_matching[i].workpiece_dir },
+		});
+
+		if (adaptive_item_workiece === null) {
+			continue;
+		}
+
+		await prisma.adaptive_item_matching.create({
+			data: {
+				machine_direction_adaptive_id: adaptive_item_machine.id,
+				worpiece_direction_adaptive_id: adaptive_item_workiece.id,
+			},
 		});
 	}
 

@@ -5,6 +5,7 @@ import {
 	useToolAssemblyContext,
 } from "@/contexts/toolAssembly.context";
 import {
+	useGetAdaptiveMatchingItems,
 	useGetToolAdaptiveItems,
 	useGetToolCuttingItems,
 } from "@/hooks/products";
@@ -33,6 +34,7 @@ const isToolAssemblerEmpty = (
 interface MapedItem {
 	id: number;
 	type: "tool" | "cutting" | "adaptive";
+	numberOfPossibleWorkpieceItems?: number;
 	name: string;
 	img: string | null;
 	order: number;
@@ -46,6 +48,7 @@ const mapToolAssembly = (
 		toolAssembly?.used_tool_item.map((item) => ({
 			id: item.tool_item_id,
 			type: "tool",
+			numberOfPossibleWorkpieceItems: 1,
 			name: item.tool_item.name,
 			img: item.tool_item.img,
 			order: item.order,
@@ -56,6 +59,8 @@ const mapToolAssembly = (
 		toolAssembly?.used_adaptive_item.map((item) => ({
 			id: item.adaptive_item_id,
 			type: "adaptive",
+			numberOfPossibleWorkpieceItems:
+				item.adaptive_item.number_of_possible_tool_items,
 			name: item.adaptive_item.name,
 			img: item.adaptive_item.img,
 			order: item.order,
@@ -66,6 +71,8 @@ const mapToolAssembly = (
 		toolAssembly?.used_cutting_item.map((item) => ({
 			id: item.cutting_item_id,
 			type: "cutting",
+			numberOfPossibleWorkpieceItems: 1,
+			data: item.cutting_item,
 			name: item.cutting_item.name,
 			img: item.cutting_item.img,
 			order: item.order,
@@ -103,6 +110,26 @@ const MachineDirection = ({
 		item.id ?? undefined,
 		item.type === "cutting"
 	);
+
+	const machineDirectionAdaptiveItems = useGetAdaptiveMatchingItems(
+		undefined,
+		item.id,
+		item.type === "adaptive"
+	);
+
+	if (
+		item.type === "adaptive" &&
+		machineDirectionAdaptiveItems.data?.items.length !== 0 &&
+		haveChild === false
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "adaptive-machine", item.id, item.order - 1)
+				}
+			/>
+		);
+	}
 
 	if (
 		item.type === "tool" &&
@@ -158,15 +185,39 @@ const WorkpieceDirection = ({
 		item.type === "tool"
 	);
 
+	const workpieceDirectionAdaptiveItems = useGetAdaptiveMatchingItems(
+		item.id,
+		undefined,
+		item.type === "adaptive"
+	);
+
 	if (
 		item.type === "adaptive" &&
 		toolAdaptive.data?.items.length !== 0 &&
-		haveParent === false
+		haveParent === false &&
+		item?.numberOfPossibleWorkpieceItems !== undefined &&
+		item?.numberOfPossibleWorkpieceItems > 0
 	) {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
 					onOpen("lists", "adaptive-tool", item.id, item.order + 1)
+				}
+			/>
+		);
+	}
+
+	if (
+		item.type === "adaptive" &&
+		workpieceDirectionAdaptiveItems.data?.items.length !== 0 &&
+		haveParent === false &&
+		(item?.numberOfPossibleWorkpieceItems === undefined ||
+			item?.numberOfPossibleWorkpieceItems === 0)
+	) {
+		return (
+			<AddToolAssemblerItem
+				handleButton={() =>
+					onOpen("lists", "adaptive-workpiece", item.id, item.order + 1)
 				}
 			/>
 		);
@@ -197,8 +248,6 @@ export default function ToolAssembler({}: Props) {
 	if (isToolAssemblerEmpty(toolAssembly) === true) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
-
-	console.log(mapedToolAseemblyItems);
 
 	return (
 		<>

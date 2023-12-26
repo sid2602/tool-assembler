@@ -1,5 +1,12 @@
 import { ListCategoryName } from "@/contexts/toolAssembly.context";
-import { useGetAdaptiveItems, useGetToolAdaptiveItems } from "@/hooks/products";
+import {
+	useGetAdaptiveItems,
+	useGetAdaptiveMatchingItems,
+	useGetToolAdaptiveItems,
+} from "@/hooks/products";
+import { GetAdaptiveItemsSuccessResponse } from "@/pages/api/adaptive-items";
+import { GetMatchingAdaptiveSuccessResponse } from "@/pages/api/adaptive-items/matching-adaptive-items";
+import { GetToolAdaptiveSuccessResponse } from "@/pages/api/tool-items/tool-adaptive";
 import { AddIcon } from "@chakra-ui/icons";
 import {
 	Button,
@@ -21,6 +28,8 @@ import {
 	Thead,
 	Tr,
 } from "@chakra-ui/react";
+import { Adaptive_item } from "@prisma/client";
+import { UseQueryResult } from "react-query";
 
 interface Props {
 	listCategory: ListCategoryName;
@@ -28,6 +37,61 @@ interface Props {
 	searchId: number | null | undefined;
 	onClick: (id: number) => Promise<void>;
 }
+
+const filterData = (
+	adaptiveItems: UseQueryResult<GetAdaptiveItemsSuccessResponse, unknown>,
+	toolAdaptive: UseQueryResult<GetToolAdaptiveSuccessResponse, unknown>,
+	matchingAdaptive: UseQueryResult<GetMatchingAdaptiveSuccessResponse, unknown>,
+	listCategory: ListCategoryName
+): {
+	data: Adaptive_item[];
+	isLoading: boolean;
+	isError: boolean;
+} => {
+	if (listCategory === "adaptive-item-categories") {
+		return {
+			data: adaptiveItems.data?.items ?? [],
+			isLoading: adaptiveItems.isLoading,
+			isError: adaptiveItems.isError,
+		};
+	}
+
+	if (listCategory === "tool-adaptive") {
+		return {
+			data: toolAdaptive.data?.items.map((item) => item.adaptive_item) ?? [],
+			isLoading: toolAdaptive.isLoading,
+			isError: toolAdaptive.isError,
+		};
+	}
+
+	if (listCategory === "adaptive-machine") {
+		return {
+			data:
+				matchingAdaptive.data?.items.map(
+					(item) => item.machine_direction_adaptive_item
+				) ?? [],
+			isLoading: matchingAdaptive.isLoading,
+			isError: matchingAdaptive.isError,
+		};
+	}
+
+	if (listCategory === "adaptive-workpiece") {
+		return {
+			data:
+				matchingAdaptive.data?.items.map(
+					(item) => item.workpiece_direction_adaptive_item
+				) ?? [],
+			isLoading: matchingAdaptive.isLoading,
+			isError: matchingAdaptive.isError,
+		};
+	}
+
+	return {
+		data: [],
+		isLoading: false,
+		isError: false,
+	};
+};
 
 export default function AdaptiveItemsStep({
 	listCategory,
@@ -46,18 +110,18 @@ export default function AdaptiveItemsStep({
 		listCategory === "tool-adaptive"
 	);
 
-	const data =
-		listCategory === "adaptive-item-categories"
-			? adaptiveItems.data?.items
-			: toolAdaptive.data?.items.map((item) => item.adaptive_item);
-	const isLoading =
-		listCategory === "adaptive-item-categories"
-			? adaptiveItems.isLoading
-			: toolAdaptive.isLoading;
-	const isError =
-		listCategory === "adaptive-item-categories"
-			? adaptiveItems.isError
-			: toolAdaptive.isError;
+	const matchingAdaptive = useGetAdaptiveMatchingItems(
+		listCategory === "adaptive-workpiece" ? searchId ?? undefined : undefined,
+		listCategory === "adaptive-machine" ? searchId ?? undefined : undefined,
+		listCategory === "adaptive-machine" || listCategory === "adaptive-workpiece"
+	);
+
+	const { data, isError, isLoading } = filterData(
+		adaptiveItems,
+		toolAdaptive,
+		matchingAdaptive,
+		listCategory
+	);
 
 	if (isError) {
 		return;

@@ -38,8 +38,8 @@ model Assembly_item {
   name  String
   connecting_adaptive_item Adaptive_assembly[]
   used_for_tool_assembly Tool_assembly_assembly_item[]
-  category Assembly_item_category @relation(fields: [category_id], references: [id])
-  category_id Int
+  category Assembly_item_category? @relation(fields: [category_id], references: [id])
+  category_id Int?
   img   String?
   adjby Int?
   dcbx  String?
@@ -87,10 +87,10 @@ model Adaptive_item {
   connecting_tool_item Tool_adaptive[]
   connecting_assembly_item Adaptive_assembly[]
   used_for_tool_assembly Tool_assembly_adaptive_item[]
-  category Adaptive_item_category @relation(fields: [category_id], references: [id])
+  category Adaptive_item_category? @relation(fields: [category_id], references: [id])
   machine_direction_adaptive_items Adaptive_item_matching[] @relation("machine_direction")
   workpiece_direction_adaptive_items Adaptive_item_matching[] @relation("workpiece_direction")
-  category_id Int
+  category_id Int?
   adc    String?
   atc    String?
   asp    Float?
@@ -167,8 +167,8 @@ model Cutting_item {
   name    String
   connecting_tool_item Tool_cutting[]
   used_for_tool_assembly Tool_assembly_cutting_item[]
-  category Cutting_item_category @relation(fields: [category_id], references: [id])
-  category_id Int
+  category Cutting_item_category? @relation(fields: [category_id], references: [id])
+  category_id Int?
   img     String?
   bnp     Boolean?
   cpp     Boolean?

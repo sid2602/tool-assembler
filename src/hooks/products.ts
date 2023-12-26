@@ -65,3 +65,28 @@ export const useGetToolCuttingItems = (
 		{ enabled: isEnabled || toolItemID !== undefined }
 	);
 };
+
+export const useGetAdaptiveMatchingItems = (
+	machineDirectionAdaptiveItemId: number | undefined,
+	workpieceDirectionAdaptiveItemId: number | undefined,
+	isEnabled?: boolean
+) => {
+	const machineKey =
+		machineDirectionAdaptiveItemId !== undefined
+			? "machine" + machineDirectionAdaptiveItemId
+			: undefined;
+	const workpieceKey =
+		workpieceDirectionAdaptiveItemId !== undefined
+			? "workpiece" + workpieceDirectionAdaptiveItemId
+			: undefined;
+
+	return useQuery(
+		["useGetAdaptiveMatchingItems", machineKey ?? workpieceKey ?? undefined],
+		() =>
+			ProductsService.getAdaptiveMatchingItems(
+				machineDirectionAdaptiveItemId,
+				workpieceDirectionAdaptiveItemId
+			),
+		{ enabled: isEnabled }
+	);
+};

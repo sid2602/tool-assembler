@@ -29,6 +29,8 @@ export type ListCategoryName =
 	| "adaptive-tool"
 	| "tool-cutting"
 	| "cutting-tool"
+	| "adaptive-machine"
+	| "adaptive-workpiece"
 	| null;
 
 interface ToolItemStep {
