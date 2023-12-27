@@ -4,6 +4,20 @@ import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
 
+export default async function routes(
+	request: NextApiRequest,
+	response: NextApiResponse
+) {
+	switch (request.method) {
+		case "POST":
+			return await POST(request, response);
+		case "DELETE":
+			return await DELETE(request, response);
+		default:
+			return response.status(400);
+	}
+}
+
 export type PostToolAssemblyAdaptiveItemSuccessResponse = {
 	type: "Success";
 	item: Tool_assembly_adaptive_item;
@@ -20,7 +34,7 @@ export interface PostToolAssemblyAdaptiveItemBody {
 	row: number;
 }
 
-export default async function POST(
+async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyAdaptiveItemResponse>
 ) {
@@ -40,5 +54,35 @@ export default async function POST(
 	return response.json({
 		type: "Success",
 		item: tool_assembly_adaptive_item,
+	});
+}
+
+export type DeleteToolAssemblyAdaptiveItemSuccessResponse = {
+	type: "Success";
+};
+
+export type DeleteToolAssemblyAdaptiveItemResponse =
+	| DeleteToolAssemblyAdaptiveItemSuccessResponse
+	| ServerErrorResponse;
+
+async function DELETE(
+	request: NextApiRequest,
+	response: NextApiResponse<DeleteToolAssemblyAdaptiveItemResponse>
+) {
+	const { id } = request.query;
+
+	if (Array.isArray(id) === true || id === undefined) {
+		return response.status(400).json({
+			type: "Error",
+			message: "Wrong ID",
+		});
+	}
+
+	await prisma.tool_assembly_adaptive_item.delete({
+		where: { id: Number(id) },
+	});
+
+	return response.json({
+		type: "Success",
 	});
 }

@@ -67,3 +67,45 @@ export const useGetToolAssembly = (id: number | undefined) => {
 		{ enabled: id !== undefined }
 	);
 };
+
+export const useDeleteAdaptiveItem = (id: number | undefined) => {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		["useDeleteAdaptiveItem"],
+		() => ToolAssemblyService.deleteAdaptiveItem(id),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("getToolAssembly");
+			},
+		}
+	);
+};
+
+export const useDeleteToolItem = (id: number | undefined) => {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		["useDeleteToolItem"],
+		() => ToolAssemblyService.deleteToolItem(id),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("getToolAssembly");
+			},
+		}
+	);
+};
+
+export const useDeleteCuttinglItem = (id: number | undefined) => {
+	const queryClient = useQueryClient();
+
+	return useMutation(
+		["useDeleteCuttinglItem"],
+		() => ToolAssemblyService.deleteCuttingItem(id),
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("getToolAssembly");
+			},
+		}
+	);
+};

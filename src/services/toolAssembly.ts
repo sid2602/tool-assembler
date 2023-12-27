@@ -1,6 +1,7 @@
 import { PostToolAssemblySuccessResponse } from "@/pages/api/tool-assembly";
 import { GetToolAssemblySuccessResponse } from "@/pages/api/tool-assembly/[id]";
 import {
+	DeleteToolAssemblyAdaptiveItemSuccessResponse,
 	PostToolAssemblyAdaptiveItemBody,
 	PostToolAssemblyAdaptiveItemSuccessResponse,
 } from "@/pages/api/tool-assembly/adaptive-item";
@@ -9,6 +10,7 @@ import {
 	PostToolAssemblyCuttingItemResponse,
 } from "@/pages/api/tool-assembly/cutting-item";
 import {
+	DeleteToolAssemblyToolItemSuccessResponse,
 	PostToolAssemblyToolItemBody,
 	PostToolAssemblyToolItemSuccessResponse,
 } from "@/pages/api/tool-assembly/tool-item";
@@ -55,6 +57,33 @@ class ToolAssemblyService {
 		const resp = await axios.post(
 			"http://localhost:3000/api/tool-assembly/tool-item",
 			{ data }
+		);
+		return resp.data;
+	}
+
+	async deleteAdaptiveItem(
+		id: number | undefined
+	): Promise<DeleteToolAssemblyAdaptiveItemSuccessResponse> {
+		const resp = await axios.delete(
+			"http://localhost:3000/api/tool-assembly/adaptive-item?id=" + id
+		);
+		return resp.data;
+	}
+
+	async deleteToolItem(
+		id: number | undefined
+	): Promise<DeleteToolAssemblyToolItemSuccessResponse> {
+		const resp = await axios.delete(
+			"http://localhost:3000/api/tool-assembly/tool-item?id=" + id
+		);
+		return resp.data;
+	}
+
+	async deleteCuttingItem(
+		id: number | undefined
+	): Promise<DeleteToolAssemblyToolItemSuccessResponse> {
+		const resp = await axios.delete(
+			"http://localhost:3000/api/tool-assembly/cutting-item?id=" + id
 		);
 		return resp.data;
 	}

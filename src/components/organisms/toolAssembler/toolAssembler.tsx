@@ -34,6 +34,7 @@ const isToolAssemblerEmpty = (
 interface MapedItem {
 	id: number;
 	type: "tool" | "cutting" | "adaptive";
+	usedItemId: number;
 	numberOfPossibleWorkpieceItems?: number;
 	name: string;
 	img: string | null;
@@ -48,6 +49,7 @@ const mapToolAssembly = (
 		toolAssembly?.used_tool_item.map((item) => ({
 			id: item.tool_item_id,
 			type: "tool",
+			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems: 1,
 			name: item.tool_item.name,
 			img: item.tool_item.img,
@@ -59,6 +61,7 @@ const mapToolAssembly = (
 		toolAssembly?.used_adaptive_item.map((item) => ({
 			id: item.adaptive_item_id,
 			type: "adaptive",
+			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems:
 				item.adaptive_item.number_of_possible_tool_items,
 			name: item.adaptive_item.name,
@@ -71,6 +74,7 @@ const mapToolAssembly = (
 		toolAssembly?.used_cutting_item.map((item) => ({
 			id: item.cutting_item_id,
 			type: "cutting",
+			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems: 1,
 			data: item.cutting_item,
 			name: item.cutting_item.name,
@@ -249,6 +253,17 @@ export default function ToolAssembler({}: Props) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
 
+	const canBeDeleted = (order: number) => {
+		const minOrder = Math.min(
+			...mapedToolAseemblyItems.map((item) => item.order)
+		);
+		const maxOrder = Math.max(
+			...mapedToolAseemblyItems.map((item) => item.order)
+		);
+
+		return order === minOrder || order === maxOrder;
+	};
+
 	return (
 		<>
 			{mapedToolAseemblyItems.map((item) => (
@@ -270,6 +285,9 @@ export default function ToolAssembler({}: Props) {
 					<ToolAssemblerItem
 						key={item.name + item.row + item.order}
 						item={{ name: item.name, img: item.img }}
+						usedItemId={item.usedItemId}
+						type={item.type}
+						canBeDeleted={canBeDeleted(item.order)}
 					/>
 					<WorkpieceDirection
 						key={item.name + item.row + item.order + "Workpiece Direction"}
