@@ -1,6 +1,17 @@
 import { useQuery } from "react-query";
 import ProductsService from "../services/products";
 
+export const useGetSearchProduct = (
+	name: string | string[] | undefined,
+	isEnabled?: boolean
+) => {
+	return useQuery(
+		["getSearchProduct", name],
+		() => ProductsService.getSearchProduct(name),
+		{ enabled: isEnabled }
+	);
+};
+
 export const useGetToolItems = (
 	categoryId: number | undefined,
 	isEnabled?: boolean

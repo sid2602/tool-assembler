@@ -1,12 +1,26 @@
 import { GetAdaptiveItemsSuccessResponse } from "@/pages/api/adaptive-items";
 import { GetMatchingAdaptiveSuccessResponse } from "@/pages/api/adaptive-items/matching-adaptive-items";
 import { GetCuttingItemsSuccessResponse } from "@/pages/api/cutting-items";
+import { GetSearchProductSuccessResponse } from "@/pages/api/search-product";
 import { GetToolItemsSuccessResponse } from "@/pages/api/tool-items";
 import { GetToolAdaptiveSuccessResponse } from "@/pages/api/tool-items/tool-adaptive";
 import { GetToolCuttingSuccessResponse } from "@/pages/api/tool-items/tool-cutting";
 import axios from "axios";
 
 class ProductsService {
+	async getSearchProduct(
+		productName: string | string[] | undefined
+	): Promise<GetSearchProductSuccessResponse> {
+		if (productName === undefined) {
+			throw new Error("No productName specified");
+		}
+
+		const resp = await axios.get(
+			`http://localhost:3000/api/search-product?name=${productName}`
+		);
+		return resp.data;
+	}
+
 	async getToolItems(
 		categoryId: number | undefined
 	): Promise<GetToolItemsSuccessResponse> {
