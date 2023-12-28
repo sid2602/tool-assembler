@@ -2,7 +2,7 @@ import { EditCustomerSchema } from "@/pages/profile/settings";
 import { ServerErrorResponse } from "@/types/ServerErrorResponse";
 import { hashPassword } from "@/utils/server/passwordHash";
 import { generateToken } from "@/utils/server/token";
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextApiRequest, NextApiResponse } from "next";
 
 const prisma = new PrismaClient();
@@ -21,18 +21,43 @@ export default async function routes(
 	}
 }
 
-async function GET(request: NextApiRequest, response: NextApiResponse) {
+export type FullCustomerModel = Prisma.CustomerGetPayload<{
+	include: {
+		tool_assemblies: true;
+	};
+}>;
+
+export type GetCustomerSuccessResponse = {
+	type: "Success";
+	item: FullCustomerModel | null;
+};
+
+export type GetCustomerResponse =
+	| GetCustomerSuccessResponse
+	| ServerErrorResponse;
+
+async function GET(
+	request: NextApiRequest,
+	response: NextApiResponse<GetCustomerResponse>
+) {
 	const customerId = request.query.id;
 
 	if (Array.isArray(customerId) === true || customerId === undefined) {
-		return response.json(null);
+		return response.json({
+			type: "Error",
+			message: "Wrong customer ID",
+		});
 	}
 
-	const customers = await prisma.customer.findUnique({
+	const customer = await prisma.customer.findUnique({
 		where: { id: Number(customerId) },
+		include: { tool_assemblies: true },
 	});
 
-	return response.json(customers);
+	return response.json({
+		type: "Success",
+		item: customer,
+	});
 }
 
 export type EditCustomerSuccessResponse = {

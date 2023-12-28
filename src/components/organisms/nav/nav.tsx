@@ -176,7 +176,9 @@ export default function Nav() {
 				<Menu>
 					<MenuButton as={Avatar} />
 					<MenuList textAlign="right">
-						<MenuItem>Saved tool assemblers</MenuItem>
+						<MenuItem as={Link} href={"/profile/saved-tool-items"}>
+							Saved tool assemblers
+						</MenuItem>
 						<MenuItem as={Link} href={"/profile/settings"}>
 							Settings
 						</MenuItem>

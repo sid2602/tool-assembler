@@ -1,3 +1,4 @@
+import { ToolAssemblyContextProvider } from "@/contexts/toolAssembly.context";
 import "@/styles/globals.css";
 import { ChakraProvider } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
@@ -12,7 +13,9 @@ export default function App({ Component, pageProps }: AppProps) {
 		<QueryClientProvider client={queryClient}>
 			<Hydrate state={pageProps.dehydratedState}>
 				<ChakraProvider>
-					<Component {...pageProps} />
+					<ToolAssemblyContextProvider>
+						<Component {...pageProps} />
+					</ToolAssemblyContextProvider>
 				</ChakraProvider>
 				<ReactQueryDevtools initialIsOpen={false} />
 			</Hydrate>

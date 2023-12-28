@@ -97,7 +97,7 @@ type ContextType = {
 	addToolItem: (toolItemId: number) => Promise<void>;
 	addAdaptiveItem: (adaptiveItemId: number) => Promise<void>;
 	addCuttingItem: (cuttingItemId: number) => Promise<void>;
-	setToolAssemblyId: (id: number) => void;
+	setToolAssemblyId: (id: number | undefined) => void;
 	handleUpdateToolAssembly: (data: PutToolAssemblyBody) => Promise<void>;
 };
 
@@ -115,7 +115,7 @@ const defaultCotnextValue: ContextType = {
 	addToolItem: async (toolItemId: number) => {},
 	addAdaptiveItem: async (adaptiveItemId: number) => {},
 	addCuttingItem: async (cuttingItemId: number) => {},
-	setToolAssemblyId: (id: number) => {},
+	setToolAssemblyId: (id: number | undefined) => {},
 	handleUpdateToolAssembly: async (data: PutToolAssemblyBody) => {},
 };
 

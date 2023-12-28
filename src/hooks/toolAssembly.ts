@@ -82,7 +82,7 @@ export const useAddToolItem = () => {
 
 export const useGetToolAssembly = (id: number | undefined) => {
 	return useQuery(
-		["getToolAssembly"],
+		["getToolAssembly", id],
 		() => ToolAssemblyService.getToolAssembly(id),
 		{ enabled: id !== undefined }
 	);

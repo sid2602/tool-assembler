@@ -1,4 +1,7 @@
-import { EditCustomerSuccessResponse } from "@/pages/api/customers/[id]";
+import {
+	EditCustomerSuccessResponse,
+	GetCustomerSuccessResponse,
+} from "@/pages/api/customers/[id]";
 import axios from "axios";
 
 export interface UpdateCustomerPut {
@@ -9,6 +12,14 @@ export interface UpdateCustomerPut {
 }
 
 class CustomerService {
+	async getCustomer(
+		id: number | undefined
+	): Promise<GetCustomerSuccessResponse> {
+		const resp = await axios.get("http://localhost:3000/api/customers/" + id);
+
+		return resp.data;
+	}
+
 	async updateCustomer(
 		id: number,
 		data: UpdateCustomerPut

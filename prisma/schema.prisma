@@ -25,6 +25,9 @@ model Tool_assembly {
     used_adaptive_item Tool_assembly_adaptive_item[]
     used_tool_item Tool_assembly_tool_item[]
     used_assembly_item Tool_assembly_assembly_item[]
+    created_at DateTime @default(now())
+updated_at DateTime @updatedAt
+
 }
 
 model Assembly_item_category {
@@ -32,7 +35,7 @@ id     Int       @id @default(autoincrement())
 name  String
 img String
 assembly_items Assembly_item[]
-created_at DateTime @default(now())
+ created_at DateTime @default(now())
 updated_at DateTime @updatedAt
 }
 

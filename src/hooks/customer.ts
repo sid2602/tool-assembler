@@ -1,5 +1,13 @@
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import CustomerService, { UpdateCustomerPut } from "../services/customer.";
+
+export const useGetCustomer = (id: number | undefined) => {
+	return useQuery(
+		["useGetCustomer", id],
+		() => CustomerService.getCustomer(id),
+		{ enabled: id !== undefined }
+	);
+};
 
 interface UseUpdateCustomer {
 	id: number;
