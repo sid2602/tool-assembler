@@ -18,6 +18,7 @@ model Customer {
 
 model Tool_assembly {
     id Int @id @default(autoincrement())
+    name String?
     customer Customer? @relation(fields: [customer_id], references: [id])
     customer_id Int?
     used_cutting_item Tool_assembly_cutting_item[]
@@ -31,6 +32,8 @@ id     Int       @id @default(autoincrement())
 name  String
 img String
 assembly_items Assembly_item[]
+created_at DateTime @default(now())
+updated_at DateTime @updatedAt
 }
 
 model Assembly_item {

@@ -1,3 +1,4 @@
+import { PutToolAssemblyBody } from "@/pages/api/tool-assembly/[id]";
 import { PostToolAssemblyAdaptiveItemBody } from "@/pages/api/tool-assembly/adaptive-item";
 import { PostToolAssemblyCuttingItemBody } from "@/pages/api/tool-assembly/cutting-item";
 import { PostToolAssemblyToolItemBody } from "@/pages/api/tool-assembly/tool-item";
@@ -9,6 +10,25 @@ export const useCreateToolAssembly = () => {
 	return useMutation(
 		() => {
 			return ToolAssemblyService.createToolAssembly();
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries("getToolAssembly");
+			},
+		}
+	);
+};
+
+interface UseUpdateToolAssemblyParams {
+	id: number | undefined;
+	data: PutToolAssemblyBody;
+}
+
+export const useUpdateToolAssembly = () => {
+	const queryClient = useQueryClient();
+	return useMutation(
+		(params: UseUpdateToolAssemblyParams) => {
+			return ToolAssemblyService.updateToolAssembly(params.id, params.data);
 		},
 		{
 			onSuccess: () => {

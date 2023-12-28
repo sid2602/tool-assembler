@@ -43,8 +43,6 @@ export default function ToolAssemblerItem({
 		}
 	};
 
-	console.log(item.name, canBeDeleted);
-
 	return (
 		<Box
 			borderRadius="lg"

@@ -4,8 +4,12 @@ import {
 	useAddToolItem,
 	useCreateToolAssembly,
 	useGetToolAssembly,
+	useUpdateToolAssembly,
 } from "@/hooks/toolAssembly";
-import { Tool_assembly } from "@/pages/api/tool-assembly/[id]";
+import {
+	PutToolAssemblyBody,
+	Tool_assembly,
+} from "@/pages/api/tool-assembly/[id]";
 import { useDisclosure } from "@chakra-ui/react";
 
 import {
@@ -93,6 +97,8 @@ type ContextType = {
 	addToolItem: (toolItemId: number) => Promise<void>;
 	addAdaptiveItem: (adaptiveItemId: number) => Promise<void>;
 	addCuttingItem: (cuttingItemId: number) => Promise<void>;
+	setToolAssemblyId: (id: number) => void;
+	handleUpdateToolAssembly: (data: PutToolAssemblyBody) => Promise<void>;
 };
 
 const defaultCotnextValue: ContextType = {
@@ -109,6 +115,8 @@ const defaultCotnextValue: ContextType = {
 	addToolItem: async (toolItemId: number) => {},
 	addAdaptiveItem: async (adaptiveItemId: number) => {},
 	addCuttingItem: async (cuttingItemId: number) => {},
+	setToolAssemblyId: (id: number) => {},
+	handleUpdateToolAssembly: async (data: PutToolAssemblyBody) => {},
 };
 
 export const ToolAssemblyContext =
@@ -132,6 +140,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	const addToolItemToToolAssemblyQuery = useAddToolItem();
 	const addAdaptiveItemToToolAssemblyQuery = useAddAdaptiveItem();
 	const addCuttingItemToToolAssemblyQuery = useAddCuttingItem();
+	const updateToolAssembly = useUpdateToolAssembly();
 
 	const onOpen = async (
 		actualStep?: ActualStep,
@@ -166,6 +175,12 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		const resp = await createToolAssemblyQuery.mutateAsync();
 		setToolAsemblyId(resp.item.id);
 		return resp.item.id;
+	};
+
+	const handleUpdateToolAssembly = async (
+		data: PutToolAssemblyBody
+	): Promise<void> => {
+		await updateToolAssembly.mutateAsync({ id: toolAssemblyId, data });
 	};
 
 	const addToolItem = async (toolItemId: number) => {
@@ -231,6 +246,8 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 				addToolItem,
 				addAdaptiveItem,
 				addCuttingItem,
+				setToolAssemblyId: (id) => setToolAsemblyId(id),
+				handleUpdateToolAssembly,
 			}}
 		>
 			{children}

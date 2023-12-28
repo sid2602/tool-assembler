@@ -1,5 +1,8 @@
 import { PostToolAssemblySuccessResponse } from "@/pages/api/tool-assembly";
-import { GetToolAssemblySuccessResponse } from "@/pages/api/tool-assembly/[id]";
+import {
+	GetToolAssemblySuccessResponse,
+	PutToolAssemblyBody,
+} from "@/pages/api/tool-assembly/[id]";
 import {
 	DeleteToolAssemblyAdaptiveItemSuccessResponse,
 	PostToolAssemblyAdaptiveItemBody,
@@ -19,6 +22,17 @@ import axios from "axios";
 class ToolAssemblyService {
 	async createToolAssembly(): Promise<PostToolAssemblySuccessResponse> {
 		const resp = await axios.post("http://localhost:3000/api/tool-assembly");
+		return resp.data;
+	}
+
+	async updateToolAssembly(
+		id: number | undefined,
+		data: PutToolAssemblyBody
+	): Promise<PostToolAssemblySuccessResponse> {
+		const resp = await axios.put(
+			"http://localhost:3000/api/tool-assembly/" + id,
+			{ data }
+		);
 		return resp.data;
 	}
 
