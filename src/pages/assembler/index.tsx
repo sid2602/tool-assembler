@@ -3,6 +3,7 @@ import ToolAssemblerModal from "@/components/organisms/toolAssemblerModal/toolAs
 import AuthenticatedCustomerPage from "@/components/templates/authenticatedCustomerPage";
 import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
 import { useMe } from "@/hooks/auth";
+import { Spinner } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { QueryClient, dehydrate } from "react-query";
@@ -31,7 +32,15 @@ export default function Assembler() {
 	}
 
 	if (isLoading) {
-		return <>loading</>;
+		<AuthenticatedCustomerPage>
+			<Spinner
+				thickness="4px"
+				speed="0.65s"
+				emptyColor="gray.200"
+				color="blue.500"
+				size="xl"
+			/>
+		</AuthenticatedCustomerPage>;
 	}
 
 	return (

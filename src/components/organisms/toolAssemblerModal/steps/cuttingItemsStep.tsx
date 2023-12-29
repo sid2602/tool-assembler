@@ -1,40 +1,29 @@
-import { ListCategoryName } from "@/contexts/toolAssembly.context";
-import { useGetCuttingItems, useGetToolCuttingItems } from "@/hooks/products";
-import { AddIcon } from "@chakra-ui/icons";
+import ToolAssemblerItemsTable from "@/components/molecues/toolAssemblerItemsTable/toolAssemblerItemsTable";
 import {
-	Button,
-	Image,
+	ListCategoryName,
+	useToolAssemblyContext,
+} from "@/contexts/toolAssembly.context";
+import { useGetCuttingItems, useGetToolCuttingItems } from "@/hooks/products";
+import {
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
-	Text,
-} from "@chakra-ui/react";
-
-import {
-	Table,
-	TableContainer,
-	Tbody,
-	Td,
-	Th,
-	Thead,
-	Tr,
 } from "@chakra-ui/react";
 
 interface Props {
 	listCategory: ListCategoryName;
 	categoryId: number | null | undefined;
 	searchId: number | null | undefined;
-	onClick: (id: number) => Promise<void>;
 }
 
 export default function CuttingItemsStep({
 	categoryId,
 	listCategory,
 	searchId,
-	onClick,
 }: Props) {
+	const { addCuttingItem } = useToolAssemblyContext();
+
 	const cuttingItems = useGetCuttingItems(
 		categoryId ?? undefined,
 		listCategory === "cutting-item-categories"
@@ -68,54 +57,16 @@ export default function CuttingItemsStep({
 			<ModalHeader>Choose your first product</ModalHeader>
 			<ModalCloseButton />
 			<ModalBody>
-				{isLoading ? <div>loading...</div> : null}
-				{data !== undefined ? (
-					<>
-						<Text fontSize="md" fontWeight="bold">
-							Select your tool
-						</Text>
-
-						<TableContainer mt="2">
-							<Table variant="simple">
-								<Thead>
-									<Tr>
-										<Th>Image</Th>
-										<Th>Name</Th>
-										<Th isNumeric>ifs</Th>
-										<Th isNumeric>d1</Th>
-										<Th isNumeric>wt</Th>
-									</Tr>
-								</Thead>
-								<Tbody>
-									{data.map((item) => (
-										<Tr key={item.id}>
-											<Td>
-												<Image
-													src={item.img ?? undefined}
-													alt={item.name}
-													width={20}
-													height={20}
-												/>
-											</Td>
-											<Td>{item.name}</Td>
-											<Td isNumeric>{item?.ifs}</Td>
-											<Td isNumeric>{item?.d1}</Td>
-											<Td isNumeric>{item?.wt}</Td>
-											<Td>
-												<Button w="10" h="10">
-													<AddIcon onClick={() => onClick(item.id)} />
-												</Button>
-											</Td>
-										</Tr>
-									))}
-								</Tbody>
-							</Table>
-						</TableContainer>
-					</>
-				) : null}
+				<ToolAssemblerItemsTable
+					isLoading={isLoading}
+					tableData={{
+						type: "Cutting",
+						data: data ?? [],
+						keys: ["name", "ifs", "d1", "wt"],
+					}}
+					onClick={addCuttingItem}
+				/>
 			</ModalBody>
-
-			<ModalFooter></ModalFooter>
 		</ModalContent>
 	);
 }

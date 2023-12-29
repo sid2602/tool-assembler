@@ -3,13 +3,9 @@ import {
 	useAddCuttingItem,
 	useAddToolItem,
 	useCreateToolAssembly,
-	useGetToolAssembly,
 	useUpdateToolAssembly,
 } from "@/hooks/toolAssembly";
-import {
-	PutToolAssemblyBody,
-	Tool_assembly,
-} from "@/pages/api/tool-assembly/[id]";
+import { PutToolAssemblyBody } from "@/pages/api/tool-assembly/[id]";
 import { useDisclosure } from "@chakra-ui/react";
 
 import {
@@ -85,7 +81,7 @@ export type OnOpenFunctionType = (
 ) => void;
 
 type ContextType = {
-	toolAssembly: Tool_assembly | undefined;
+	toolAssemblyId: number | undefined;
 	stepState: StepState;
 	isOpen: boolean;
 	onOpen: OnOpenFunctionType;
@@ -102,7 +98,7 @@ type ContextType = {
 };
 
 const defaultCotnextValue: ContextType = {
-	toolAssembly: undefined,
+	toolAssemblyId: undefined,
 	stepState: initialStep,
 	isOpen: false,
 	onOpen: (
@@ -129,7 +125,6 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		undefined
 	);
 
-	const toolAssemblyQuery = useGetToolAssembly(toolAssemblyId);
 	const {
 		isOpen,
 		onOpen: onOpenModal,
@@ -149,7 +144,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		order?: number | null,
 		row?: number | null
 	) => {
-		if (toolAssemblyQuery.data === undefined) {
+		if (toolAssemblyId === undefined) {
 			await createToolAssembly();
 		}
 
@@ -171,10 +166,9 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		dispatchStepState({ type: "CLOSE", payload: {} });
 	};
 
-	const createToolAssembly = async (): Promise<number> => {
+	const createToolAssembly = async (): Promise<void> => {
 		const resp = await createToolAssemblyQuery.mutateAsync();
 		setToolAsemblyId(resp.item.id);
-		return resp.item.id;
 	};
 
 	const handleUpdateToolAssembly = async (
@@ -184,7 +178,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	};
 
 	const addToolItem = async (toolItemId: number) => {
-		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
+		const toolAssemblerId = toolAssemblyId;
 
 		if (toolAssemblerId === undefined) {
 			throw new Error("No tool assembly");
@@ -201,8 +195,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	};
 
 	const addAdaptiveItem = async (adaptiveItemId: number) => {
-		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
-
+		const toolAssemblerId = toolAssemblyId;
 		if (toolAssemblerId === undefined) {
 			throw new Error("No tool assembly");
 		}
@@ -218,7 +211,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	};
 
 	const addCuttingItem = async (cuttingItemId: number) => {
-		const toolAssemblerId = toolAssemblyQuery.data?.item?.id;
+		const toolAssemblerId = toolAssemblyId;
 
 		if (toolAssemblerId === undefined) {
 			throw new Error("No tool assembly");
@@ -237,7 +230,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	return (
 		<ToolAssemblyContext.Provider
 			value={{
-				toolAssembly: toolAssemblyQuery.data?.item ?? undefined,
+				toolAssemblyId,
 				stepState,
 				isOpen,
 				onOpen,

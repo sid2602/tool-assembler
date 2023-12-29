@@ -9,7 +9,10 @@ import {
 	useGetToolAdaptiveItems,
 	useGetToolCuttingItems,
 } from "@/hooks/products";
+import { useGetToolAssembly } from "@/hooks/toolAssembly";
 import { Tool_assembly } from "@/pages/api/tool-assembly/[id]";
+import { checkSomeQueryParam } from "@/utils/client/checkSomeQueryParam";
+import { Spinner } from "@chakra-ui/react";
 
 interface Props {}
 
@@ -121,6 +124,18 @@ const MachineDirection = ({
 		item.type === "adaptive"
 	);
 
+	const isLoading = checkSomeQueryParam(
+		true,
+		"isLoading",
+		toolAdaptive,
+		toolCutting,
+		machineDirectionAdaptiveItems
+	);
+
+	if (isLoading) {
+		return null;
+	}
+
 	if (
 		item.type === "adaptive" &&
 		machineDirectionAdaptiveItems.data?.items.length !== 0 &&
@@ -195,6 +210,18 @@ const WorkpieceDirection = ({
 		item.type === "adaptive"
 	);
 
+	const isLoading = checkSomeQueryParam(
+		true,
+		"isLoading",
+		toolAdaptive,
+		toolCutting,
+		workpieceDirectionAdaptiveItems
+	);
+
+	if (isLoading) {
+		return null;
+	}
+
 	if (
 		item.type === "adaptive" &&
 		toolAdaptive.data?.items.length !== 0 &&
@@ -245,11 +272,14 @@ const WorkpieceDirection = ({
 };
 
 export default function ToolAssembler({}: Props) {
-	const { toolAssembly, onOpen } = useToolAssemblyContext();
+	const { toolAssemblyId, onOpen } = useToolAssemblyContext();
 
-	const mapedToolAseemblyItems: MapedItem[] = mapToolAssembly(toolAssembly);
+	const { data: toolAssemblyData, isLoading } =
+		useGetToolAssembly(toolAssemblyId);
+	const tollAssembly = toolAssemblyData?.item ?? undefined;
+	const mapedToolAseemblyItems: MapedItem[] = mapToolAssembly(tollAssembly);
 
-	if (isToolAssemblerEmpty(toolAssembly) === true) {
+	if (isToolAssemblerEmpty(tollAssembly) === true) {
 		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
 	}
 
@@ -263,6 +293,18 @@ export default function ToolAssembler({}: Props) {
 
 		return order === minOrder || order === maxOrder;
 	};
+
+	if (isLoading) {
+		return (
+			<Spinner
+				thickness="4px"
+				speed="0.65s"
+				emptyColor="gray.200"
+				color="blue.500"
+				size="xl"
+			/>
+		);
+	}
 
 	return (
 		<>

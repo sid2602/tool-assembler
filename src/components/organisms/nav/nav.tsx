@@ -1,5 +1,6 @@
 import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
 import { useMe } from "@/hooks/auth";
+import { useGetToolAssembly } from "@/hooks/toolAssembly";
 import {
 	Avatar,
 	Button,
@@ -37,7 +38,9 @@ export const saveToolAssemblySchema = Yup.object().shape({
 
 export default function Nav() {
 	const { data, isLoading, isError } = useMe();
-	const { toolAssembly, handleUpdateToolAssembly } = useToolAssemblyContext();
+	const { toolAssemblyId, handleUpdateToolAssembly } = useToolAssemblyContext();
+	const { data: toolAssemblyData } = useGetToolAssembly(toolAssemblyId);
+	const toolAssembly = toolAssemblyData?.item ?? undefined;
 	const router = useRouter();
 	const toast = useToast({});
 	const { onOpen, onClose, isOpen } = useDisclosure();
@@ -176,7 +179,7 @@ export default function Nav() {
 				<Menu>
 					<MenuButton as={Avatar} />
 					<MenuList textAlign="right">
-						<MenuItem as={Link} href={"/profile/saved-tool-items"}>
+						<MenuItem as={Link} href={"/profile/saved-tool-assembler"}>
 							Saved tool assemblers
 						</MenuItem>
 						<MenuItem as={Link} href={"/profile/settings"}>

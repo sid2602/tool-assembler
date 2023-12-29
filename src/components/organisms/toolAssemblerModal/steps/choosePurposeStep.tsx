@@ -12,6 +12,8 @@ import {
 	ModalContent,
 	ModalFooter,
 	ModalHeader,
+	Skeleton,
+	Stack,
 	Text,
 } from "@chakra-ui/react";
 
@@ -52,57 +54,62 @@ export default function ChoosePurposeStep({ onCategorySelect }: Props) {
 		return;
 	}
 
+	const Loader = (
+		<Stack my="3">
+			<Skeleton height="8" />
+			<Skeleton height="8" />
+			<Skeleton height="8" />
+			<Skeleton height="8" />
+		</Stack>
+	);
+
 	return (
-		<ModalContent maxW="1000px" maxH="700px" h="100%">
+		<ModalContent maxW="1000px" maxH="725px" h="100%">
 			<ModalHeader>Choose your first product</ModalHeader>
 			<ModalCloseButton />
 			<ModalBody>
 				<>
-					{toolCategoriesIsLoading ? <div>loading...</div> : null}
+					<Text fontSize="md" fontWeight="bold">
+						Tool items categories
+					</Text>
+					{toolCategoriesIsLoading ? Loader : null}
 					{toolCategoriesIsSuccess && toolCategories !== undefined ? (
-						<>
-							<Text fontSize="md" fontWeight="bold">
-								Tool categories
-							</Text>
-							<Flex my="4" gap="2">
-								{toolCategories.items.map((item) => (
-									<CategoryItem
-										key={item.id}
-										item={item}
-										onClick={() =>
-											onCategorySelect("tool-item-categories", item.id)
-										}
-									/>
-								))}
-							</Flex>
-						</>
+						<Flex my="4" gap="2">
+							{toolCategories.items.map((item) => (
+								<CategoryItem
+									key={item.id}
+									item={item}
+									onClick={() =>
+										onCategorySelect("tool-item-categories", item.id)
+									}
+								/>
+							))}
+						</Flex>
 					) : null}
-					{adaptiveCategoriesIsLoading ? <div>loading...</div> : null}
+					<Text fontSize="md" fontWeight="bold">
+						Adaptive items categories
+					</Text>
+					{adaptiveCategoriesIsLoading ? Loader : null}
 					{adaptiveCategoriesIsSuccess && adaptiveCategories !== undefined ? (
-						<>
-							<Text fontSize="md" fontWeight="bold">
-								Adaptive categories
-							</Text>
-							<Flex my="4" gap="2">
-								{adaptiveCategories.items.map((item) => (
-									<CategoryItem
-										key={item.id}
-										item={item}
-										onClick={() =>
-											onCategorySelect("adaptive-item-categories", item.id)
-										}
-									/>
-								))}
-							</Flex>
-						</>
+						<Flex my="4" gap="2">
+							{adaptiveCategories.items.map((item) => (
+								<CategoryItem
+									key={item.id}
+									item={item}
+									onClick={() =>
+										onCategorySelect("adaptive-item-categories", item.id)
+									}
+								/>
+							))}
+						</Flex>
 					) : null}
 
-					{cuttingCategoriesIsLoading ? <div>loading...</div> : null}
+					<Text fontSize="md" fontWeight="bold">
+						Cutting items categories
+					</Text>
+					{cuttingCategoriesIsLoading ? Loader : null}
 					{cuttingCategoriesIsSuccess && cuttingCategories !== undefined ? (
 						<>
-							<Text fontSize="md" fontWeight="bold">
-								Adaptive categories
-							</Text>
 							<Flex my="4" gap="2">
 								{cuttingCategories.items.map((item) => (
 									<CategoryItem

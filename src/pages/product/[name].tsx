@@ -1,6 +1,6 @@
 import AuthenticatedCustomerPage from "@/components/templates/authenticatedCustomerPage";
 import { useGetSearchProduct } from "@/hooks/products";
-import { Box, Divider, Flex, Image, Text } from "@chakra-ui/react";
+import { Box, Divider, Flex, Image, Spinner, Text } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
 export default function Product() {
@@ -18,7 +18,15 @@ export default function Product() {
 	}
 
 	if (isLoading) {
-		return <div>loading</div>;
+		return (
+			<Spinner
+				thickness="4px"
+				speed="0.65s"
+				emptyColor="gray.200"
+				color="blue.500"
+				size="xl"
+			/>
+		);
 	}
 
 	return (
