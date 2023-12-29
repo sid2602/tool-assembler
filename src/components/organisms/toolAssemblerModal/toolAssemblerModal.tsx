@@ -61,7 +61,6 @@ export default function ToolAssemblerModal({}: Props) {
 					<ToolItemsStep
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
-						onClick={addToolItem}
 						searchId={stepState.searchId}
 					/>
 				)}
@@ -76,7 +75,6 @@ export default function ToolAssemblerModal({}: Props) {
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						searchId={stepState.searchId}
-						onClick={addAdaptiveItem}
 					/>
 				)}
 
@@ -88,7 +86,6 @@ export default function ToolAssemblerModal({}: Props) {
 						listCategory={stepState.listCategory}
 						categoryId={stepState.categoryId}
 						searchId={stepState.searchId}
-						onClick={addCuttingItem}
 					/>
 				)}
 		</Modal>

@@ -1,34 +1,17 @@
-import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
+import NavSaveDeleteAssembly from "@/components/molecues/navSaveAssembly/navSaveDeleteAssembly";
 import { useMe } from "@/hooks/auth";
-import { useGetToolAssembly } from "@/hooks/toolAssembly";
 import {
 	Avatar,
 	Button,
 	Flex,
-	FormControl,
-	FormLabel,
-	IconButton,
-	Input,
 	Menu,
 	MenuButton,
 	MenuItem,
 	MenuList,
-	Popover,
-	PopoverArrow,
-	PopoverBody,
-	PopoverCloseButton,
-	PopoverContent,
-	PopoverHeader,
-	PopoverTrigger,
 	Text,
-	useDisclosure,
-	useToast,
 } from "@chakra-ui/react";
-import axios from "axios";
-import { useFormik } from "formik";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import { MdOutlineSave, MdRemoveCircleOutline } from "react-icons/md";
 import * as Yup from "yup";
 import { default as AuthService } from "../../../services/auth";
 
@@ -38,50 +21,7 @@ export const saveToolAssemblySchema = Yup.object().shape({
 
 export default function Nav() {
 	const { data, isLoading, isError } = useMe();
-	const { toolAssemblyId, handleUpdateToolAssembly } = useToolAssemblyContext();
-	const { data: toolAssemblyData } = useGetToolAssembly(toolAssemblyId);
-	const toolAssembly = toolAssemblyData?.item ?? undefined;
 	const router = useRouter();
-	const toast = useToast({});
-	const { onOpen, onClose, isOpen } = useDisclosure();
-
-	const formik = useFormik({
-		initialValues: {
-			name: "",
-		},
-		validationSchema: saveToolAssemblySchema,
-		onSubmit: async (values) => {
-			try {
-				await handleUpdateToolAssembly({
-					customer_id: data?.customer.id ?? null,
-					name: values.name,
-				});
-				toast({
-					title: "Success",
-					description: "successfully saved",
-					status: "success",
-					duration: 5000,
-					isClosable: true,
-					position: "top",
-				});
-
-				onClose();
-			} catch (e) {
-				const errorMessage = axios.isAxiosError(e)
-					? e.response?.data?.message
-					: "Unknow error";
-
-				toast({
-					title: "Error",
-					description: errorMessage,
-					status: "error",
-					duration: 5000,
-					isClosable: true,
-					position: "top",
-				});
-			}
-		},
-	});
 
 	if (isError === true) {
 		return;
@@ -111,65 +51,7 @@ export default function Nav() {
 						Assembler
 					</Text>
 				</Button>
-				{router.asPath.includes("/assembler") &&
-				toolAssembly?.id !== undefined ? (
-					<Popover isOpen={isOpen}>
-						{toolAssembly?.name === null &&
-						toolAssembly?.customer_id === null ? (
-							<>
-								<PopoverTrigger>
-									<IconButton
-										mx={2}
-										icon={<MdOutlineSave />}
-										aria-label={"Save"}
-										onClick={onOpen}
-									/>
-								</PopoverTrigger>
-								<PopoverContent>
-									<PopoverArrow />
-									<PopoverHeader
-										pt={4}
-										fontWeight="bold"
-										border="0"
-										textAlign="left"
-									>
-										Save your tool
-									</PopoverHeader>
-									<PopoverCloseButton ml="2" />
-									<PopoverBody textAlign="left">
-										<form onSubmit={formik.handleSubmit}>
-											<FormControl>
-												<FormLabel>Set name for your tool</FormLabel>
-												<Input
-													name="name"
-													onChange={formik.handleChange}
-													onBlur={formik.handleBlur}
-													value={formik.values.name}
-												/>
-											</FormControl>
-											<Button mt="2" type="submit">
-												Save
-											</Button>
-										</form>
-									</PopoverBody>
-								</PopoverContent>
-							</>
-						) : (
-							<IconButton
-								mx={2}
-								icon={<MdRemoveCircleOutline />}
-								aria-label={"Save"}
-								onClick={async () => {
-									await handleUpdateToolAssembly({
-										name: null,
-										customer_id: null,
-									});
-									onClose();
-								}}
-							/>
-						)}
-					</Popover>
-				) : null}
+				<NavSaveDeleteAssembly />
 			</Flex>
 			<Flex alignItems="center">
 				<Text fontSize="sm" fontWeight="bold" mr="2">
