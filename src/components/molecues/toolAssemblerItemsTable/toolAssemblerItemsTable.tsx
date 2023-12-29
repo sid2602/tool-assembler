@@ -44,7 +44,7 @@ export default function ToolAssemblerItemsTable({
 	if (isLoading) {
 		return (
 			<Box mt="2">
-				<SkeletonText mt="4" noOfLines={4} spacing="4" skeletonHeight="2" />
+				<SkeletonText mt="4" noOfLines={25} spacing="4" skeletonHeight="2" />
 			</Box>
 		);
 	}

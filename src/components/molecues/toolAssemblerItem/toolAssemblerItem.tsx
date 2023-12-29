@@ -47,8 +47,8 @@ export default function ToolAssemblerItem({
 		<Box
 			borderRadius="lg"
 			boxShadow="lg"
-			w="40"
-			h="40"
+			w="175px"
+			h="175px"
 			p="2"
 			backgroundColor="white"
 			display="flex"
@@ -70,10 +70,10 @@ export default function ToolAssemblerItem({
 					flex="1"
 					position="absolute"
 					left="50%"
-					top="35%"
+					top="40%"
 					transform="translate(-50%,-50%)"
-					w="40"
-					h="40"
+					w="130px"
+					h="130px"
 				/>
 				<Text fontSize="sm" textAlign="center">
 					{item.name}

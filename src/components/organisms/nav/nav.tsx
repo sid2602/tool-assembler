@@ -12,12 +12,7 @@ import {
 } from "@chakra-ui/react";
 import Link from "next/link";
 import Router, { useRouter } from "next/router";
-import * as Yup from "yup";
 import { default as AuthService } from "../../../services/auth";
-
-export const saveToolAssemblySchema = Yup.object().shape({
-	name: Yup.string().required(),
-});
 
 export default function Nav() {
 	const { data, isLoading, isError } = useMe();
