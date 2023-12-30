@@ -110,15 +110,11 @@ const mapToolAssembly = (
 
 interface MachineDirectionProps {
 	item: MapedItem;
-	haveChild: boolean;
+	array: MapedItem[];
 	onOpen: OnOpenFunctionType;
 }
 
-const MachineDirection = ({
-	item,
-	haveChild,
-	onOpen,
-}: MachineDirectionProps) => {
+const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 	const toolAdaptive = useGetToolAdaptiveItems(
 		item.id ?? undefined,
 		undefined,
@@ -145,6 +141,24 @@ const MachineDirection = ({
 		machineDirectionAdaptiveItems
 	);
 
+	const canAddSingleElement = checkIfProductHaveChild(
+		item.order - 1,
+		item.row,
+		array
+	);
+
+	const haveParentWithHigerRow = checkIfProductHaveChild(
+		item.order - 1,
+		item.row + 1,
+		array
+	);
+
+	const haveParentWithLowerRow = checkIfProductHaveChild(
+		item.order - 1,
+		item.row - 1,
+		array
+	);
+
 	if (isLoading) {
 		return null;
 	}
@@ -152,7 +166,9 @@ const MachineDirection = ({
 	if (
 		item.type === "adaptive" &&
 		machineDirectionAdaptiveItems.data?.items.length !== 0 &&
-		haveChild === false
+		canAddSingleElement === false &&
+		haveParentWithHigerRow === false &&
+		haveParentWithLowerRow === false
 	) {
 		return (
 			<AddToolAssemblerItem
@@ -166,7 +182,7 @@ const MachineDirection = ({
 	if (
 		item.type === "tool" &&
 		toolAdaptive.data?.items.length !== 0 &&
-		haveChild === false
+		canAddSingleElement === false
 	) {
 		return (
 			<AddToolAssemblerItem
@@ -180,7 +196,7 @@ const MachineDirection = ({
 	if (
 		item.type === "cutting" &&
 		toolCutting.data?.items.length !== 0 &&
-		haveChild === false
+		canAddSingleElement === false
 	) {
 		return (
 			<AddToolAssemblerItem
@@ -196,14 +212,12 @@ const MachineDirection = ({
 
 interface WorkpieceDirectionProps {
 	item: MapedItem;
-	haveParent: boolean;
 	array: MapedItem[];
 	onOpen: OnOpenFunctionType;
 }
 
 const WorkpieceDirection = ({
 	item,
-	haveParent,
 	array,
 	onOpen,
 }: WorkpieceDirectionProps) => {
@@ -382,8 +396,6 @@ export default function ToolAssembler({}: Props) {
 	const orderArray = createArrayFromNToM(minOrder, maxOrder);
 	const rowArray = createArrayFromNToM(minRow, maxRow);
 
-	console.log("ORDER", orderArray);
-	console.log("ROW", rowArray);
 	if (isLoading) {
 		return (
 			<Spinner
@@ -397,9 +409,15 @@ export default function ToolAssembler({}: Props) {
 	}
 
 	return (
-		<Flex position="relative" w="100%" h="50%" justifyContent="center">
+		<Flex
+			position="relative"
+			w="100%"
+			h="50%"
+			justifyContent="center"
+			alignItems="center"
+		>
 			{orderArray.map((order) => (
-				<Flex m="2" key={order} flexDir="column">
+				<Flex m="2" key={order + "order"} flexDir="column">
 					{rowArray.map((row) => {
 						const item = mapedToolAseemblyItems.find(
 							(toolAssemblyItem) =>
@@ -407,51 +425,98 @@ export default function ToolAssembler({}: Props) {
 						);
 
 						if (item === undefined) {
+							const haveParentInUpperRow = mapedToolAseemblyItems.find(
+								(toolAssemblyItem) =>
+									toolAssemblyItem.row === row + 1 &&
+									toolAssemblyItem.order === order
+							);
+
+							const haveChildInRow = mapedToolAseemblyItems.find(
+								(toolAssemblyItem) =>
+									toolAssemblyItem.row === row &&
+									toolAssemblyItem.order === order + 1
+							);
+
+							if (
+								haveParentInUpperRow !== undefined &&
+								haveChildInRow !== undefined
+							) {
+								return (
+									<Box w="175px" h="175px" key={order} position="relative">
+										<Box
+											position="absolute"
+											w="70%"
+											h="70%"
+											left="90%"
+											top="80%"
+											transform="translate(-50%,-50%)"
+											border="solid 5px #000"
+											borderColor="#000 transparent transparent #000"
+											borderRadius="50%/2000px"
+										></Box>
+									</Box>
+								);
+							}
+
+							const haveParentInLowerRow = mapedToolAseemblyItems.find(
+								(toolAssemblyItem) =>
+									toolAssemblyItem.row === row - 1 &&
+									toolAssemblyItem.order === order
+							);
+
+							if (
+								haveParentInLowerRow !== undefined &&
+								haveChildInRow !== undefined
+							) {
+								return (
+									<Box
+										w="175px"
+										h="175px"
+										key={row + "row"}
+										position="relative"
+									>
+										<Box
+											position="absolute"
+											w="70%"
+											h="70%"
+											left="90%"
+											top="25%"
+											transform="translate(-50%,-50%)"
+											border="solid 5px #000"
+											borderColor="transparent transparent #000 #000"
+											borderRadius="50%/2000px"
+											zIndex={0}
+										></Box>
+									</Box>
+								);
+							}
+
 							return (
-								<Box w="175px" h="175px" key={order}>
-									No data
-								</Box>
+								<Box
+									w="175px"
+									h="175px"
+									key={row + "row"}
+									position="relative"
+								></Box>
 							);
 						}
 
 						return (
-							<Flex m="2" key={order} alignItems="center">
+							<Flex m="2" key={order} alignItems="center" zIndex="1">
 								<MachineDirection
-									key={item.name + item.row + item.order + "Machine Direction"}
 									item={item}
-									haveChild={
-										mapedToolAseemblyItems.find(
-											(mapedItem) =>
-												mapedItem.order === item.order - 1 &&
-												mapedItem.row === item.row
-										)
-											? true
-											: false
-									}
+									array={mapedToolAseemblyItems}
 									onOpen={onOpen}
 								/>
 								<ToolAssemblerItem
-									key={item.name + item.row + item.order}
 									item={{ name: item.name, img: item.img }}
 									usedItemId={item.usedItemId}
 									type={item.type}
 									canBeDeleted={canBeDeleted(item.order)}
 								/>
 								<WorkpieceDirection
-									key={
-										item.name + item.row + item.order + "Workpiece Direction"
-									}
 									item={item}
 									array={mapedToolAseemblyItems}
-									haveParent={
-										mapedToolAseemblyItems.find(
-											(mapedItem) =>
-												mapedItem.order === item.order + 1 &&
-												mapedItem.row === item.row
-										)
-											? true
-											: false
-									}
 									onOpen={onOpen}
 								/>
 							</Flex>

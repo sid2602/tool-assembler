@@ -34,7 +34,10 @@ type CuttingItems = {
 interface Props {
 	tableData: AdaptiveItems | ToolItems | CuttingItems;
 	isLoading: boolean;
-	onClick: (id: number) => Promise<void>;
+	onClick: (
+		id: number,
+		number_of_possible_connections?: number
+	) => Promise<void>;
 }
 export default function ToolAssemblerItemsTable({
 	tableData,
@@ -82,7 +85,11 @@ export default function ToolAssemblerItemsTable({
 									icon={<AddIcon />}
 									aria-label={"Add item"}
 									onClick={async () => {
-										await onClick(item.id);
+										await onClick(
+											item.id,
+											// @ts-ignore
+											item?.number_of_possible_connections ?? undefined
+										);
 									}}
 								></IconButton>
 							</Td>

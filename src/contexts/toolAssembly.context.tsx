@@ -194,17 +194,27 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		onClose();
 	};
 
-	const addAdaptiveItem = async (adaptiveItemId: number) => {
+	const addAdaptiveItem = async (
+		adaptiveItemId: number,
+		number_of_possible_connections?: number
+	) => {
 		const toolAssemblerId = toolAssemblyId;
 		if (toolAssemblerId === undefined) {
 			throw new Error("No tool assembly");
 		}
 
+		const row =
+			stepState.row !== null &&
+			(number_of_possible_connections ?? 0) > 1 &&
+			stepState.listCategory === "adaptive-machine"
+				? stepState.row + 1
+				: stepState.row ?? 0;
+
 		await addAdaptiveItemToToolAssemblyQuery.mutateAsync({
 			adaptiveItemId: adaptiveItemId,
 			toolAssemblyId: toolAssemblerId,
 			order: stepState.order ?? 0,
-			row: stepState.row ?? 0,
+			row: row,
 		});
 
 		onClose();
