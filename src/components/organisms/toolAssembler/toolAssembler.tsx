@@ -12,7 +12,7 @@ import {
 import { useGetToolAssembly } from "@/hooks/toolAssembly";
 import { Tool_assembly } from "@/pages/api/tool-assembly/[id]";
 import { checkSomeQueryParam } from "@/utils/client/checkSomeQueryParam";
-import { Spinner } from "@chakra-ui/react";
+import { Box, Flex, Spinner } from "@chakra-ui/react";
 
 interface Props {}
 
@@ -34,6 +34,15 @@ const isToolAssemblerEmpty = (
 
 	return false;
 };
+
+const checkIfProductHaveChild = (
+	order: number,
+	row: number,
+	array: MapedItem[]
+): boolean => {
+	return array.some((item) => item.order === order && item.row === row);
+};
+
 interface MapedItem {
 	id: number;
 	type: "tool" | "cutting" | "adaptive";
@@ -148,7 +157,7 @@ const MachineDirection = ({
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "adaptive-machine", item.id, item.order - 1)
+					onOpen("lists", "adaptive-machine", item.id, item.order - 1, item.row)
 				}
 			/>
 		);
@@ -162,7 +171,7 @@ const MachineDirection = ({
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "tool-adaptive", item.id, item.order - 1)
+					onOpen("lists", "tool-adaptive", item.id, item.order - 1, item.row)
 				}
 			/>
 		);
@@ -176,7 +185,7 @@ const MachineDirection = ({
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "cutting-tool", item.id, item.order - 1)
+					onOpen("lists", "cutting-tool", item.id, item.order - 1, item.row)
 				}
 			/>
 		);
@@ -188,12 +197,14 @@ const MachineDirection = ({
 interface WorkpieceDirectionProps {
 	item: MapedItem;
 	haveParent: boolean;
+	array: MapedItem[];
 	onOpen: OnOpenFunctionType;
 }
 
 const WorkpieceDirection = ({
 	item,
 	haveParent,
+	array,
 	onOpen,
 }: WorkpieceDirectionProps) => {
 	const toolAdaptive = useGetToolAdaptiveItems(
@@ -226,47 +237,101 @@ const WorkpieceDirection = ({
 		return null;
 	}
 
+	const canAddSingleElement = checkIfProductHaveChild(
+		item.order + 1,
+		item.row,
+		array
+	);
+
 	if (
 		item.type === "adaptive" &&
 		toolAdaptive.data?.items.length !== 0 &&
-		haveParent === false &&
+		canAddSingleElement === false &&
 		item?.numberOfPossibleWorkpieceItems !== undefined &&
 		item?.numberOfPossibleWorkpieceItems > 0
 	) {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "adaptive-tool", item.id, item.order + 1)
+					onOpen("lists", "adaptive-tool", item.id, item.order + 1, item.row)
 				}
 			/>
 		);
 	}
-
 	if (
 		item.type === "adaptive" &&
 		workpieceDirectionAdaptiveItems.data?.items.length !== 0 &&
-		haveParent === false &&
-		(item?.numberOfPossibleWorkpieceItems === undefined ||
-			item?.numberOfPossibleWorkpieceItems === 0)
+		item?.numberOfPossibleWorkpieceItems !== undefined &&
+		item?.numberOfPossibleWorkpieceItems !== 0
 	) {
-		return (
-			<AddToolAssemblerItem
-				handleButton={() =>
-					onOpen("lists", "adaptive-workpiece", item.id, item.order + 1)
-				}
-			/>
-		);
+		if (item.numberOfPossibleWorkpieceItems > 1) {
+			return (
+				<Box>
+					{checkIfProductHaveChild(
+						item.order + 1,
+						item.row - 1,
+						array
+					) ? null : (
+						<AddToolAssemblerItem
+							handleButton={() =>
+								onOpen(
+									"lists",
+									"adaptive-workpiece",
+									item.id,
+									item.order + 1,
+									item.row - 1
+								)
+							}
+						/>
+					)}
+
+					{checkIfProductHaveChild(
+						item.order + 1,
+						item.row + 1,
+						array
+					) ? null : (
+						<AddToolAssemblerItem
+							handleButton={() =>
+								onOpen(
+									"lists",
+									"adaptive-workpiece",
+									item.id,
+									item.order + 1,
+									item.row + 1
+								)
+							}
+						/>
+					)}
+				</Box>
+			);
+		}
+
+		if (canAddSingleElement === false) {
+			return (
+				<AddToolAssemblerItem
+					handleButton={() =>
+						onOpen(
+							"lists",
+							"adaptive-workpiece",
+							item.id,
+							item.order + 1,
+							item.row
+						)
+					}
+				/>
+			);
+		}
 	}
 
 	if (
 		item.type === "tool" &&
 		toolCutting.data?.items.length !== 0 &&
-		haveParent === false
+		canAddSingleElement === false
 	) {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "tool-cutting", item.id, item.order + 1)
+					onOpen("lists", "tool-cutting", item.id, item.order + 1, item.row)
 				}
 			/>
 		);
@@ -274,6 +339,10 @@ const WorkpieceDirection = ({
 
 	return null;
 };
+
+function createArrayFromNToM(n: number, m: number) {
+	return Array.from({ length: m - n + 1 }, (_, index) => index + n);
+}
 
 export default function ToolAssembler({}: Props) {
 	const { toolAssemblyId, onOpen } = useToolAssemblyContext();
@@ -298,6 +367,23 @@ export default function ToolAssembler({}: Props) {
 		return order === minOrder || order === maxOrder;
 	};
 
+	const minOrder = Math.min(
+		...mapedToolAseemblyItems.map((item) => item.order)
+	);
+
+	const maxOrder = Math.max(
+		...mapedToolAseemblyItems.map((item) => item.order)
+	);
+
+	const minRow = Math.min(...mapedToolAseemblyItems.map((item) => item.row));
+
+	const maxRow = Math.max(...mapedToolAseemblyItems.map((item) => item.row));
+
+	const orderArray = createArrayFromNToM(minOrder, maxOrder);
+	const rowArray = createArrayFromNToM(minRow, maxRow);
+
+	console.log("ORDER", orderArray);
+	console.log("ROW", rowArray);
 	if (isLoading) {
 		return (
 			<Spinner
@@ -311,46 +397,68 @@ export default function ToolAssembler({}: Props) {
 	}
 
 	return (
-		<>
-			{mapedToolAseemblyItems.map((item) => (
-				<>
-					<MachineDirection
-						key={item.name + item.row + item.order + "Machine Direction"}
-						item={item}
-						haveChild={
-							mapedToolAseemblyItems.find(
-								(mapedItem) =>
-									mapedItem.order === item.order - 1 &&
-									mapedItem.row === item.row
-							)
-								? true
-								: false
+		<Flex position="relative" w="100%" h="50%" justifyContent="center">
+			{orderArray.map((order) => (
+				<Flex m="2" key={order} flexDir="column">
+					{rowArray.map((row) => {
+						const item = mapedToolAseemblyItems.find(
+							(toolAssemblyItem) =>
+								toolAssemblyItem.row === row && toolAssemblyItem.order === order
+						);
+
+						if (item === undefined) {
+							return (
+								<Box w="175px" h="175px" key={order}>
+									No data
+								</Box>
+							);
 						}
-						onOpen={onOpen}
-					/>
-					<ToolAssemblerItem
-						key={item.name + item.row + item.order}
-						item={{ name: item.name, img: item.img }}
-						usedItemId={item.usedItemId}
-						type={item.type}
-						canBeDeleted={canBeDeleted(item.order)}
-					/>
-					<WorkpieceDirection
-						key={item.name + item.row + item.order + "Workpiece Direction"}
-						item={item}
-						haveParent={
-							mapedToolAseemblyItems.find(
-								(mapedItem) =>
-									mapedItem.order === item.order + 1 &&
-									mapedItem.row === item.row
-							)
-								? true
-								: false
-						}
-						onOpen={onOpen}
-					/>
-				</>
+
+						return (
+							<Flex m="2" key={order} alignItems="center">
+								<MachineDirection
+									key={item.name + item.row + item.order + "Machine Direction"}
+									item={item}
+									haveChild={
+										mapedToolAseemblyItems.find(
+											(mapedItem) =>
+												mapedItem.order === item.order - 1 &&
+												mapedItem.row === item.row
+										)
+											? true
+											: false
+									}
+									onOpen={onOpen}
+								/>
+								<ToolAssemblerItem
+									key={item.name + item.row + item.order}
+									item={{ name: item.name, img: item.img }}
+									usedItemId={item.usedItemId}
+									type={item.type}
+									canBeDeleted={canBeDeleted(item.order)}
+								/>
+								<WorkpieceDirection
+									key={
+										item.name + item.row + item.order + "Workpiece Direction"
+									}
+									item={item}
+									array={mapedToolAseemblyItems}
+									haveParent={
+										mapedToolAseemblyItems.find(
+											(mapedItem) =>
+												mapedItem.order === item.order + 1 &&
+												mapedItem.row === item.row
+										)
+											? true
+											: false
+									}
+									onOpen={onOpen}
+								/>
+							</Flex>
+						);
+					})}
+				</Flex>
 			))}
-		</>
+		</Flex>
 	);
 }
