@@ -175,6 +175,7 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 				handleButton={() =>
 					onOpen("lists", "adaptive-machine", item.id, item.order - 1, item.row)
 				}
+				direction="left"
 			/>
 		);
 	}
@@ -189,6 +190,7 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 				handleButton={() =>
 					onOpen("lists", "tool-adaptive", item.id, item.order - 1, item.row)
 				}
+				direction="left"
 			/>
 		);
 	}
@@ -203,6 +205,7 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 				handleButton={() =>
 					onOpen("lists", "cutting-tool", item.id, item.order - 1, item.row)
 				}
+				direction="left"
 			/>
 		);
 	}
@@ -257,6 +260,19 @@ const WorkpieceDirection = ({
 		array
 	);
 
+	if (canAddSingleElement === true) {
+		return (
+			<Box
+				width="100px"
+				height="2px"
+				border="3px solid black"
+				position="absolute"
+				left="100%"
+				top="50%"
+			></Box>
+		);
+	}
+
 	if (
 		item.type === "adaptive" &&
 		toolAdaptive.data?.items.length !== 0 &&
@@ -269,6 +285,7 @@ const WorkpieceDirection = ({
 				handleButton={() =>
 					onOpen("lists", "adaptive-tool", item.id, item.order + 1, item.row)
 				}
+				direction="right"
 			/>
 		);
 	}
@@ -281,11 +298,22 @@ const WorkpieceDirection = ({
 		if (item.numberOfPossibleWorkpieceItems > 1) {
 			return (
 				<Box>
-					{checkIfProductHaveChild(
-						item.order + 1,
-						item.row - 1,
-						array
-					) ? null : (
+					{checkIfProductHaveChild(item.order + 1, item.row - 1, array) ? (
+						<Box w="175px" h="175px" position="absolute">
+							<Box
+								position="absolute"
+								w="70%"
+								h="70%"
+								left="-15%"
+								top="-70%"
+								transform="translate(-50%,-50%)"
+								border="solid 5px #000"
+								borderColor="#000 transparent transparent #000"
+								borderRadius="50%/2000px"
+								zIndex={-1}
+							></Box>
+						</Box>
+					) : (
 						<AddToolAssemblerItem
 							handleButton={() =>
 								onOpen(
@@ -296,14 +324,26 @@ const WorkpieceDirection = ({
 									item.row - 1
 								)
 							}
+							direction="right-top"
 						/>
 					)}
 
-					{checkIfProductHaveChild(
-						item.order + 1,
-						item.row + 1,
-						array
-					) ? null : (
+					{checkIfProductHaveChild(item.order + 1, item.row + 1, array) ? (
+						<Box w="175px" h="175px" position="absolute">
+							<Box
+								position="absolute"
+								w="70%"
+								h="70%"
+								left="-15%"
+								top="70%"
+								transform="translate(-50%,-50%)"
+								border="solid 5px #000"
+								borderColor="transparent transparent #000 #000"
+								borderRadius="50%/2000px"
+								zIndex={-1}
+							></Box>
+						</Box>
+					) : (
 						<AddToolAssemblerItem
 							handleButton={() =>
 								onOpen(
@@ -314,6 +354,7 @@ const WorkpieceDirection = ({
 									item.row + 1
 								)
 							}
+							direction="right-bottom"
 						/>
 					)}
 				</Box>
@@ -332,6 +373,7 @@ const WorkpieceDirection = ({
 							item.row
 						)
 					}
+					direction="right"
 				/>
 			);
 		}
@@ -347,6 +389,7 @@ const WorkpieceDirection = ({
 				handleButton={() =>
 					onOpen("lists", "tool-cutting", item.id, item.order + 1, item.row)
 				}
+				direction="right"
 			/>
 		);
 	}
@@ -367,7 +410,9 @@ export default function ToolAssembler({}: Props) {
 	const mapedToolAseemblyItems: MapedItem[] = mapToolAssembly(tollAssembly);
 
 	if (isToolAssemblerEmpty(tollAssembly) === true) {
-		return <AddToolAssemblerItem handleButton={() => onOpen()} />;
+		return (
+			<AddToolAssemblerItem handleButton={() => onOpen()} direction="center" />
+		);
 	}
 
 	const canBeDeleted = (order: number) => {
@@ -417,7 +462,7 @@ export default function ToolAssembler({}: Props) {
 			alignItems="center"
 		>
 			{orderArray.map((order) => (
-				<Flex m="2" key={order + "order"} flexDir="column">
+				<Flex key={order + "order"} flexDir="column">
 					{rowArray.map((row) => {
 						const item = mapedToolAseemblyItems.find(
 							(toolAssemblyItem) =>
@@ -425,72 +470,6 @@ export default function ToolAssembler({}: Props) {
 						);
 
 						if (item === undefined) {
-							const haveParentInUpperRow = mapedToolAseemblyItems.find(
-								(toolAssemblyItem) =>
-									toolAssemblyItem.row === row + 1 &&
-									toolAssemblyItem.order === order
-							);
-
-							const haveChildInRow = mapedToolAseemblyItems.find(
-								(toolAssemblyItem) =>
-									toolAssemblyItem.row === row &&
-									toolAssemblyItem.order === order + 1
-							);
-
-							if (
-								haveParentInUpperRow !== undefined &&
-								haveChildInRow !== undefined
-							) {
-								return (
-									<Box w="175px" h="175px" key={order} position="relative">
-										<Box
-											position="absolute"
-											w="70%"
-											h="70%"
-											left="90%"
-											top="80%"
-											transform="translate(-50%,-50%)"
-											border="solid 5px #000"
-											borderColor="#000 transparent transparent #000"
-											borderRadius="50%/2000px"
-										></Box>
-									</Box>
-								);
-							}
-
-							const haveParentInLowerRow = mapedToolAseemblyItems.find(
-								(toolAssemblyItem) =>
-									toolAssemblyItem.row === row - 1 &&
-									toolAssemblyItem.order === order
-							);
-
-							if (
-								haveParentInLowerRow !== undefined &&
-								haveChildInRow !== undefined
-							) {
-								return (
-									<Box
-										w="175px"
-										h="175px"
-										key={row + "row"}
-										position="relative"
-									>
-										<Box
-											position="absolute"
-											w="70%"
-											h="70%"
-											left="90%"
-											top="25%"
-											transform="translate(-50%,-50%)"
-											border="solid 5px #000"
-											borderColor="transparent transparent #000 #000"
-											borderRadius="50%/2000px"
-											zIndex={0}
-										></Box>
-									</Box>
-								);
-							}
-
 							return (
 								<Box
 									w="175px"
@@ -502,7 +481,13 @@ export default function ToolAssembler({}: Props) {
 						}
 
 						return (
-							<Flex m="2" key={order} alignItems="center" zIndex="1">
+							<Flex
+								m="2"
+								key={order + row}
+								alignItems="center"
+								zIndex="1"
+								position="relative"
+							>
 								<MachineDirection
 									item={item}
 									array={mapedToolAseemblyItems}

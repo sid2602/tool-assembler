@@ -1,11 +1,59 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Box } from "@chakra-ui/react";
 
+type Direction = "center" | "left" | "right" | "right-top" | "right-bottom";
 interface Props {
 	handleButton: () => void;
+	direction: Direction;
 }
 
-export default function AddToolAssemblerItem({ handleButton }: Props) {
+interface Positon {
+	top?: string | undefined;
+	left?: string | undefined;
+	right?: string | undefined;
+	bottom?: string | undefined;
+}
+
+const calculatePosition = (direction: Direction): Positon => {
+	if (direction === "center") {
+		return {};
+	}
+
+	if (direction === "left") {
+		return {
+			left: "-110%",
+		};
+	}
+
+	if (direction === "right") {
+		return {
+			right: "-110%",
+		};
+	}
+
+	if (direction === "right-top") {
+		return {
+			right: "-110%",
+			top: "-90%",
+		};
+	}
+
+	if (direction === "right-bottom") {
+		return {
+			right: "-110%",
+			bottom: "-90%",
+		};
+	}
+
+	return {};
+};
+
+export default function AddToolAssemblerItem({
+	handleButton,
+	direction,
+}: Props) {
+	const { top, left, right, bottom } = calculatePosition(direction);
+
 	return (
 		<Box
 			borderRadius="lg"
@@ -16,8 +64,12 @@ export default function AddToolAssemblerItem({ handleButton }: Props) {
 			backgroundColor="white"
 			display="flex"
 			flexDir="column"
-			position="relative"
+			position="absolute"
 			alignItems="center"
+			top={top}
+			left={left}
+			right={right}
+			bottom={bottom}
 			justifyContent="flex-end"
 		>
 			<AddIcon
