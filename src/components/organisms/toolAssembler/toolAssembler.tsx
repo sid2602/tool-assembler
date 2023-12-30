@@ -39,6 +39,7 @@ interface MapedItem {
 	type: "tool" | "cutting" | "adaptive";
 	usedItemId: number;
 	numberOfPossibleWorkpieceItems?: number;
+	canHaveToolItem?: boolean;
 	name: string;
 	img: string | null;
 	order: number;
@@ -54,6 +55,7 @@ const mapToolAssembly = (
 			type: "tool",
 			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems: 1,
+			canHaveToolItem: false,
 			name: item.tool_item.name,
 			img: item.tool_item.img,
 			order: item.order,
@@ -66,7 +68,8 @@ const mapToolAssembly = (
 			type: "adaptive",
 			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems:
-				item.adaptive_item.number_of_possible_tool_items,
+				item.adaptive_item.number_of_possible_connections,
+			canHaveToolItem: item.adaptive_item.can_have_tool_item,
 			name: item.adaptive_item.name,
 			img: item.adaptive_item.img,
 			order: item.order,
@@ -79,6 +82,7 @@ const mapToolAssembly = (
 			type: "cutting",
 			usedItemId: item.id,
 			numberOfPossibleWorkpieceItems: 1,
+			canHaveToolItem: false,
 			data: item.cutting_item,
 			name: item.cutting_item.name,
 			img: item.cutting_item.img,

@@ -96,7 +96,8 @@ model Adaptive_item {
   id     Int       @id @default(autoincrement())
   name   String
   img    String?
-  number_of_possible_tool_items Int @default(0)
+  number_of_possible_connections Int @default(0)
+  can_have_tool_item Boolean @default(false)
   connecting_tool_item Tool_adaptive[]
   connecting_assembly_item Adaptive_assembly[]
   used_for_tool_assembly Tool_assembly_adaptive_item[]

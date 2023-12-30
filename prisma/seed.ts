@@ -8,7 +8,6 @@ import {
 	Tool_item,
 	Tool_item_category,
 } from "@prisma/client";
-// import { createToolItemAndToolItemCategory } from "./seedData/tool_item";
 
 const prisma = new PrismaClient();
 
@@ -61,6 +60,56 @@ const drills: ToolItem = {
 			lcf: 47,
 			rpmx: "11 862 1/min",
 			wt: 0.0707,
+		},
+	],
+};
+
+const turningTools: ToolItem = {
+	category: {
+		id: 0,
+		name: "Turning tools",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/trn_png.webp",
+	},
+	toolItems: [
+		{
+			name: "SL-SVXBL-40A-16-050 A",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view-on-item-level/preview/204081522_d50_0_0~tl04_04.jpg",
+			mtp: "S",
+			rmpx: "75",
+			dmin: 50,
+			lu: 15,
+			hand: "L",
+			dcon: "40",
+			lf: 45,
+			wf: 0.53,
+			hf: 6,
+			bd: 40,
+			gamo: 2,
+			lams: 0,
+			bmc: "Steel",
+			wt: 0.18,
+		},
+	],
+};
+
+const Cartridge: ToolItem = {
+	category: {
+		id: 0,
+		name: "Cartridges",
+		img: "https://cdn.sandvik.coromant.com/files/sitecollectionimages/tpchierarchy/blt_png.webp",
+	},
+	toolItems: [
+		{
+			name: "R826C-BF23STUC11HP",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424568_d50_0_0~tl04_00.png",
+			mtp: "S",
+			dmin: 56,
+			hand: "R",
+			lf: 23,
+			wf: 10.5,
+			oah: 23.5,
+			oaw: 13.2,
+			wt: 0.04,
 		},
 	],
 };
@@ -149,7 +198,9 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 		{
 			name: "A1B05-40 27 100",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424022_d50_0_0~tl04_00.png",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+
 			dcp: true,
 			lf: 100,
 			bd: 60,
@@ -165,7 +216,9 @@ const rotationSymetricalAdaptors: AdaptiveItem = {
 		{
 			name: "392.54005C4027050",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view-on-item-level/preview-high/204032410_d50_0_0~tl04_04.jpg",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+
 			bd: 60,
 			bdx: 63.5,
 			lb: 30.9,
@@ -189,7 +242,8 @@ const collets: AdaptiveItem = {
 		{
 			name: "393.14-25 140",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426884_d50_0_0~tl04_00.png",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
 			bd: 26,
 			lf: 11.66,
 			oal: 34,
@@ -199,7 +253,9 @@ const collets: AdaptiveItem = {
 		{
 			name: "C3-391.32-08 076",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202423385_d50_0_0~tl04_00.png",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+
 			bd: 36,
 			lf: 76,
 			wt: 0.54,
@@ -209,7 +265,9 @@ const collets: AdaptiveItem = {
 		{
 			name: "393.14-50 320",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426884_d50_0_0~tl04_00.png",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+
 			dcon: "52",
 			lsc: 60,
 			lf: 21.08,
@@ -220,7 +278,9 @@ const collets: AdaptiveItem = {
 		{
 			name: "132L-1610050-B",
 			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426929_d50_0_0~tl04_00.png",
-			number_of_possible_tool_items: 1,
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+
 			dcon: "25,4",
 			lsc: 55,
 			lf: 5,
@@ -266,6 +326,82 @@ const adaptive_item_without_category: AdaptiveItemWithoutCategory = {
 	],
 };
 
+const bridges: AdaptiveItem = {
+	category: {
+		id: 0,
+		name: "Bridges",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424572_d50_0_0~tl04_00.png",
+	},
+	adaptive_items: [
+		{
+			can_have_tool_item: false,
+			number_of_possible_connections: 2,
+			name: "A33-R822XLS17-LJ030",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424572_d50_0_0~tl04_00.png",
+			lf: 30,
+			oah: 104,
+			bmc: "Aluminium",
+			wt: 1.024,
+		},
+	],
+};
+
+const slidges: AdaptiveItem = {
+	category: {
+		id: 0,
+		name: "Slidges",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424631_d50_0_0~tl04_00.png",
+	},
+	adaptive_items: [
+		{
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+			name: "S17-R820XL-40A-018",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424631_d50_0_0~tl04_00.png",
+			lf: 18,
+			wf: 11.8,
+			oah: 104,
+			oaw: 78.5,
+			bmc: "Steel",
+			wt: 0.804,
+		},
+		{
+			can_have_tool_item: false,
+			number_of_possible_connections: 1,
+			name: "S17-R825XLA34-020",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202423932_d50_0_0~tl04_00.png",
+			lf: 20,
+			wf: 9,
+			oah: 104,
+			oaw: 72,
+			bmc: "Aluminium",
+			wt: 0.374,
+		},
+	],
+};
+
+const boringHeads: AdaptiveItem = {
+	category: {
+		id: 0,
+		name: "Boring heads",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424573_d50_0_0~tl04_00.png",
+	},
+	adaptive_items: [
+		{
+			can_have_tool_item: true,
+			number_of_possible_connections: 1,
+			name: "A34-R826C-E024HP",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424573_d50_0_0~tl04_00.png",
+			oal: 51,
+			lf: 24,
+			wf: 21,
+			hf: 0,
+			bmc: "Steel",
+			wt: 0.665,
+		},
+	],
+};
+
 const tool_adaptive = [
 	{ tool_name: "400.1-1250-075A1-NM N1DU", adaptive_name: "393.14-25 140" },
 	{ tool_name: "452.1-0417-044A0-CM H10F", adaptive_name: "C3-391.32-08 076" },
@@ -275,11 +411,15 @@ const tool_adaptive = [
 	{ tool_name: "162-120Q27-60", adaptive_name: "392.54005C4027050" },
 	{ tool_name: "345-040A32-13M", adaptive_name: "393.14-50 320" },
 	{ tool_name: "460.1-0805-024A1-XM GC34", adaptive_name: "132L-1610050-B" },
+	{ tool_name: "SL-SVXBL-40A-16-050 A", adaptive_name: "S17-R820XL-40A-018" },
+	{ tool_name: "R826C-BF23STUC11HP", adaptive_name: "A34-R826C-E024HP" },
 ];
 
 const adaptive_matching = [
 	{ machine_dir: "A416.2-LX25-32", workpiece_dir: "132L-1610050-B" },
 	{ machine_dir: "AA3B27-40 32 090", workpiece_dir: "A416.2-LX25-32" },
+	{ machine_dir: "A33-R822XLS17-LJ030", workpiece_dir: "S17-R820XL-40A-018" },
+	{ machine_dir: "A33-R822XLS17-LJ030", workpiece_dir: "S17-R825XLA34-020" },
 ];
 
 interface CuttingItem {
@@ -326,10 +466,49 @@ const millingInserts: CuttingItem = {
 	],
 };
 
+const TurningInserts: CuttingItem = {
+	category: {
+		id: 0,
+		name: "Turning inserts",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426004_d50_0_0~tl04_00.png",
+	},
+	cutting_items: [
+		{
+			name: "VBGT 16 04 01-UM 1115",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202426004_d50_0_0~tl04_00.png",
+			ifs: 3,
+			d1: 4.4,
+			cedc: 2,
+			ic: 9.525,
+			sc: "V",
+			le: 16.5063,
+			re: 0.1,
+			s: 4.7625,
+			an: 5,
+			wt: 0.007,
+		},
+		{
+			name: "TCEX 11 03 00L-F 1125",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202424915_d50_0_0~tl04_00.png",
+			ifs: 3,
+			d1: 2.8,
+			ic: 6.35,
+			sc: "T",
+			le: 10.74,
+			re: 0.02,
+			s: 3.175,
+			an: 7,
+			wt: 0.0013,
+		},
+	],
+};
+
 const tool_cutting = [
 	{ tool_name: "345-040A32-13M", cutting_name: "345N-1305E-KW8 3220" },
 	{ tool_name: "162-090Q27-40", cutting_name: "176M40-N100608E-PM 1130" },
 	{ tool_name: "162-120Q27-60", cutting_name: "176M40-N100608E-PM 1130" },
+	{ tool_name: "SL-SVXBL-40A-16-050 A", cutting_name: "VBGT 16 04 01-UM 1115" },
+	{ tool_name: "R826C-BF23STUC11HP", cutting_name: "TCEX 11 03 00L-F 1125" },
 ];
 
 const dictonary: Omit<Partial<Dictonary>, "id">[] = [
@@ -427,6 +606,35 @@ const dictonary: Omit<Partial<Dictonary>, "id">[] = [
 		full_property_name: "Major cutting edge angle",
 		unit: "deg",
 	},
+	{ property_name: "oah", full_property_name: "Overall height", unit: "mm" },
+	{ property_name: "oaw", full_property_name: "Overall width", unit: "mm" },
+	{ property_name: "wf", full_property_name: "Functional width", unit: "mm" },
+	{
+		property_name: "rmpx",
+		full_property_name: "Maximum ramping angle",
+		unit: "deg",
+	},
+	{
+		property_name: "dmin",
+		full_property_name: "Minimum bore diameter",
+		unit: "mm",
+	},
+	{ property_name: "hf", full_property_name: "Functional height", unit: "mm" },
+	{
+		property_name: "gamo",
+		full_property_name: "Orthogonal rake angle",
+		unit: "deg",
+	},
+	{
+		property_name: "lams",
+		full_property_name: "Inclination angle",
+		unit: "deg",
+	},
+	{
+		property_name: "an",
+		full_property_name: "Clearance angle major",
+		unit: "deg",
+	},
 ];
 
 async function main() {
@@ -449,7 +657,55 @@ async function main() {
 	await prisma.cutting_item_category.deleteMany();
 	await prisma.tool_assembly.deleteMany();
 
-	// //Tool items
+	//Tool items
+
+	const turning_tool_item_category = await prisma.tool_item_category.upsert({
+		where: { id: turningTools.category.id },
+		create: {
+			name: turningTools.category.name ?? "",
+			img: turningTools.category.img ?? "",
+		},
+		update: {},
+	});
+
+	for (let i = 0; i < turningTools.toolItems.length; i++) {
+		await prisma.tool_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...turningTools.toolItems[i],
+				name: turningTools.toolItems[i].name ?? "",
+				img: turningTools.toolItems[i].img ?? "",
+				category_id: turning_tool_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	const cartridge_tool_item_category = await prisma.tool_item_category.upsert({
+		where: { id: Cartridge.category.id },
+		create: {
+			name: Cartridge.category.name ?? "",
+			img: Cartridge.category.img ?? "",
+		},
+		update: {},
+	});
+
+	for (let i = 0; i < Cartridge.toolItems.length; i++) {
+		await prisma.tool_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...Cartridge.toolItems[i],
+				name: Cartridge.toolItems[i].name ?? "",
+				img: Cartridge.toolItems[i].img ?? "",
+				category_id: cartridge_tool_item_category.id,
+			},
+			update: {},
+		});
+	}
 
 	const drillt_tool_item_category = await prisma.tool_item_category.upsert({
 		where: {
@@ -504,6 +760,87 @@ async function main() {
 	}
 
 	//adaptive items
+
+	const bridges_adaptive_item_category =
+		await prisma.adaptive_item_category.upsert({
+			where: {
+				id: bridges.category.id,
+			},
+			create: {
+				name: bridges.category.name ?? "",
+				img: bridges.category.img ?? "",
+			},
+			update: {},
+		});
+
+	for (let i = 0; i < bridges.adaptive_items.length; i++) {
+		await prisma.adaptive_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...bridges.adaptive_items[i],
+				name: bridges.adaptive_items[i].name ?? "",
+				img: bridges.adaptive_items[i].img ?? "",
+				category_id: bridges_adaptive_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	const slidges_adaptive_item_category =
+		await prisma.adaptive_item_category.upsert({
+			where: {
+				id: slidges.category.id,
+			},
+			create: {
+				name: slidges.category.name ?? "",
+				img: slidges.category.img ?? "",
+			},
+			update: {},
+		});
+
+	for (let i = 0; i < slidges.adaptive_items.length; i++) {
+		await prisma.adaptive_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...slidges.adaptive_items[i],
+				name: slidges.adaptive_items[i].name ?? "",
+				img: slidges.adaptive_items[i].img ?? "",
+				category_id: slidges_adaptive_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	const boring_heads_adaptive_item_category =
+		await prisma.adaptive_item_category.upsert({
+			where: {
+				id: boringHeads.category.id,
+			},
+			create: {
+				name: boringHeads.category.name ?? "",
+				img: boringHeads.category.img ?? "",
+			},
+			update: {},
+		});
+
+	for (let i = 0; i < boringHeads.adaptive_items.length; i++) {
+		await prisma.adaptive_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...boringHeads.adaptive_items[i],
+				name: boringHeads.adaptive_items[i].name ?? "",
+				img: boringHeads.adaptive_items[i].img ?? "",
+				category_id: boring_heads_adaptive_item_category.id,
+			},
+			update: {},
+		});
+	}
 
 	const collet_adaptive_item_category =
 		await prisma.adaptive_item_category.upsert({
@@ -654,6 +991,33 @@ async function main() {
 				name: millingInserts.cutting_items[i].name ?? "",
 				img: millingInserts.cutting_items[i].img ?? "",
 				category_id: miling_inserts_cutting_item_category.id,
+			},
+			update: {},
+		});
+	}
+
+	const turning_inserts_cutting_item_category =
+		await prisma.cutting_item_category.upsert({
+			where: {
+				id: TurningInserts.category.id,
+			},
+			create: {
+				name: TurningInserts.category.name ?? "",
+				img: TurningInserts.category.img ?? "",
+			},
+			update: {},
+		});
+
+	for (let i = 0; i < TurningInserts.cutting_items.length; i++) {
+		await prisma.cutting_item.upsert({
+			where: {
+				id: 0,
+			},
+			create: {
+				...TurningInserts.cutting_items[i],
+				name: TurningInserts.cutting_items[i].name ?? "",
+				img: TurningInserts.cutting_items[i].img ?? "",
+				category_id: turning_inserts_cutting_item_category.id,
 			},
 			update: {},
 		});

@@ -113,7 +113,7 @@ export default function ToolItemsStep({
 					tableData={{
 						type: "Tool",
 						data: data ?? [],
-						keys: ["name", "LU", "PL", "WT"],
+						keys: ["name", "lu", "pl", "wt"],
 					}}
 					onClick={addToolItem}
 				/>
