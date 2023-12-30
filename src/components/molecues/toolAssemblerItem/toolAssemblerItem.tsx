@@ -5,7 +5,7 @@ import {
 } from "@/hooks/toolAssembly";
 import { DeleteIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { Box, Fade, Flex, IconButton, Image, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import Link from "next/link";
 import { useState } from "react";
 
 interface Props {
@@ -25,7 +25,6 @@ export default function ToolAssemblerItem({
 	canBeDeleted,
 }: Props) {
 	const [isHovering, setIsHovering] = useState(false);
-	const router = useRouter();
 
 	const deleteAdaptiveItem = useDeleteAdaptiveItem(usedItemId);
 	const deleteToolItem = useDeleteToolItem(usedItemId);
@@ -91,8 +90,10 @@ export default function ToolAssemblerItem({
 						justifyContent="flex-end"
 					>
 						<IconButton
+							as={Link}
+							href={"/product/" + item.name}
+							target="_blank"
 							aria-label={"Product info"}
-							onClick={() => router.push("/product/" + item.name)}
 							icon={<InfoOutlineIcon />}
 						/>
 						{canBeDeleted === false ? null : (

@@ -16,6 +16,14 @@ model Customer {
     tool_assemblies Tool_assembly[]
 }
 
+model Dictonary {
+  id Int @id @default(autoincrement())
+  property_name String
+  full_property_name String?
+  unit String?
+  unit_explanation String?
+}
+
 model Tool_assembly {
     id Int @id @default(autoincrement())
     name String?
@@ -26,8 +34,7 @@ model Tool_assembly {
     used_tool_item Tool_assembly_tool_item[]
     used_assembly_item Tool_assembly_assembly_item[]
     created_at DateTime @default(now())
-updated_at DateTime @updatedAt
-
+  updated_at DateTime @updatedAt
 }
 
 model Assembly_item_category {
@@ -292,174 +299,174 @@ model Tool_item {
   connecting_cutting_item Tool_cutting[]
   used_for_tool_assembly Tool_assembly_tool_item[]
   img     String?
-  LFA     Float?
-  WFA     Float?
-  ADJBY   String?
-  DAXX    Float?
-  DAXN    Float?
-  BLQ     String?
-  BBD     Boolean?
-  BLRAD   Float?
-  BCDP    Float?
-  BD      Float?
-  BDX     Float?
-  BHTA    Float?
-  HTB     Float?
-  LB      Float?
-  LBX     Float?
-  BMC     String?
-  WB      Float?
-  BTC     String?
-  CASC    String?
-  LSC     Float?
-  LSCX    Float?
-  LSCN    String?
-  MTP     String?
-  WSC     Float?
-  ALP     Float?
-  ALN     Float?
-  ALO     Float?
-  ALF     Float?
-  CTP     Boolean?
-  CBDP    Float?
-  DCB     Float?
-  CCMS    String?
-  CCWS    String?
-  CCONWS  Int?
-  DCON    String?
-  CRKS    String?
-  CZC     String?
-  CUB     String?
-  DCSFMS  Float?
-  CSP     Boolean?
-  CDX     String?
-  DC      Float?
-  DCIN    Float?
-  DCINX   Float?
-  DCINN   Float?
-  DCX     Float?
-  DCN     Float?
-  DCSC    String?
-  ZNC     Int?
-  NCE     Int?
-  CICT    Int?
-  CLMBD   Float?
-  CPDN    String?
-  CPDF    Boolean?
-  CW      Float?
-  CWX     String?
-  CWN     String?
-  DPC     Boolean?
-  DCP     Boolean?
-  APMX    String?
-  DCC     String?
-  DBT     String?
-  DRVA    Float?
-  DRVCT   Int?
-  DHD     Boolean?
-  ZEFF    Int?
-  ZNF     Int?
-  NOF     Int?
-  FDC     String?
-  FHA     Float?
-  FHH     String?
-  FHP     Float?
-  FLW     Float?
-  HF      Float?
-  LF      Float?
-  LFN     Float?
-  LFS     Float?
-  WF      Float?
-  WF2     Float?
-  WFS     Float?
-  GDMB    Float?
-  GEP     Boolean?
-  GPD     Float?
-  HAND    String?
-  HBKL    Float?
-  HBKW    Float?
-  HBH     Float?
-  HBL     Float?
-  HDD     Float?
-  LH      Float?
-  DHUB    Float?
-  HBP     Boolean?
-  THUB    Float?
-  LAMS    Float?
-  ZADJ    Int?
-  IIC     String?
-  SSC     String?
-  LCB     Boolean?
-  KYP     Boolean?
-  LCF     Float?
-  MIID    String?
-  DMIN    Float?
-  MHA     Float?
-  MHD     Float?
-  MHD2    Float?
-  MHH     Float?
-  DN      Float?
-  LN      Float?
-  OAH     Float?
-  OAL     Float?
-  OALN    Float?
-  OAW     Float?
-  ZEFP    Int?
-  ZNP     Int?
-  PDP     Float?
-  PPL     Float?
-  TCPD    Float?
-  TCS     String?
-  AZ      Float?
-  SIG     Float?
-  PL      Float?
-  PHD     Float?
-  PRSPC   String?
-  LPR     Float?
-  QTC     String?
-  GAMP    Float?
-  GAMN    Float?
-  GAMO    Float?
-  GAMF    Float?
-  RMPX    String?
-  RPMX    String?
-  RID     String?
-  SX      String?
-  DMM     Float?
-  H       Float?
-  LS      Float?
-  B       Float?
-  SHIAN   Float?
-  NOS     Int?
-  SDL     Float?
-  SD      Float?
-  STA     Float?
-  SRX     String?
-  SRN     String?
-  SRR     String?
-  TMINS   Boolean?
-  TTPID   String?
-  TA      Float?
-  TG      Float?
-  TPD     Boolean?
-  TD      Float?
-  TDZ     String?
-  TCTR    String?
-  DIX     String?
-  LIN     String?
-  KAPR    Float?
-  CEATC   String?
-  THSC    String?
-  PSIR    Float?
-  TSYC    String?
-  UST     String?
-  LU      Float?
-  ULDR    Float?
-  LUX     String?
-  WBTP    String?
-  WBTHK   Float?
-  WT      Float?
-  CUTDIA  String?
+  lfa     Float?
+wfa     Float?
+adjby   String?
+daxx    Float?
+daxn    Float?
+blq     String?
+bbd     Boolean?
+blrad   Float?
+bcdp    Float?
+bd      Float?
+bdx     Float?
+bhta    Float?
+htb     Float?
+lb      Float?
+lbx     Float?
+bmc     String?
+wb      Float?
+btc     String?
+casc    String?
+lsc     Float?
+lscx    Float?
+lscn    String?
+mtp     String?
+wsc     Float?
+alp     Float?
+aln     Float?
+alo     Float?
+alf     Float?
+ctp     Boolean?
+cbdp    Float?
+dcb     Float?
+ccms    String?
+ccws    String?
+cconws  Int?
+dcon    String?
+crks    String?
+czc     String?
+cub     String?
+dcsfms  Float?
+csp     Boolean?
+cdx     String?
+dc      Float?
+dcin    Float?
+dcinx   Float?
+dcinn   Float?
+dcx     Float?
+dcn     Float?
+dcsc    String?
+znc     Int?
+nce     Int?
+cict    Int?
+clmbd   Float?
+cpdn    String?
+cpdf    Boolean?
+cw      Float?
+cwx     String?
+cwn     String?
+dpc     Boolean?
+dcp     Boolean?
+apmx    String?
+dcc     String?
+dbt     String?
+drva    Float?
+drvct   Int?
+dhd     Boolean?
+zeff    Int?
+znf     Int?
+nof     Int?
+fdc     String?
+fha     Float?
+fhh     String?
+fhp     Float?
+flw     Float?
+hf      Float?
+lf      Float?
+lfn     Float?
+lfs     Float?
+wf      Float?
+wf2     Float?
+wfs     Float?
+gdmb    Float?
+gep     Boolean?
+gpd     Float?
+hand    String?
+hbkl    Float?
+hbw     Float?
+hbh     Float?
+hbl     Float?
+hdd     Float?
+lh      Float?
+dhub    Float?
+hbp     Boolean?
+thub    Float?
+lams    Float?
+zadj    Int?
+iic     String?
+ssc     String?
+lcb     Boolean?
+kyp     Boolean?
+lcf     Float?
+miid    String?
+dmin    Float?
+mha     Float?
+mhd     Float?
+mhd2    Float?
+mhh     Float?
+dn      Float?
+ln      Float?
+oah     Float?
+oal     Float?
+oaln    Float?
+oaw     Float?
+zefp    Int?
+znp     Int?
+pdp     Float?
+ppl     Float?
+tcpd    Float?
+tcs     String?
+az      Float?
+sig     Float?
+pl      Float?
+phd     Float?
+prspc   String?
+lpr     Float?
+qtc     String?
+gamp    Float?
+gamn    Float?
+gamo    Float?
+gamf    Float?
+rmpx    String?
+rpmx    String?
+rid     String?
+sx      String?
+dmm     Float?
+h       Float?
+ls      Float?
+b       Float?
+shian   Float?
+nos     Int?
+sdl     Float?
+sd      Float?
+sta     Float?
+srx     String?
+srn     String?
+srr     String?
+tmins   Boolean?
+ttpid   String?
+ta      Float?
+tg      Float?
+tpd     Boolean?
+td      Float?
+tdz     String?
+tctr    String?
+dix     String?
+lin     String?
+kapr    Float?
+ceatc   String?
+thsc    String?
+psir    Float?
+tsyc    String?
+ust     String?
+lu      Float?
+uldr    Float?
+lux     String?
+wbtp    String?
+wbthk   Float?
+wt      Float?
+cutdia  String?
 }
 
 model Tool_adaptive {

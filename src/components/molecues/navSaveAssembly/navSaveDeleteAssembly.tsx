@@ -80,7 +80,7 @@ export default function NavSaveDeleteAssembly() {
 					isClosable: true,
 					position: "top",
 				});
-
+				router.replace("/assembler?id=" + toolAssemblyId);
 				onClose();
 			} catch (e) {
 				const errorMessage = axios.isAxiosError(e)
@@ -118,6 +118,8 @@ export default function NavSaveDeleteAssembly() {
 						name: null,
 						customer_id: null,
 					});
+					router.replace("/assembler");
+
 					onClose();
 				}}
 			/>
