@@ -22,6 +22,8 @@ export default function CategoryItem({ item, onClick }: Props) {
 			alignItems="center"
 			justifyContent="center"
 			_hover={{ bg: "gray.100", transition: "0.1s" }}
+			overflow="hidden"
+			textOverflow="ellipsis"
 			onClick={onClick}
 		>
 			<Image src={item.img} alt={item.name} flex="1" />
