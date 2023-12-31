@@ -1,8 +1,8 @@
 import { useToolAssemblyContext } from "@/contexts/toolAssembly.context";
 import { useMe } from "@/hooks/auth";
 import { useGetToolAssembly } from "@/hooks/toolAssembly";
-import { Tool_assembly } from "@/pages/api/tool-assembly/[id]";
 import { checkSomeQueryParam } from "@/utils/client/checkSomeQueryParam";
+import { checkToolAssemblyHaveItem } from "@/utils/client/checkToolAssemblyHaveItem";
 import {
 	Button,
 	FormControl,
@@ -28,20 +28,6 @@ import * as Yup from "yup";
 export const saveToolAssemblySchema = Yup.object().shape({
 	name: Yup.string().required(),
 });
-
-const checkToolAssemblyHaveItem = (
-	toolAssembly: Tool_assembly | undefined
-): boolean => {
-	if (toolAssembly === undefined) return false;
-	const arrays = [
-		toolAssembly.used_adaptive_item,
-		toolAssembly.used_assembly_item,
-		toolAssembly.used_cutting_item,
-		toolAssembly.used_tool_item,
-	];
-
-	return arrays.some((array) => array.length > 0);
-};
 
 export default function NavSaveDeleteAssembly() {
 	const { toolAssemblyId, handleUpdateToolAssembly } = useToolAssemblyContext();

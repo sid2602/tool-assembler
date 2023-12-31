@@ -1,3 +1,4 @@
+import NavItemAssemblers from "@/components/molecues/navItemAssemblers/navItemAssemblers";
 import NavSaveDeleteAssembly from "@/components/molecues/navSaveAssembly/navSaveDeleteAssembly";
 import { useMe } from "@/hooks/auth";
 import {
@@ -47,6 +48,7 @@ export default function Nav() {
 					</Text>
 				</Button>
 				<NavSaveDeleteAssembly />
+				<NavItemAssemblers />
 			</Flex>
 			<Flex alignItems="center">
 				<Text fontSize="sm" fontWeight="bold" mr="2">

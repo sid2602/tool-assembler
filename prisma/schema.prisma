@@ -283,8 +283,6 @@ model Cutting_item {
   bsr     Float?
 }
 
-
-
 model Tool_item_category {
 id     Int       @id @default(autoincrement())
 name  String

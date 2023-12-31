@@ -22,7 +22,15 @@ export type Tool_assembly = Prisma.Tool_assemblyGetPayload<{
 	include: {
 		used_adaptive_item: {
 			include: {
-				adaptive_item: true;
+				adaptive_item: {
+					include: {
+						connecting_assembly_item: {
+							include: {
+								assembly_item: true;
+							};
+						};
+					};
+				};
 			};
 		};
 		used_cutting_item: {
@@ -32,7 +40,15 @@ export type Tool_assembly = Prisma.Tool_assemblyGetPayload<{
 		};
 		used_tool_item: {
 			include: {
-				tool_item: true;
+				tool_item: {
+					include: {
+						connecting_assembly_item: {
+							include: {
+								assembly_item: true;
+							};
+						};
+					};
+				};
 			};
 		};
 		used_assembly_item: {
@@ -72,7 +88,15 @@ async function GET(
 		include: {
 			used_adaptive_item: {
 				include: {
-					adaptive_item: true,
+					adaptive_item: {
+						include: {
+							connecting_assembly_item: {
+								include: {
+									assembly_item: true,
+								},
+							},
+						},
+					},
 				},
 			},
 			used_assembly_item: {
@@ -87,7 +111,15 @@ async function GET(
 			},
 			used_tool_item: {
 				include: {
-					tool_item: true,
+					tool_item: {
+						include: {
+							connecting_assembly_item: {
+								include: {
+									assembly_item: true,
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -140,7 +172,11 @@ async function PUT(
 		include: {
 			used_adaptive_item: {
 				include: {
-					adaptive_item: true,
+					adaptive_item: {
+						include: {
+							used_for_tool_assembly: true,
+						},
+					},
 				},
 			},
 			used_assembly_item: {
@@ -155,7 +191,11 @@ async function PUT(
 			},
 			used_tool_item: {
 				include: {
-					tool_item: true,
+					tool_item: {
+						include: {
+							used_for_tool_assembly: true,
+						},
+					},
 				},
 			},
 		},
