@@ -50,6 +50,7 @@ model Assembly_item {
   id    Int       @id @default(autoincrement())
   name  String
   connecting_adaptive_item Adaptive_assembly[]
+  connecting_tool_item Assembly_tool[]
   used_for_tool_assembly Tool_assembly_assembly_item[]
   category Assembly_item_category? @relation(fields: [category_id], references: [id])
   category_id Int?
@@ -298,6 +299,7 @@ model Tool_item {
   category_id Int?
   connecting_adaptive_item Tool_adaptive[]
   connecting_cutting_item Tool_cutting[]
+  connecting_assembly_item Assembly_tool[]
   used_for_tool_assembly Tool_assembly_tool_item[]
   img     String?
   lfa     Float?
@@ -491,10 +493,20 @@ model Tool_cutting{
 
 model Adaptive_assembly{
   id  Int       @id @default(autoincrement())
- 
 
+  quantity Int
   adaptive_item_id Int
   adaptive_item Adaptive_item @relation(fields: [adaptive_item_id], references: [id])
+  assembly_item_id Int
+  assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
+}
+
+model Assembly_tool{
+  id  Int       @id @default(autoincrement())
+
+  quantity Int
+  tool_item_id Int
+  tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
   assembly_item_id Int
   assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
 }

@@ -1,6 +1,8 @@
 import {
 	Adaptive_item,
 	Adaptive_item_category,
+	Assembly_item,
+	Assembly_item_category,
 	Cutting_item,
 	Cutting_item_category,
 	Dictonary,
@@ -420,6 +422,7 @@ const adaptive_matching = [
 	{ machine_dir: "AA3B27-40 32 090", workpiece_dir: "A416.2-LX25-32" },
 	{ machine_dir: "A33-R822XLS17-LJ030", workpiece_dir: "S17-R820XL-40A-018" },
 	{ machine_dir: "A33-R822XLS17-LJ030", workpiece_dir: "S17-R825XLA34-020" },
+	{ machine_dir: "S17-R825XLA34-020", workpiece_dir: "A34-R826C-E024HP" },
 ];
 
 interface CuttingItem {
@@ -509,6 +512,470 @@ const tool_cutting = [
 	{ tool_name: "162-120Q27-60", cutting_name: "176M40-N100608E-PM 1130" },
 	{ tool_name: "SL-SVXBL-40A-16-050 A", cutting_name: "VBGT 16 04 01-UM 1115" },
 	{ tool_name: "R826C-BF23STUC11HP", cutting_name: "TCEX 11 03 00L-F 1125" },
+];
+
+interface AssemblyItem {
+	category: Partial<Assembly_item_category>;
+	assembly_items: Omit<Partial<Assembly_item>, "id">[];
+}
+
+const Screw: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Screw",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//A33-R822XLS17-LJ030
+		{
+			name: "3212 010-462",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3212 010-446",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3214 010-355",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3212 230-207",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		//S17-R820XL-40A-018
+		{
+			name: "3212 010-359",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3214 010-303",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		//SL-SVXBL-40A-16-050 A
+		{
+			name: "5513 020-10",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203859111_d50_0_1~tl04_00.png",
+		},
+		//A34-R826C-E024HP
+		{
+			name: "5513 010-08",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203716261_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3214 011-405",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3212 010-360",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		//R826C-BF23STUC11HP
+		{
+			name: "5513 020-03",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203859111_d50_0_1~tl04_00.png",
+		},
+		//AA3B27-40 32 090
+		{
+			name: "5514 022-06",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203859111_d50_0_1~tl04_00.png",
+		},
+		{
+			name: "3214 010-253",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203859111_d50_0_1~tl04_00.png",
+		},
+		//162-090Q27-40   162-120Q27-60
+		{
+			name: "5516 014-06",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203724501_d50_0_0~tl04_00.png",
+		},
+		////A1B05-40 27 100
+		{
+			name: "3212 020-512",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		//392.54005C4027050
+		{
+			name: "3212 020-514",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "3212 010-258",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427096_d50_0_0~tl04_00.png",
+		},
+		//345-040A32-13M
+		{
+			name: "416.1-834",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203859111_d50_0_1~tl04_00.png",
+		},
+		{
+			name: "5512 090-11",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427104_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Washer: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Washer",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427517_d50_0_1~tl04_00.png",
+	},
+	assembly_items: [
+		//A33-R822XLS17-LJ030
+		{
+			name: "3411 013-105",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427517_d50_0_1~tl04_00.png",
+		},
+		{
+			name: "3411 012-084",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427517_d50_0_1~tl04_00.png",
+		},
+		//A34-R826C-E024HP
+		{
+			name: "3411 010-064",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427517_d50_0_1~tl04_00.png",
+		},
+		//162-090Q27-40   162-120Q27-60
+		{
+			name: "5541 009-03",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699577_d50_0_0~tl04_00.png",
+		},
+		{
+			name: "5541 009-02",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699577_d50_0_0~tl04_00.png",
+		},
+		//A1B05-40 27 100
+		{
+			name: "5541 015-03",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699577_d50_0_0~tl04_00.png",
+		},
+		//392.54005C4027050
+		{
+			name: "5541 015-03",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699577_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const ORing: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "O-Ring",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427523_d50_0_1~tl04_00.png",
+	},
+	assembly_items: [
+		//S17-R820XL-40A-018
+		{
+			name: "3671 010-113",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427523_d50_0_1~tl04_00.png",
+		},
+		//A34-R826C-E024HP
+		{
+			name: "3671 010-016",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427523_d50_0_1~tl04_00.png",
+		},
+	],
+};
+
+const Cover: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Cover",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/205054612_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//S17-R820XL-40A-018
+		{
+			name: "5549 051-01",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/205054612_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Bush: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Bush",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203700758_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//SL-SVXBL-40A-16-050 A
+		{
+			name: "5552 058-02",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203700758_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Nozzle: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Nozzle",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203686381_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//R826C-BF23STUC11HP
+		{
+			name: "5691 026-13",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203686381_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Wedge: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Wedge",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699389_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//162-090Q27-40   162-120Q27-60
+		{
+			name: "5431 058-08",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/203699389_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Shim: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Shim",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427078_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//345-040A32-13M
+		{
+			name: "5322 474-01",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/202427078_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+const Bit: AssemblyItem = {
+	category: {
+		id: 0,
+		name: "Bit",
+		img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/205003246_d50_0_0~tl04_00.png",
+	},
+	assembly_items: [
+		//345-040A32-13M
+		{
+			name: "5680 084-02",
+			img: "https://productinformation.sandvik.coromant.com/s3/documents/pictures/pict-3d-view/ext-preview/205003246_d50_0_0~tl04_00.png",
+		},
+	],
+};
+
+interface AssemblyTool {
+	assembly_name: string;
+	tool_name: string;
+	quantity: number;
+}
+
+const assembly_tool: AssemblyTool[] = [
+	{
+		assembly_name: "5513 020-10",
+		tool_name: "SL-SVXBL-40A-16-050 A",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5552 058-02",
+		tool_name: "SL-SVXBL-40A-16-050 A",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5513 020-03",
+		tool_name: "R826C-BF23STUC11HP",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5691 026-13",
+		tool_name: "R826C-BF23STUC11HP",
+		quantity: 1,
+	},
+
+	{
+		assembly_name: "5516 014-06",
+		tool_name: "162-090Q27-40",
+		quantity: 11,
+	},
+	{
+		assembly_name: "5541 009-03",
+		tool_name: "162-090Q27-40",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5541 009-02",
+		tool_name: "162-090Q27-40",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5431 058-08",
+		tool_name: "162-090Q27-40",
+		quantity: 11,
+	},
+
+	{
+		assembly_name: "5516 014-06",
+		tool_name: "162-120Q27-60",
+		quantity: 11,
+	},
+	{
+		assembly_name: "5541 009-03",
+		tool_name: "162-120Q27-60",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5541 009-02",
+		tool_name: "162-120Q27-60",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5431 058-08",
+		tool_name: "162-120Q27-60",
+		quantity: 11,
+	},
+];
+
+interface AdaptiveAssembly {
+	assembly_name: string;
+	adaptive_name: string;
+	quantity: number;
+}
+
+const adaptive_assembly: AdaptiveAssembly[] = [
+	{
+		assembly_name: "3212 010-462",
+		adaptive_name: "A33-R822XLS17-LJ030",
+		quantity: 4,
+	},
+	{
+		assembly_name: "3212 010-446",
+		adaptive_name: "A33-R822XLS17-LJ030",
+		quantity: 4,
+	},
+	{
+		assembly_name: "3214 010-355",
+		adaptive_name: "A33-R822XLS17-LJ030",
+		quantity: 1,
+	},
+	{
+		assembly_name: "3212 230-207",
+		adaptive_name: "A33-R822XLS17-LJ030",
+		quantity: 2,
+	},
+	{
+		assembly_name: "3411 013-105",
+		adaptive_name: "A33-R822XLS17-LJ030",
+		quantity: 2,
+	},
+	{
+		assembly_name: "3212 010-359",
+		adaptive_name: "S17-R820XL-40A-018",
+		quantity: 6,
+	},
+
+	{
+		assembly_name: "3214 010-303",
+		adaptive_name: "S17-R820XL-40A-018",
+		quantity: 1,
+	},
+	{
+		assembly_name: "3671 010-113",
+		adaptive_name: "S17-R820XL-40A-018",
+		quantity: 2,
+	},
+	{
+		assembly_name: "5549 051-01",
+		adaptive_name: "S17-R820XL-40A-018",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5513 010-08",
+		adaptive_name: "A34-R826C-E024HP",
+		quantity: 1,
+	},
+	{
+		assembly_name: "3214 011-405",
+		adaptive_name: "A34-R826C-E024HP",
+		quantity: 1,
+	},
+	{
+		assembly_name: "3212 010-360",
+		adaptive_name: "A34-R826C-E024HP",
+		quantity: 2,
+	},
+	{
+		assembly_name: "3411 010-064",
+		adaptive_name: "A34-R826C-E024HP",
+		quantity: 2,
+	},
+	{
+		assembly_name: "3671 010-016",
+		adaptive_name: "A34-R826C-E024HP",
+		quantity: 1,
+	},
+
+	{
+		assembly_name: "5514 022-06",
+		adaptive_name: "AA3B27-40 32 090",
+		quantity: 2,
+	},
+	{
+		assembly_name: "3214 010-253",
+		adaptive_name: "AA3B27-40 32 090",
+		quantity: 4,
+	},
+
+	{
+		assembly_name: "3212 020-512",
+		adaptive_name: "A1B05-40 27 100",
+		quantity: 1,
+	},
+	{
+		assembly_name: "5541 015-03",
+		adaptive_name: "A1B05-40 27 100",
+		quantity: 1,
+	},
+
+	{
+		assembly_name: "3212 020-514",
+		adaptive_name: "392.54005C4027050",
+		quantity: 1,
+	},
+	{
+		assembly_name: "3212 010-258",
+		adaptive_name: "392.54005C4027050",
+		quantity: 2,
+	},
+	{
+		assembly_name: "5541 015-03",
+		adaptive_name: "392.54005C4027050",
+		quantity: 1,
+	},
+
+	{
+		assembly_name: "416.1-834",
+		adaptive_name: "345-040A32-13M",
+		quantity: 4,
+	},
+	{
+		assembly_name: "5512 090-11",
+		adaptive_name: "345-040A32-13M",
+		quantity: 4,
+	},
+	{
+		assembly_name: "5322 474-01",
+		adaptive_name: "345-040A32-13M",
+		quantity: 4,
+	},
+	{
+		assembly_name: "345-040A32-13M",
+		adaptive_name: "345-040A32-13M",
+		quantity: 1,
+	},
 ];
 
 const dictonary: Omit<Partial<Dictonary>, "id">[] = [
@@ -647,14 +1114,19 @@ async function main() {
 	await prisma.tool_cutting.deleteMany();
 	await prisma.tool_adaptive.deleteMany();
 	await prisma.adaptive_item_matching.deleteMany();
+	await prisma.adaptive_assembly.deleteMany();
+	await prisma.assembly_tool.deleteMany();
 
 	await prisma.tool_item.deleteMany();
 	await prisma.adaptive_item.deleteMany();
 	await prisma.cutting_item.deleteMany();
+	await prisma.assembly_item.deleteMany();
 
 	await prisma.tool_item_category.deleteMany();
 	await prisma.adaptive_item_category.deleteMany();
 	await prisma.cutting_item_category.deleteMany();
+	await prisma.assembly_item_category.deleteMany();
+
 	await prisma.tool_assembly.deleteMany();
 
 	//Tool items
@@ -1046,6 +1518,103 @@ async function main() {
 			data: {
 				cutting_item_id: cutting_item.id,
 				tool_item_id: tool_item.id,
+			},
+		});
+	}
+
+	//Assembly items
+	const arrAssembly = [
+		Screw,
+		Washer,
+		ORing,
+		Cover,
+		Bush,
+		Nozzle,
+		Wedge,
+		Shim,
+		Bit,
+	];
+
+	for (let i = 0; i < arrAssembly.length; i++) {
+		const category = await prisma.assembly_item_category.upsert({
+			where: {
+				id: arrAssembly[i].category.id,
+			},
+			create: {
+				name: arrAssembly[i].category.name ?? "",
+				img: arrAssembly[i].category.img ?? "",
+			},
+			update: {},
+		});
+
+		for (let j = 0; j < arrAssembly[i].assembly_items.length; j++) {
+			await prisma.assembly_item.upsert({
+				where: {
+					id: 0,
+				},
+				create: {
+					...arrAssembly[i].assembly_items[j],
+					name: arrAssembly[i].assembly_items[j].name ?? "",
+					img: arrAssembly[i].assembly_items[j].img ?? "",
+					category_id: category.id,
+				},
+				update: {},
+			});
+		}
+	}
+
+	//assembly tool
+
+	for (let i = 0; i < assembly_tool.length; i++) {
+		const tool_item = await prisma.tool_item.findFirst({
+			where: { name: assembly_tool[i].tool_name },
+		});
+
+		if (tool_item === null) {
+			continue;
+		}
+
+		const assembly_item = await prisma.assembly_item.findFirst({
+			where: { name: assembly_tool[i].assembly_name },
+		});
+
+		if (assembly_item === null) {
+			continue;
+		}
+
+		await prisma.assembly_tool.create({
+			data: {
+				quantity: assembly_tool[i].quantity,
+				assembly_item_id: assembly_item.id,
+				tool_item_id: tool_item.id,
+			},
+		});
+	}
+
+	//adaptive assembly
+
+	for (let i = 0; i < adaptive_assembly.length; i++) {
+		const adaptive_item = await prisma.adaptive_item.findFirst({
+			where: { name: adaptive_assembly[i].adaptive_name },
+		});
+
+		if (adaptive_item === null) {
+			continue;
+		}
+
+		const assembly_item = await prisma.assembly_item.findFirst({
+			where: { name: adaptive_assembly[i].assembly_name },
+		});
+
+		if (assembly_item === null) {
+			continue;
+		}
+
+		await prisma.adaptive_assembly.create({
+			data: {
+				quantity: adaptive_assembly[i].quantity,
+				assembly_item_id: assembly_item.id,
+				adaptive_item_id: adaptive_item.id,
 			},
 		});
 	}
