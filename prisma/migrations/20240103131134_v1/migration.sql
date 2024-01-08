@@ -478,16 +478,26 @@ CREATE TABLE [dbo].[Tool_cutting] (
 -- CreateTable
 CREATE TABLE [dbo].[Adaptive_assembly] (
     [id] INT NOT NULL IDENTITY(1,1),
+    [quantity] INT NOT NULL,
     [adaptive_item_id] INT NOT NULL,
     [assembly_item_id] INT NOT NULL,
     CONSTRAINT [Adaptive_assembly_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
 -- CreateTable
+CREATE TABLE [dbo].[Assembly_tool] (
+    [id] INT NOT NULL IDENTITY(1,1),
+    [quantity] INT NOT NULL,
+    [tool_item_id] INT NOT NULL,
+    [assembly_item_id] INT NOT NULL,
+    CONSTRAINT [Assembly_tool_pkey] PRIMARY KEY CLUSTERED ([id])
+);
+
+-- CreateTable
 CREATE TABLE [dbo].[Tool_assembly_cutting_item] (
     [id] INT NOT NULL IDENTITY(1,1),
     [order] INT NOT NULL,
-    [row] INT NOT NULL,
+    [column] INT NOT NULL,
     [tool_assembly_id] INT NOT NULL,
     [cutting_item_id] INT NOT NULL,
     CONSTRAINT [Tool_assembly_cutting_item_pkey] PRIMARY KEY CLUSTERED ([id])
@@ -497,7 +507,7 @@ CREATE TABLE [dbo].[Tool_assembly_cutting_item] (
 CREATE TABLE [dbo].[Tool_assembly_adaptive_item] (
     [id] INT NOT NULL IDENTITY(1,1),
     [order] INT NOT NULL,
-    [row] INT NOT NULL,
+    [column] INT NOT NULL,
     [tool_assembly_id] INT NOT NULL,
     [adaptive_item_id] INT NOT NULL,
     CONSTRAINT [Tool_assembly_adaptive_item_pkey] PRIMARY KEY CLUSTERED ([id])
@@ -507,18 +517,10 @@ CREATE TABLE [dbo].[Tool_assembly_adaptive_item] (
 CREATE TABLE [dbo].[Tool_assembly_tool_item] (
     [id] INT NOT NULL IDENTITY(1,1),
     [order] INT NOT NULL,
-    [row] INT NOT NULL,
+    [column] INT NOT NULL,
     [tool_assembly_id] INT NOT NULL,
     [tool_item_id] INT NOT NULL,
     CONSTRAINT [Tool_assembly_tool_item_pkey] PRIMARY KEY CLUSTERED ([id])
-);
-
--- CreateTable
-CREATE TABLE [dbo].[Tool_assembly_assembly_item] (
-    [id] INT NOT NULL IDENTITY(1,1),
-    [tool_assembly_id] INT NOT NULL,
-    [assembly_item_id] INT NOT NULL,
-    CONSTRAINT [Tool_assembly_assembly_item_pkey] PRIMARY KEY CLUSTERED ([id])
 );
 
 -- AddForeignKey
@@ -561,6 +563,12 @@ ALTER TABLE [dbo].[Adaptive_assembly] ADD CONSTRAINT [Adaptive_assembly_adaptive
 ALTER TABLE [dbo].[Adaptive_assembly] ADD CONSTRAINT [Adaptive_assembly_assembly_item_id_fkey] FOREIGN KEY ([assembly_item_id]) REFERENCES [dbo].[Assembly_item]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE [dbo].[Assembly_tool] ADD CONSTRAINT [Assembly_tool_tool_item_id_fkey] FOREIGN KEY ([tool_item_id]) REFERENCES [dbo].[Tool_item]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[Assembly_tool] ADD CONSTRAINT [Assembly_tool_assembly_item_id_fkey] FOREIGN KEY ([assembly_item_id]) REFERENCES [dbo].[Assembly_item]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE [dbo].[Tool_assembly_cutting_item] ADD CONSTRAINT [Tool_assembly_cutting_item_tool_assembly_id_fkey] FOREIGN KEY ([tool_assembly_id]) REFERENCES [dbo].[Tool_assembly]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -577,12 +585,6 @@ ALTER TABLE [dbo].[Tool_assembly_tool_item] ADD CONSTRAINT [Tool_assembly_tool_i
 
 -- AddForeignKey
 ALTER TABLE [dbo].[Tool_assembly_tool_item] ADD CONSTRAINT [Tool_assembly_tool_item_tool_item_id_fkey] FOREIGN KEY ([tool_item_id]) REFERENCES [dbo].[Tool_item]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE [dbo].[Tool_assembly_assembly_item] ADD CONSTRAINT [Tool_assembly_assembly_item_tool_assembly_id_fkey] FOREIGN KEY ([tool_assembly_id]) REFERENCES [dbo].[Tool_assembly]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE [dbo].[Tool_assembly_assembly_item] ADD CONSTRAINT [Tool_assembly_assembly_item_assembly_item_id_fkey] FOREIGN KEY ([assembly_item_id]) REFERENCES [dbo].[Assembly_item]([id]) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 COMMIT TRAN;
 

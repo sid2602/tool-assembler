@@ -31,14 +31,14 @@ export interface PostToolAssemblyAdaptiveItemBody {
 	adaptiveItemId: number;
 	toolAssemblyId: number;
 	order: number;
-	row: number;
+	column: number;
 }
 
 async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyAdaptiveItemResponse>
 ) {
-	const { adaptiveItemId, toolAssemblyId, order, row } = request.body
+	const { adaptiveItemId, toolAssemblyId, order, column } = request.body
 		.data as PostToolAssemblyAdaptiveItemBody;
 
 	const tool_assembly_adaptive_item =
@@ -47,7 +47,7 @@ async function POST(
 				adaptive_item_id: adaptiveItemId,
 				tool_assembly_id: toolAssemblyId,
 				order,
-				row,
+				column,
 			},
 		});
 

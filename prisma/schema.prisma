@@ -32,9 +32,8 @@ model Tool_assembly {
     used_cutting_item Tool_assembly_cutting_item[]
     used_adaptive_item Tool_assembly_adaptive_item[]
     used_tool_item Tool_assembly_tool_item[]
-    used_assembly_item Tool_assembly_assembly_item[]
     created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+    updated_at DateTime @updatedAt
 }
 
 model Assembly_item_category {
@@ -51,7 +50,6 @@ model Assembly_item {
   name  String
   connecting_adaptive_item Adaptive_assembly[]
   connecting_tool_item Assembly_tool[]
-  used_for_tool_assembly Tool_assembly_assembly_item[]
   category Assembly_item_category? @relation(fields: [category_id], references: [id])
   category_id Int?
   img   String?
@@ -512,9 +510,8 @@ model Assembly_tool{
 
 model Tool_assembly_cutting_item {
   id  Int       @id @default(autoincrement())
-  
   order Int
-  row Int
+  column Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   cutting_item_id Int
@@ -523,11 +520,8 @@ model Tool_assembly_cutting_item {
 
 model Tool_assembly_adaptive_item {
   id  Int       @id @default(autoincrement())
-
-
   order Int
-  row Int
-
+  column Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   adaptive_item_id Int
@@ -537,19 +531,9 @@ model Tool_assembly_adaptive_item {
 model Tool_assembly_tool_item {
   id  Int       @id @default(autoincrement())
   order Int
-  row Int
+  column Int
   tool_assembly_id Int
   tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
   tool_item_id Int
   tool_item Tool_item @relation(fields: [tool_item_id], references: [id])
-}
-
-model Tool_assembly_assembly_item {
-  id  Int       @id @default(autoincrement())
-  
-  
-  tool_assembly_id Int
-  tool_assembly Tool_assembly @relation(fields: [tool_assembly_id], references: [id])
-  assembly_item_id Int
-  assembly_item Assembly_item @relation(fields: [assembly_item_id], references: [id])
 }

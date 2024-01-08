@@ -40,7 +40,7 @@ interface ToolItemStep {
 	categoryId: number | null;
 	searchId: number | null;
 	order: number | null;
-	row: number | null;
+	column: number | null;
 }
 
 type StepState = ToolItemStep;
@@ -52,7 +52,7 @@ const initialStep: StepState = {
 	categoryId: null,
 	searchId: null,
 	order: null,
-	row: null,
+	column: null,
 };
 
 type StepStateActions = "MODAL" | "CLOSE";
@@ -77,7 +77,7 @@ export type OnOpenFunctionType = (
 	listCategory?: ListCategoryName,
 	searchId?: number | null,
 	order?: number | null,
-	row?: number | null
+	column?: number | null
 ) => void;
 
 type ContextType = {
@@ -142,7 +142,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 		listCategory?: ListCategoryName,
 		searchId?: number | null,
 		order?: number | null,
-		row?: number | null
+		column?: number | null
 	) => {
 		if (toolAssemblyId === undefined) {
 			await createToolAssembly();
@@ -155,7 +155,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 				listCategory: listCategory ?? initialStep.listCategory,
 				searchId,
 				order,
-				row,
+				column,
 			},
 		});
 		onOpenModal();
@@ -188,7 +188,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 			toolItemId: toolItemId,
 			toolAssemblyId: toolAssemblerId,
 			order: stepState.order ?? 0,
-			row: stepState.row ?? 0,
+			column: stepState.column ?? 0,
 		});
 
 		onClose();
@@ -203,18 +203,18 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 			throw new Error("No tool assembly");
 		}
 
-		const row =
-			stepState.row !== null &&
+		const column =
+			stepState.column !== null &&
 			(number_of_possible_connections ?? 0) > 1 &&
 			stepState.listCategory === "adaptive-machine"
-				? stepState.row + 1
-				: stepState.row ?? 0;
+				? stepState.column + 1
+				: stepState.column ?? 0;
 
 		await addAdaptiveItemToToolAssemblyQuery.mutateAsync({
 			adaptiveItemId: adaptiveItemId,
 			toolAssemblyId: toolAssemblerId,
 			order: stepState.order ?? 0,
-			row: row,
+			column: column,
 		});
 
 		onClose();
@@ -231,7 +231,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 			cuttingItemId: cuttingItemId,
 			toolAssemblyId: toolAssemblerId,
 			order: stepState.order ?? 0,
-			row: stepState.row ?? 0,
+			column: stepState.column ?? 0,
 		});
 
 		onClose();

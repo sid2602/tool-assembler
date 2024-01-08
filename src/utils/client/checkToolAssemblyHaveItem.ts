@@ -6,7 +6,6 @@ export const checkToolAssemblyHaveItem = (
 	if (toolAssembly === undefined) return false;
 	const arrays = [
 		toolAssembly.used_adaptive_item,
-		toolAssembly.used_assembly_item,
 		toolAssembly.used_cutting_item,
 		toolAssembly.used_tool_item,
 	];

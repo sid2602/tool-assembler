@@ -51,11 +51,6 @@ export type Tool_assembly = Prisma.Tool_assemblyGetPayload<{
 				};
 			};
 		};
-		used_assembly_item: {
-			include: {
-				assembly_item: true;
-			};
-		};
 	};
 }>;
 
@@ -97,11 +92,6 @@ async function GET(
 							},
 						},
 					},
-				},
-			},
-			used_assembly_item: {
-				include: {
-					assembly_item: true,
 				},
 			},
 			used_cutting_item: {
@@ -177,11 +167,6 @@ async function PUT(
 							used_for_tool_assembly: true,
 						},
 					},
-				},
-			},
-			used_assembly_item: {
-				include: {
-					assembly_item: true,
 				},
 			},
 			used_cutting_item: {

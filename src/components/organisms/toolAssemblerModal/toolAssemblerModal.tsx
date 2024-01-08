@@ -42,7 +42,7 @@ export default function ToolAssemblerModal({}: Props) {
 				categoryId,
 				listCategory: listCategoryName,
 				order: stepState.order,
-				row: stepState.row,
+				column: stepState.column,
 			},
 		});
 	};

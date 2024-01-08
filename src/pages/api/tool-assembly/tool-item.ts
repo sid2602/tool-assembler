@@ -31,14 +31,14 @@ export interface PostToolAssemblyToolItemBody {
 	toolItemId: number;
 	toolAssemblyId: number;
 	order: number;
-	row: number;
+	column: number;
 }
 
 async function POST(
 	request: NextApiRequest,
 	response: NextApiResponse<PostToolAssemblyToolItemResponse>
 ) {
-	const { toolItemId, toolAssemblyId, order, row } = request.body
+	const { toolItemId, toolAssemblyId, order, column } = request.body
 		.data as PostToolAssemblyToolItemBody;
 
 	const tool_assembly_tool_item = await prisma.tool_assembly_tool_item.create({
@@ -46,7 +46,7 @@ async function POST(
 			tool_item_id: toolItemId,
 			tool_assembly_id: toolAssemblyId,
 			order,
-			row,
+			column,
 		},
 	});
 

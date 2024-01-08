@@ -25,7 +25,6 @@ const isToolAssemblerEmpty = (
 
 	if (
 		toolAssembly.used_adaptive_item.length === 0 &&
-		toolAssembly.used_assembly_item.length === 0 &&
 		toolAssembly.used_cutting_item.length === 0 &&
 		toolAssembly.used_tool_item.length === 0
 	) {
@@ -37,10 +36,10 @@ const isToolAssemblerEmpty = (
 
 const checkIfProductHaveChild = (
 	order: number,
-	row: number,
+	column: number,
 	array: MapedItem[]
 ): boolean => {
-	return array.some((item) => item.order === order && item.row === row);
+	return array.some((item) => item.order === order && item.column === column);
 };
 
 interface MapedItem {
@@ -52,7 +51,7 @@ interface MapedItem {
 	name: string;
 	img: string | null;
 	order: number;
-	row: number;
+	column: number;
 }
 
 const mapToolAssembly = (
@@ -68,7 +67,7 @@ const mapToolAssembly = (
 			name: item.tool_item.name,
 			img: item.tool_item.img,
 			order: item.order,
-			row: item.row,
+			column: item.column,
 		})) ?? [];
 	44;
 	const adaptive_items: MapedItem[] =
@@ -82,7 +81,7 @@ const mapToolAssembly = (
 			name: item.adaptive_item.name,
 			img: item.adaptive_item.img,
 			order: item.order,
-			row: item.row,
+			column: item.column,
 		})) ?? [];
 
 	const cutting_items: MapedItem[] =
@@ -96,7 +95,7 @@ const mapToolAssembly = (
 			name: item.cutting_item.name,
 			img: item.cutting_item.img,
 			order: item.order,
-			row: item.row,
+			column: item.column,
 		})) ?? [];
 
 	const finalArray = [...adaptive_items, ...tool_items, ...cutting_items].sort(
@@ -143,19 +142,19 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 
 	const canAddSingleElement = checkIfProductHaveChild(
 		item.order - 1,
-		item.row,
+		item.column,
 		array
 	);
 
-	const haveParentWithHigerRow = checkIfProductHaveChild(
+	const haveParentWithHigerColumn = checkIfProductHaveChild(
 		item.order - 1,
-		item.row + 1,
+		item.column + 1,
 		array
 	);
 
-	const haveParentWithLowerRow = checkIfProductHaveChild(
+	const haveParentWithLowerColumn = checkIfProductHaveChild(
 		item.order - 1,
-		item.row - 1,
+		item.column - 1,
 		array
 	);
 
@@ -167,13 +166,19 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 		item.type === "adaptive" &&
 		machineDirectionAdaptiveItems.data?.items.length !== 0 &&
 		canAddSingleElement === false &&
-		haveParentWithHigerRow === false &&
-		haveParentWithLowerRow === false
+		haveParentWithHigerColumn === false &&
+		haveParentWithLowerColumn === false
 	) {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "adaptive-machine", item.id, item.order - 1, item.row)
+					onOpen(
+						"lists",
+						"adaptive-machine",
+						item.id,
+						item.order - 1,
+						item.column
+					)
 				}
 				direction="left"
 			/>
@@ -188,7 +193,7 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "tool-adaptive", item.id, item.order - 1, item.row)
+					onOpen("lists", "tool-adaptive", item.id, item.order - 1, item.column)
 				}
 				direction="left"
 			/>
@@ -203,7 +208,7 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "cutting-tool", item.id, item.order - 1, item.row)
+					onOpen("lists", "cutting-tool", item.id, item.order - 1, item.column)
 				}
 				direction="left"
 			/>
@@ -256,7 +261,7 @@ const WorkpieceDirection = ({
 
 	const canAddSingleElement = checkIfProductHaveChild(
 		item.order + 1,
-		item.row,
+		item.column,
 		array
 	);
 
@@ -283,7 +288,7 @@ const WorkpieceDirection = ({
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "adaptive-tool", item.id, item.order + 1, item.row)
+					onOpen("lists", "adaptive-tool", item.id, item.order + 1, item.column)
 				}
 				direction="right"
 			/>
@@ -298,7 +303,7 @@ const WorkpieceDirection = ({
 		if (item.numberOfPossibleWorkpieceItems > 1) {
 			return (
 				<Box>
-					{checkIfProductHaveChild(item.order + 1, item.row - 1, array) ? (
+					{checkIfProductHaveChild(item.order + 1, item.column - 1, array) ? (
 						<Box w="175px" h="175px" position="absolute">
 							<Box
 								position="absolute"
@@ -321,14 +326,14 @@ const WorkpieceDirection = ({
 									"adaptive-workpiece",
 									item.id,
 									item.order + 1,
-									item.row - 1
+									item.column - 1
 								)
 							}
 							direction="right-top"
 						/>
 					)}
 
-					{checkIfProductHaveChild(item.order + 1, item.row + 1, array) ? (
+					{checkIfProductHaveChild(item.order + 1, item.column + 1, array) ? (
 						<Box w="175px" h="175px" position="absolute">
 							<Box
 								position="absolute"
@@ -351,7 +356,7 @@ const WorkpieceDirection = ({
 									"adaptive-workpiece",
 									item.id,
 									item.order + 1,
-									item.row + 1
+									item.column + 1
 								)
 							}
 							direction="right-bottom"
@@ -370,7 +375,7 @@ const WorkpieceDirection = ({
 							"adaptive-workpiece",
 							item.id,
 							item.order + 1,
-							item.row
+							item.column
 						)
 					}
 					direction="right"
@@ -387,7 +392,7 @@ const WorkpieceDirection = ({
 		return (
 			<AddToolAssemblerItem
 				handleButton={() =>
-					onOpen("lists", "tool-cutting", item.id, item.order + 1, item.row)
+					onOpen("lists", "tool-cutting", item.id, item.order + 1, item.column)
 				}
 				direction="right"
 			/>
@@ -434,12 +439,16 @@ export default function ToolAssembler({}: Props) {
 		...mapedToolAseemblyItems.map((item) => item.order)
 	);
 
-	const minRow = Math.min(...mapedToolAseemblyItems.map((item) => item.row));
+	const minColumn = Math.min(
+		...mapedToolAseemblyItems.map((item) => item.column)
+	);
 
-	const maxRow = Math.max(...mapedToolAseemblyItems.map((item) => item.row));
+	const maxColumn = Math.max(
+		...mapedToolAseemblyItems.map((item) => item.column)
+	);
 
 	const orderArray = createArrayFromNToM(minOrder, maxOrder);
-	const rowArray = createArrayFromNToM(minRow, maxRow);
+	const columnArray = createArrayFromNToM(minColumn, maxColumn);
 
 	if (isLoading) {
 		return (
@@ -463,10 +472,11 @@ export default function ToolAssembler({}: Props) {
 		>
 			{orderArray.map((order) => (
 				<Flex key={order + "order"} flexDir="column">
-					{rowArray.map((row) => {
+					{columnArray.map((column) => {
 						const item = mapedToolAseemblyItems.find(
 							(toolAssemblyItem) =>
-								toolAssemblyItem.row === row && toolAssemblyItem.order === order
+								toolAssemblyItem.column === column &&
+								toolAssemblyItem.order === order
 						);
 
 						if (item === undefined) {
@@ -474,7 +484,7 @@ export default function ToolAssembler({}: Props) {
 								<Box
 									w="175px"
 									h="175px"
-									key={row + "row"}
+									key={column + "column"}
 									position="relative"
 								></Box>
 							);
@@ -483,7 +493,7 @@ export default function ToolAssembler({}: Props) {
 						return (
 							<Flex
 								m="2"
-								key={order + row}
+								key={order + column}
 								alignItems="center"
 								zIndex="1"
 								position="relative"
