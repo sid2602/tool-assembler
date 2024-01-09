@@ -13,7 +13,7 @@ import {
 import { Adaptive_item, Cutting_item, Tool_item } from "@prisma/client";
 import { useRouter } from "next/router";
 
-const mapProductKeys = (
+export const mapProductKeys = (
 	product: Tool_item | Adaptive_item | Cutting_item | undefined
 ): string[] => {
 	if (product === undefined) {
@@ -34,7 +34,6 @@ export default function Product() {
 		product.data?.item.id,
 		mapProductKeys(product.data?.item)
 	);
-	console.log(mapProductKeys(product.data?.item));
 
 	if (productName === undefined || Array.isArray(productName)) {
 		return <div>Wrong product name</div>;

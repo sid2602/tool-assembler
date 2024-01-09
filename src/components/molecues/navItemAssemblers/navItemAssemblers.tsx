@@ -18,6 +18,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import { Assembly_item } from "@prisma/client";
+
 import { useRouter } from "next/router";
 import React from "react";
 import { GiScrew } from "react-icons/gi";
@@ -27,7 +28,7 @@ type AssemblyItemWithQuantity = {
 	quantity: number;
 };
 
-const gropuAssemblies = (
+export const gropuAssemblies = (
 	toolAssembly: Tool_assembly | undefined
 ): AssemblyItemWithQuantity[] => {
 	if (toolAssembly === undefined) {

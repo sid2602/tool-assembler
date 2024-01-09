@@ -1,4 +1,5 @@
 import NavItemAssemblers from "@/components/molecues/navItemAssemblers/navItemAssemblers";
+import NavItemDownloadPDF from "@/components/molecues/navItemAssemblers/navItemDownloadPDF";
 import NavSaveDeleteAssembly from "@/components/molecues/navSaveAssembly/navSaveDeleteAssembly";
 import { useMe } from "@/hooks/auth";
 import {
@@ -18,7 +19,6 @@ import { default as AuthService } from "../../../services/auth";
 export default function Nav() {
 	const { data, isLoading, isError } = useMe();
 	const router = useRouter();
-
 	if (isError === true) {
 		return;
 	}
@@ -49,6 +49,7 @@ export default function Nav() {
 				</Button>
 				<NavSaveDeleteAssembly />
 				<NavItemAssemblers />
+				<NavItemDownloadPDF />
 			</Flex>
 			<Flex alignItems="center">
 				<Text fontSize="sm" fontWeight="bold" mr="2">

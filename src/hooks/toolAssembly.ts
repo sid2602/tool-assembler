@@ -14,6 +14,7 @@ export const useCreateToolAssembly = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -33,6 +34,7 @@ export const useUpdateToolAssembly = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -47,6 +49,7 @@ export const useAddAdaptiveItem = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -61,6 +64,7 @@ export const useAddCuttingItem = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -75,6 +79,7 @@ export const useAddToolItem = () => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -97,6 +102,7 @@ export const useDeleteAdaptiveItem = (id: number | undefined) => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -111,6 +117,7 @@ export const useDeleteToolItem = (id: number | undefined) => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);
@@ -125,6 +132,7 @@ export const useDeleteCuttinglItem = (id: number | undefined) => {
 		{
 			onSuccess: () => {
 				queryClient.invalidateQueries("getToolAssembly");
+				queryClient.invalidateQueries("useGetReport");
 			},
 		}
 	);

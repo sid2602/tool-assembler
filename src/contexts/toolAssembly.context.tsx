@@ -7,7 +7,7 @@ import {
 } from "@/hooks/toolAssembly";
 import { PutToolAssemblyBody } from "@/pages/api/tool-assembly/[id]";
 import { useDisclosure } from "@chakra-ui/react";
-
+import { useRouter } from "next/router";
 import {
 	Dispatch,
 	createContext,
@@ -15,7 +15,6 @@ import {
 	useReducer,
 	useState,
 } from "react";
-
 type ContainerProps = {
 	children: React.ReactNode;
 };
@@ -124,7 +123,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	const [toolAssemblyId, setToolAsemblyId] = useState<number | undefined>(
 		undefined
 	);
-
+	const router = useRouter();
 	const {
 		isOpen,
 		onOpen: onOpenModal,
@@ -136,7 +135,6 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	const addAdaptiveItemToToolAssemblyQuery = useAddAdaptiveItem();
 	const addCuttingItemToToolAssemblyQuery = useAddCuttingItem();
 	const updateToolAssembly = useUpdateToolAssembly();
-
 	const onOpen = async (
 		actualStep?: ActualStep,
 		listCategory?: ListCategoryName,
@@ -169,6 +167,7 @@ export const ToolAssemblyContextProvider = ({ children }: ContainerProps) => {
 	const createToolAssembly = async (): Promise<void> => {
 		const resp = await createToolAssemblyQuery.mutateAsync();
 		setToolAsemblyId(resp.item.id);
+		router.replace({ query: { ...router.query, id: resp.item.id } });
 	};
 
 	const handleUpdateToolAssembly = async (

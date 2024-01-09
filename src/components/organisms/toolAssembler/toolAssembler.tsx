@@ -408,7 +408,6 @@ function createArrayFromNToM(n: number, m: number) {
 
 export default function ToolAssembler({}: Props) {
 	const { toolAssemblyId, onOpen } = useToolAssemblyContext();
-
 	const { data: toolAssemblyData, isLoading } =
 		useGetToolAssembly(toolAssemblyId);
 	const tollAssembly = toolAssemblyData?.item ?? undefined;
