@@ -54,7 +54,7 @@ export default function CuttingItemsStep({
 
 	return (
 		<ModalContent maxW="1000px" maxH="700px" h="100%">
-			<ModalHeader>Choose your first product</ModalHeader>
+			<ModalHeader>Choose your product</ModalHeader>
 			<ModalCloseButton />
 			<ModalBody>
 				<ToolAssemblerItemsTable

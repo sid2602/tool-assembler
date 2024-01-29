@@ -28,7 +28,7 @@ export const EditCustomerSchema = Yup.object().shape({
 });
 
 export default function Register() {
-	const { data, isError } = useMe();
+	const { data } = useMe();
 
 	const { mutateAsync, isLoading } = useUpdateCustomer();
 	const toast = useToast({});

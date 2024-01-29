@@ -1,5 +1,5 @@
 import NavItemAssemblers from "@/components/molecues/navItemAssemblers/navItemAssemblers";
-import NavItemDownloadPDF from "@/components/molecues/navItemAssemblers/navItemDownloadPDF";
+import NavItemDownloadPDF from "@/components/molecues/navItemDownloadPDF/navItemDownloadPDF";
 import NavSaveDeleteAssembly from "@/components/molecues/navSaveAssembly/navSaveDeleteAssembly";
 import { useMe } from "@/hooks/auth";
 import {

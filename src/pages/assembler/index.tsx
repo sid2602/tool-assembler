@@ -10,7 +10,7 @@ import { QueryClient, dehydrate } from "react-query";
 import { default as AuthService } from "../../services/auth";
 
 export default function Assembler() {
-	const { data, isLoading, isError } = useMe();
+	const { isLoading, isError } = useMe();
 	const context = useToolAssemblyContext();
 	const router = useRouter();
 	const toolAssemblerId = router.query?.id;
