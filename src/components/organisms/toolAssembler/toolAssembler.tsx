@@ -62,7 +62,8 @@ const mapToolAssembly = (
 			id: item.tool_item_id,
 			type: "tool",
 			usedItemId: item.id,
-			numberOfPossibleWorkpieceItems: 1,
+			numberOfPossibleWorkpieceItems:
+				item.tool_item.number_of_possible_connections,
 			canHaveToolItem: false,
 			name: item.tool_item.name,
 			img: item.tool_item.img,
@@ -203,7 +204,9 @@ const MachineDirection = ({ item, array, onOpen }: MachineDirectionProps) => {
 	if (
 		item.type === "cutting" &&
 		toolCutting.data?.items.length !== 0 &&
-		canAddSingleElement === false
+		canAddSingleElement === false &&
+		haveParentWithLowerColumn === false &&
+		haveParentWithHigerColumn === false
 	) {
 		return (
 			<AddToolAssemblerItem
@@ -264,19 +267,6 @@ const WorkpieceDirection = ({
 		item.column,
 		array
 	);
-
-	if (canAddSingleElement === true) {
-		return (
-			<Box
-				width="100px"
-				height="2px"
-				border="3px solid black"
-				position="absolute"
-				left="100%"
-				top="50%"
-			></Box>
-		);
-	}
 
 	if (
 		item.type === "adaptive" &&
@@ -387,6 +377,101 @@ const WorkpieceDirection = ({
 	if (
 		item.type === "tool" &&
 		toolCutting.data?.items.length !== 0 &&
+		(item?.numberOfPossibleWorkpieceItems ?? 1) > 1
+	) {
+		return (
+			<Box>
+				{checkIfProductHaveChild(item.order + 1, item.column, array) &&
+				(item?.numberOfPossibleWorkpieceItems ?? 1) >= 3 ? (
+					<Box
+						width="100px"
+						height="2px"
+						border="3px solid black"
+						position="absolute"
+						left="100%"
+						top="50%"
+					></Box>
+				) : (
+					<AddToolAssemblerItem
+						handleButton={() =>
+							onOpen(
+								"lists",
+								"tool-cutting",
+								item.id,
+								item.order + 1,
+								item.column
+							)
+						}
+						direction="right"
+					/>
+				)}
+
+				{checkIfProductHaveChild(item.order + 1, item.column - 1, array) ? (
+					<Box w="175px" h="175px" position="absolute">
+						<Box
+							position="absolute"
+							w="70%"
+							h="70%"
+							left="-15%"
+							top="-70%"
+							transform="translate(-50%,-50%)"
+							border="solid 5px #000"
+							borderColor="#000 transparent transparent #000"
+							borderRadius="50%/2000px"
+							zIndex={-1}
+						></Box>
+					</Box>
+				) : (
+					<AddToolAssemblerItem
+						handleButton={() =>
+							onOpen(
+								"lists",
+								"tool-cutting",
+								item.id,
+								item.order + 1,
+								item.column - 1
+							)
+						}
+						direction="right-top"
+					/>
+				)}
+
+				{checkIfProductHaveChild(item.order + 1, item.column + 1, array) ? (
+					<Box w="175px" h="175px" position="absolute">
+						<Box
+							position="absolute"
+							w="70%"
+							h="70%"
+							left="-15%"
+							top="70%"
+							transform="translate(-50%,-50%)"
+							border="solid 5px #000"
+							borderColor="transparent transparent #000 #000"
+							borderRadius="50%/2000px"
+							zIndex={-1}
+						></Box>
+					</Box>
+				) : (
+					<AddToolAssemblerItem
+						handleButton={() =>
+							onOpen(
+								"lists",
+								"tool-cutting",
+								item.id,
+								item.order + 1,
+								item.column + 1
+							)
+						}
+						direction="right-bottom"
+					/>
+				)}
+			</Box>
+		);
+	}
+
+	if (
+		item.type === "tool" &&
+		toolCutting.data?.items.length !== 0 &&
 		canAddSingleElement === false
 	) {
 		return (
@@ -396,6 +481,19 @@ const WorkpieceDirection = ({
 				}
 				direction="right"
 			/>
+		);
+	}
+
+	if (canAddSingleElement === true) {
+		return (
+			<Box
+				width="100px"
+				height="2px"
+				border="3px solid black"
+				position="absolute"
+				left="100%"
+				top="50%"
+			></Box>
 		);
 	}
 

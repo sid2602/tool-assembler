@@ -27,6 +27,7 @@ const calculatePosition = (direction: Direction): Positon => {
 
 	if (direction === "right") {
 		return {
+			top: "0%",
 			right: "-110%",
 		};
 	}
@@ -34,14 +35,14 @@ const calculatePosition = (direction: Direction): Positon => {
 	if (direction === "right-top") {
 		return {
 			right: "-110%",
-			top: "-90%",
+			top: "-110%",
 		};
 	}
 
 	if (direction === "right-bottom") {
 		return {
 			right: "-110%",
-			bottom: "-90%",
+			bottom: "-110%",
 		};
 	}
 

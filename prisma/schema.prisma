@@ -297,6 +297,7 @@ model Tool_item {
   connecting_cutting_item Tool_cutting[]
   connecting_assembly_item Assembly_tool[]
   used_for_tool_assembly Tool_assembly_tool_item[]
+  number_of_possible_connections Int @default(1)
   img     String?
   lfa     Float?
 wfa     Float?
